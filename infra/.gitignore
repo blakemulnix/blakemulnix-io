@@ -1,0 +1,11 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraformrc
+crash.log
+terraform.rc
+*.tf.json
+*.tfplan
+.DS_Store
+tf_env.sh
