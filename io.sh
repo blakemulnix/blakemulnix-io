@@ -4,7 +4,7 @@ deploy() {
   local environment="$1"
 
   # Change to the desired directory
-  cd /workspaces/personal-website
+  cd /workspaces/blakemulnix-io
 
   case "$environment" in
   local)
