@@ -3,7 +3,7 @@ export enum Command {
   ContactInfo = "Contact info",
   WorkExperience = "Work Experience",
   GoBack = "Go back",
-  MoreAboutMe = "More about me",
+  SeeAboutMePage = "See my about me page",
   MoreContactInfo = "More Contact Info",
-  MoreWorkExperience = "More Work Experience"
+  MoreWorkExperience = "More Work Experience",
 }

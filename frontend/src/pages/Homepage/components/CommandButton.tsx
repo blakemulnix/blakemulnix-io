@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-import { Command } from "../utils/Commands";
+import { Command } from "../utils/Command";
 
 interface CommandButtonProps {
   command: Command; // The command associated with the button
