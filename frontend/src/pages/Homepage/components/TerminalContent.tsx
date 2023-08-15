@@ -1,13 +1,13 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import CommandButton from "./CommandButton";
-import ExecutingText from "./ExecutingText";
+import ExecutingText, { TextDisplayMode } from "./ExecutingText";
 import { getKeyboardListener } from "../utils/KeyboardListener";
 import { Command } from "../utils/Command";
 
 interface TerminalContentProps {
   commands: Command[];
   executeCommand: (command: Command) => void;
-  executingText: string;
+  executingText: { text: string; textDisplayMode: TextDisplayMode };
   children?: ReactElement[];
 }
 
@@ -59,7 +59,7 @@ const TerminalContent: React.FC<TerminalContentProps> = ({
         ))}
       </div>
       {children}
-      {executingText && <ExecutingText text={executingText} />}
+      {executingText && <ExecutingText {...executingText} />}
     </>
   );
 };

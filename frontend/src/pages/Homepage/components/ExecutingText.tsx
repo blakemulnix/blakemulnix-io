@@ -3,9 +3,24 @@ import ReactTyped from "react-typed";
 
 interface ExecutingTextProps {
   text: string;
+  textDisplayMode: TextDisplayMode;
 }
 
-const ExecutingText: React.FC<ExecutingTextProps> = ({ text: text }) => {
+export enum TextDisplayMode {
+  Elipsis = "Elipsis",
+  Plain = "Plain",
+}
+
+const ExecutingText: React.FC<ExecutingTextProps> = ({
+  text,
+  textDisplayMode,
+}) => {
+  if (!text) return null;
+
+  if (textDisplayMode === TextDisplayMode.Plain) {
+    return <p>{text}</p>;
+  }
+
   return (
     <p>
       {text}

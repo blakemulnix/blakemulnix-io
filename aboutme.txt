@@ -1,0 +1,21 @@
+My fascination with computers began early on in grade school, where I spent many afternoons exploring the web on my parents' Gateway computer (remember AOL?). By middle school, I was setting up Minecraft servers (during its beta, mind you) for my circle of friends. What started as youthful curiosity has now evolved into a deep appreciation for the potential of software to enhance our lives.
+
+My professional journey has led me through a diverse range of experiences, shaping my skills and perspective:
+
+    I've contributed my expertise to major corporations in the defense and insurance sectors, revitalizing and modernizing applications to meet the demands of the future.
+
+    My time at a small software firm was dedicated to improving railway safety, working on projects that highlighted the real-world impact of technology on critical infrastructure.
+
+    I worked briefly at the Department of Energy's Ames Laboratory on an open-source initiative to empower computational chemists, simplifying their workflows and amplifying their research impact.
+
+    I've ventured into the startup world, working to make legal services more accessible and affordable, aligning technology with social impact.
+
+Currently, my passion lies in crafting cloud-based applications, with a strong focus on AWS. In my toolkit, you'll find favorites like React, which I leverage to create elegant and intuitive user interfaces (Tailwind CSS makes this a breeze). Typescript and NodeJS serve as the backbone for all business logic, whenever possible. Terraform is my go-to for orchestrating infrastructure management, while good ol' bash scripts come in handy for automating repetitive tasks.
+
+I firmly believe that adaptability is crucial in an era of perpetual transformation and technological upheaval. I value discipline, empathy, and an unrelenting thirst for growth. Collaborating with brilliant engineers and professionals who challenge my assumptions is where I thrive.
+
+When I'm not engrossed in VSCode, you'll find me shooting pool with friends, hanging out on Discord, experimenting on my Fender Stratocaster (trying to capture that elusive golden tone), planning road trips centered around gravel biking and hiking, or enduring the elements in a treestand, patiently waiting for that 12-point whitetail to wander by. Nature is where I decompress – whether in the woods, by the lake, or amidst the desert and mountains.
+
+Music, film, and podcasts are my preferred forms of media. While perfection eludes us all, I'm dedicated to making the world safer and more enjoyable for everyone, from close companions to strangers across the globe. I organize Yakapalooza, a large kayaking trip where I run a charity raffle – we've managed to raise over $2500 so far!
+
+Welcome to my world, where technology meets compassion, and the love for the digital realm is harmonized by a profound connection to the natural world

@@ -8,7 +8,9 @@ export enum Command {
   MoreWorkExperience = "More Work Experience",
   DownloadResume = "Download my resume",
   ViewOnlineResume = "View my online resume",
-  ViewProjects = "View my projects"
+  ViewProjects = "View my projects",
+  CopyEmail = "Copy my email address",
+  CopyPhone = "Copy my phone number"
 }
 
 export const getNextCommand = (commandOrder: Command[], current: Command) => {

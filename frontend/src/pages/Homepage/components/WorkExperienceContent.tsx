@@ -4,6 +4,7 @@ import { downloadFile } from "../utils/DownloadFile";
 import TerminalContent from "./TerminalContent";
 import { Command } from "../utils/Command";
 import { useState } from "react";
+import { TextDisplayMode } from "./ExecutingText";
 
 interface WorkExperienceContentProps {
   setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
@@ -19,29 +20,49 @@ const workExperienceCommands = [
 const WorkExperienceContent: React.FC<WorkExperienceContentProps> = ({
   setDisplayState,
 }) => {
-  const [executingText, setExecutingText] = useState("");
+  const [executingText, setExecutingText] = useState({
+    text: "",
+    textDisplayMode: TextDisplayMode.Elipsis,
+  });
 
   const executeActiveCommand = (command: Command) => {
     switch (command) {
       case Command.GoBack:
-        setExecutingText("Going back");
+        setExecutingText({
+          text: "Going back to main menu",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
         executeAfterDelay(() => {
           setDisplayState(DisplayState.CommandSelection);
         }, 1000);
         break;
       case Command.DownloadResume:
-        setExecutingText("Downloading resume");
+        setExecutingText({
+          text: "Downloading resume",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
         executeAfterDelay(() => {
           downloadFile("files/BlakeMulnixResume.pdf", "BlakeMulnixResume.pdf");
         }, 1000);
         executeAfterDelay(() => {
-          setExecutingText("");
+          setExecutingText({
+            text: "",
+            textDisplayMode: TextDisplayMode.Plain,
+          });
         }, 2000);
         break;
       case Command.ViewOnlineResume:
-        setExecutingText("Redirecting to online resume");
+        setExecutingText({
+          text: "Redirecting to online resume",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
+        break;
       case Command.ViewProjects:
-        setExecutingText("Redirecting to projects page");
+        setExecutingText({
+          text: "Redirecting to projects",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
+        break;
       default:
         break;
     }

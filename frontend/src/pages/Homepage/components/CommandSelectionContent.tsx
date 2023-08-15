@@ -3,6 +3,7 @@ import { Command } from "../utils/Command";
 import { DisplayState } from "../utils/DisplayState";
 import { executeAfterDelay } from "../utils/ExecuteAfterDelay";
 import TerminalContent from "./TerminalContent";
+import { TextDisplayMode } from "./ExecutingText";
 
 interface CommandSelectionContentProps {
   setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
@@ -17,24 +18,36 @@ const commandSelectionCommands = [
 const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
   setDisplayState,
 }) => {
-  const [executingText, setExecutingText] = useState("");
+  const [executingText, setExecutingText] = useState({
+    text: "",
+    textDisplayMode: TextDisplayMode.Elipsis,
+  });
 
   const executeActiveCommand = (command: Command) => {
     switch (command) {
       case Command.AboutMe:
-        setExecutingText("Navigating to About Me...");
+        setExecutingText({
+          text: "Navigating to About Me...",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
         executeAfterDelay(() => {
           setDisplayState(DisplayState.AboutMe);
         }, 1000);
         break;
       case Command.ContactInfo:
-        setExecutingText("Navigating to Contact Info...");
+        setExecutingText({
+          text: "Navigating to Contact Info...",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
         executeAfterDelay(() => {
           setDisplayState(DisplayState.ContactInfo);
         }, 1000);
         break;
       case Command.WorkExperience:
-        setExecutingText("Navigating to Work Experience...");
+        setExecutingText({
+          text: "Navigating to Work Experience...",
+          textDisplayMode: TextDisplayMode.Elipsis,
+        });
         executeAfterDelay(() => {
           setDisplayState(DisplayState.WorkExperience);
         }, 1000);
