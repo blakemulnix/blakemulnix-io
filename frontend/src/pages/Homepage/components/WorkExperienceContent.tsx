@@ -1,49 +1,64 @@
-import React from "react";
-import CommandButton from "./CommandButton";
+import { DisplayState } from "../utils/DisplayState";
+import { executeAfterDelay } from "../utils/ExecuteAfterDelay";
+import { downloadFile } from "../utils/DownloadFile";
+import TerminalContent from "./TerminalContent";
 import { Command } from "../utils/Command";
+import { useState } from "react";
 
 interface WorkExperienceContentProps {
-  activeCommand: Command;
-  setActiveCommand: React.Dispatch<React.SetStateAction<Command>>;
-  executeCommand: () => void;
-  executeElement: JSX.Element | null;
+  setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
 }
 
-export const workExperienceCommandOrder = [
+const workExperienceCommands = [
+  Command.DownloadResume,
+  Command.ViewOnlineResume,
+  Command.ViewProjects,
   Command.GoBack,
-  Command.MoreWorkExperience,
 ];
 
 const WorkExperienceContent: React.FC<WorkExperienceContentProps> = ({
-  activeCommand,
-  setActiveCommand,
-  executeCommand,
-  executeElement,
+  setDisplayState,
 }) => {
+  const [executingText, setExecutingText] = useState("");
+
+  const executeActiveCommand = (command: Command) => {
+    switch (command) {
+      case Command.GoBack:
+        setExecutingText("Going back");
+        executeAfterDelay(() => {
+          setDisplayState(DisplayState.CommandSelection);
+        }, 1000);
+        break;
+      case Command.DownloadResume:
+        setExecutingText("Downloading resume");
+        executeAfterDelay(() => {
+          downloadFile("files/BlakeMulnixResume.pdf", "BlakeMulnixResume.pdf");
+        }, 1000);
+        executeAfterDelay(() => {
+          setExecutingText("");
+        }, 2000);
+        break;
+      case Command.ViewOnlineResume:
+        setExecutingText("Redirecting to online resume");
+      case Command.ViewProjects:
+        setExecutingText("Redirecting to projects page");
+      default:
+        break;
+    }
+  };
+
   return (
     <>
-      <p>Hello all! Work experience...</p>
-      <div>
-        <CommandButton
-          command={Command.GoBack}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={() => {
-            setActiveCommand(Command.GoBack);
-            executeCommand();
-          }}
-        />
-        <CommandButton
-          command={Command.MoreWorkExperience}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={() => {
-            setActiveCommand(Command.MoreWorkExperience);
-            executeCommand();
-          }}
-        />
-      </div>
-      {executeElement}
+      <p>
+        On my software engineering journey, I've ventured into many technical
+        domains. Discover more about my professional journey by selecting an
+        option below.
+      </p>
+      <TerminalContent
+        commands={workExperienceCommands}
+        executeCommand={executeActiveCommand}
+        executingText={executingText}
+      />
     </>
   );
 };

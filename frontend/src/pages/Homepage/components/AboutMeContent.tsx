@@ -1,46 +1,41 @@
-import React from "react";
-import CommandButton from "./CommandButton";
+import React, { useState } from "react";
 import { Command } from "../utils/Command";
+import { DisplayState } from "../utils/DisplayState";
+import { executeAfterDelay } from "../utils/ExecuteAfterDelay";
+import TerminalContent from "./TerminalContent";
 
 interface AboutMeContentProps {
-  activeCommand: Command;
-  setActiveCommand: React.Dispatch<React.SetStateAction<Command>>;
-  executeCommand: () => void;
-  executeElement: JSX.Element | null;
+  setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
 }
 
-export const aboutMeCommandOrder = [Command.GoBack, Command.SeeAboutMePage];
+const aboutMeCommands = [Command.GoBack, Command.SeeAboutMePage];
 
-const AboutMeContent: React.FC<AboutMeContentProps> = ({
-  activeCommand,
-  setActiveCommand,
-  executeCommand,
-  executeElement,
-}) => {
+const AboutMeContent: React.FC<AboutMeContentProps> = ({ setDisplayState }) => {
+  const [executingText, setExecutingText] = useState("");
+
+  const executeActiveCommand = (command: Command) => {
+    switch (command) {
+      case Command.GoBack:
+        setExecutingText("Going back");
+        executeAfterDelay(() => {
+          setDisplayState(DisplayState.CommandSelection);
+        }, 1000);
+        break;
+      case Command.SeeAboutMePage:
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <p>Hello all! About me...</p>
-      <div>
-        <CommandButton
-          command={Command.GoBack}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={() => {
-            setActiveCommand(Command.GoBack);
-            executeCommand();
-          }}
-        />
-        <CommandButton
-          command={Command.SeeAboutMePage}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={() => {
-            setActiveCommand(Command.SeeAboutMePage);
-            executeCommand();
-          }}
-        />
-      </div>
-      {executeElement}
+      <TerminalContent
+        commands={aboutMeCommands}
+        executeCommand={executeActiveCommand}
+        executingText={executingText}
+      />
     </>
   );
 };

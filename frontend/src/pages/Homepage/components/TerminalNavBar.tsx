@@ -8,7 +8,7 @@ const TerminalNavBar: React.FC = () => {
         <div className="grow flex place-content-end space-x-4 self-center justify-content-end">
           <a href="https://www.github.com/blakemulnix">
             <img
-              src="img/github-icon.png"
+              src="images/github-icon.png"
               alt="github"
               className="w-12 h-12
               transition ease-in-out hover:scale-110"
@@ -16,7 +16,7 @@ const TerminalNavBar: React.FC = () => {
           </a>
           <a href="https://www.linkedin.com/in/blakemulnix">
             <img
-              src="img/linkedin-icon.png"
+              src="images/linkedin-icon.png"
               alt="github"
               className="inline-block relative object-cover object-center w-12 h-12 rounded-lg
               transition ease-in-out hover:scale-110"

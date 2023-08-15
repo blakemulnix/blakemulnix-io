@@ -1,62 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CommandButton from "./CommandButton";
-import { Command } from "../utils/Command";
+import { Command, getNextCommand, getPreviousCommand } from "../utils/Command";
+import ExecutingText from "./ExecutingText";
+import { getKeyboardListener } from "../utils/KeyboardListener";
+import { DisplayState } from "../utils/DisplayState";
+import { executeAfterDelay } from "../utils/ExecuteAfterDelay";
+import TerminalContent from "./TerminalContent";
 
 interface CommandSelectionContentProps {
-  activeCommand: Command;
-  setActiveCommand: React.Dispatch<React.SetStateAction<Command>>;
-  executeCommand: () => void;
-  executeElement: JSX.Element | null;
+  setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
 }
 
-export const selectCommandOrder = [
+const commandSelectionCommands = [
   Command.AboutMe,
   Command.ContactInfo,
   Command.WorkExperience,
 ];
 
 const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
-  activeCommand,
-  setActiveCommand,
-  executeCommand,
-  executeElement,
+  setDisplayState,
 }) => {
+  const [executingText, setExecutingText] = useState("");
+
+  const executeActiveCommand = (command: Command) => {
+    switch (command) {
+      case Command.AboutMe:
+        setExecutingText("Navigating to About Me...");
+        executeAfterDelay(() => {
+          setDisplayState(DisplayState.AboutMe);
+        }, 1000);
+        break;
+      case Command.ContactInfo:
+        setExecutingText("Navigating to Contact Info...");
+        executeAfterDelay(() => {
+          setDisplayState(DisplayState.ContactInfo);
+        }, 1000);
+        break;
+      case Command.WorkExperience:
+        setExecutingText("Navigating to Work Experience...");
+        executeAfterDelay(() => {
+          setDisplayState(DisplayState.WorkExperience);
+        }, 1000);
+        break;
+      default:
+        console.log("default");
+        break;
+    }
+  };
+
   return (
     <>
       <p>
         Hello all! I am a full stack developer, channeling my expertise into the
-        realm of cloud native applications.
+        realm of cloud native applications. Execute any of the commands below to
+        learn more about me.
       </p>
-      <p>Execute any of the commands below to learn more about me.</p>
-      <p>Available commands:</p>
-      <div>
-        <CommandButton
-          command={Command.AboutMe}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={executeCommand}
-        />
-        <CommandButton
-          command={Command.ContactInfo}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={executeCommand}
-        />
-        <CommandButton
-          command={Command.WorkExperience}
-          activeCommand={activeCommand}
-          setActiveCommand={setActiveCommand}
-          executeCommand={executeCommand}
-        />
-      </div>
-      <p className="md:hidden">
-        {"("}Double tap to execute{")"}
-      </p>
-      <p className="hidden md:block">
-        {"("}Use arrow keys to select command and hit enter to execute OR click
-        to execute{")"}
-      </p>
-      {executeElement}
+      <TerminalContent
+        commands={commandSelectionCommands}
+        executeCommand={executeActiveCommand}
+        executingText={executingText}
+      >
+        <p className="md:hidden">
+          {"("}Double tap to execute a command{")"}
+        </p>
+        <p className="hidden md:block">
+          {"("}Click a command to execute it OR use arrow keys to select command
+          and hit enter{")"}
+        </p>
+      </TerminalContent>
     </>
   );
 };

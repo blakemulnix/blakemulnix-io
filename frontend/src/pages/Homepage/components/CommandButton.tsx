@@ -3,10 +3,10 @@ import classNames from "classnames";
 import { Command } from "../utils/Command";
 
 interface CommandButtonProps {
-  command: Command; // The command associated with the button
-  activeCommand: Command | null; // Currently active command
-  setActiveCommand: (command: Command) => void; // Function to set the active command
-  executeCommand: () => void; // Function to execute the command
+  command: Command;
+  activeCommand: Command | null;
+  setActiveCommand: (command: Command) => void;
+  executeCommand: () => void;
 }
 
 const CommandButton: React.FC<CommandButtonProps> = ({
@@ -22,6 +22,10 @@ const CommandButton: React.FC<CommandButtonProps> = ({
       })}
       onMouseOver={() => setActiveCommand(command)}
       onTouchStart={() => setActiveCommand(command)}
+      onClick={() => {
+        setActiveCommand(command);
+        executeCommand();
+      }}
       onDoubleClick={() => {
         setActiveCommand(command);
         executeCommand();
