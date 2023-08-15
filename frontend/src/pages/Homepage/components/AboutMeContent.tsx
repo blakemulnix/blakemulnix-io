@@ -35,17 +35,13 @@ const AboutMeContent: React.FC<AboutMeContentProps> = ({ setDisplayState }) => {
     }
   };
 
-  // todo
-  // fix typos
-  // change arrow to go
-
   return (
     <>
       <p>
         From exploring the web on AOL in gradeschool to crafting cloud-based
-        applications, my tech journey has been fueled curiosity and passion.
-        With experiences spanning from fortune 500 corporations to a tiny
-        startup, I have honed the skills need to shape our technological
+        applications, my tech journey has been fueled by curiosity and passion.
+        Through experience spanning from Fortune 500 corporations to tiny SaaS
+        startups, I have honed the skills needed to shape our technological
         landscape. Explore my about me page to take a closer look at my journey
         and learn what makes me tick.
       </p>

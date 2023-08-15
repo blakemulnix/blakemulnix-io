@@ -9,7 +9,7 @@ deploy() {
   case "$environment" in
   local)
     echo "Deploying locally..."
-    cd ../frontend
+    cd frontend/
     yarn dev
     ;;
   public)

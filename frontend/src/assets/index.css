@@ -25,7 +25,7 @@ div.terminal {
 }
 
 p.cursor-after::after {
-  content: "█ ";
+  content: "█";
   animation: cursor 1s infinite;
 }
 
@@ -36,6 +36,11 @@ div.command::before {
 
 div.command.active::before {
   content: "\00a0\00a0\00a0>\00a0";
+  animation: cursor 1s infinite;
+}
+
+div.command.active.backButton::before {
+  content: "\00a0\00a0\00a0<\00a0";
   animation: cursor 1s infinite;
 }
 
