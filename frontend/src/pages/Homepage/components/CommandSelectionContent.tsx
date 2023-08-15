@@ -27,7 +27,7 @@ const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
     switch (command) {
       case Command.AboutMe:
         setExecutingText({
-          text: "Navigating to About Me...",
+          text: "Navigating to About Me",
           textDisplayMode: TextDisplayMode.Elipsis,
         });
         executeAfterDelay(() => {
@@ -36,7 +36,7 @@ const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
         break;
       case Command.ContactInfo:
         setExecutingText({
-          text: "Navigating to Contact Info...",
+          text: "Navigating to Contact Info",
           textDisplayMode: TextDisplayMode.Elipsis,
         });
         executeAfterDelay(() => {
@@ -45,7 +45,7 @@ const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
         break;
       case Command.WorkExperience:
         setExecutingText({
-          text: "Navigating to Work Experience...",
+          text: "Navigating to Work Experience",
           textDisplayMode: TextDisplayMode.Elipsis,
         });
         executeAfterDelay(() => {
@@ -71,7 +71,7 @@ const CommandSelectionContent: React.FC<CommandSelectionContentProps> = ({
         executingText={executingText}
       >
         <p className="md:hidden">
-          {"("}Double tap to execute a command{")"}
+          {"("}Tap on a command{")"}
         </p>
         <p className="hidden md:block">
           {"("}Click a command to execute it OR use arrow keys to select command

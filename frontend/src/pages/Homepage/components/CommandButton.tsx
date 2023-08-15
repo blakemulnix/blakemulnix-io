@@ -19,7 +19,7 @@ const CommandButton: React.FC<CommandButtonProps> = ({
     <div
       className={classNames("flex", "command", "select-none", {
         active: activeCommand === command,
-        backButton: command === Command.GoBack
+        backButton: command === Command.GoBack,
       })}
       onMouseOver={() => setActiveCommand(command)}
       onTouchStart={() => setActiveCommand(command)}

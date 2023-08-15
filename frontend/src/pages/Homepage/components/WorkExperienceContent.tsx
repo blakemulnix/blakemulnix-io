@@ -53,14 +53,14 @@ const WorkExperienceContent: React.FC<WorkExperienceContentProps> = ({
         break;
       case Command.ViewOnlineResume:
         setExecutingText({
-          text: "Redirecting to online resume",
-          textDisplayMode: TextDisplayMode.Elipsis,
+          text: "Not yet. Feature coming soon!",
+          textDisplayMode: TextDisplayMode.Plain,
         });
         break;
       case Command.ViewProjects:
         setExecutingText({
-          text: "Redirecting to projects",
-          textDisplayMode: TextDisplayMode.Elipsis,
+          text: "Not yet. Feature coming soon!",
+          textDisplayMode: TextDisplayMode.Plain,
         });
         break;
       default:

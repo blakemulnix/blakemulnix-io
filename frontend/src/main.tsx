@@ -1,14 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Homepage from "./pages/Homepage/Homepage";
+import "./utils/ViewHeight"
 
 import "./assets/index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Homepage />,
+  },
+  {
+    path: "/index.html",
+    element: <Navigate to="/" />,
   },
 ]);
 

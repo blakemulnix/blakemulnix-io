@@ -29,6 +29,10 @@ const AboutMeContent: React.FC<AboutMeContentProps> = ({ setDisplayState }) => {
         }, 1000);
         break;
       case Command.SeeAboutMePage:
+        setExecutingText({
+          text: "Not yet. Feature coming soon!",
+          textDisplayMode: TextDisplayMode.Plain,
+        });
         break;
       default:
         break;
