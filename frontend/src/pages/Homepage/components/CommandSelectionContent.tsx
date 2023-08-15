@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import CommandButton from "./CommandButton";
-import { Command, getNextCommand, getPreviousCommand } from "../utils/Command";
-import ExecutingText from "./ExecutingText";
-import { getKeyboardListener } from "../utils/KeyboardListener";
+import React, { useState } from "react";
+import { Command } from "../utils/Command";
 import { DisplayState } from "../utils/DisplayState";
 import { executeAfterDelay } from "../utils/ExecuteAfterDelay";
 import TerminalContent from "./TerminalContent";
