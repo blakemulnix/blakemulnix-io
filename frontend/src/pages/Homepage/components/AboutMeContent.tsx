@@ -37,7 +37,7 @@ const AboutMeContent: React.FC<AboutMeContentProps> = ({ setDisplayState }) => {
 
   // todo
   // fix typos
-  // change arrow to go back
+  // change arrow to go
 
   return (
     <>

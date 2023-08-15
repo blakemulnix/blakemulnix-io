@@ -3,20 +3,27 @@
 deploy() {
   local environment="$1"
 
+  # Change to the desired directory
+  cd /workspaces/personal-website
+
   case "$environment" in
   local)
     echo "Deploying locally..."
+    cd ../frontend
+    yarn dev
+    ;;
+  public)
+    echo "Executing steps to deploy to the web..."
     echo "Building Terraform Infra..."
     # Build infra
     cd infra/
     terraform plan
     terraform apply
     cd ../frontend
-    npm start
-    ;;
-  dev)
-    echo "Deploying to dev environment..."
-    #
+    echo "Building frontend..."
+    yarn build
+    echo "Deploying frontend to S3..."
+    yarn deploy
     ;;
   esac
 }
