@@ -9,6 +9,7 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import AboutMe from "./pages/AboutMe/AboutMe";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/index.html",
     element: <Navigate to="/" />,
+  },
+  {
+    path: "/aboutme",
+    element: <AboutMe />,
   },
 ]);
 

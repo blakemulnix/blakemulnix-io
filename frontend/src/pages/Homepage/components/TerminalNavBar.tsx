@@ -2,8 +2,8 @@ import React from 'react';
 
 const TerminalNavBar: React.FC = () => {
   return (
-    <div className="max-w-screen-xl w-full mx-auto xl:rounded-t-xl px-8 py-4 bg-white bg-opacity-[10%]">
-      <div className="container mx-auto flex flex-row align-center">
+    <div className="max-w-screen-xl w-full mx-auto xl:rounded-t-xl px-8 py-4 bg-stone-950 bg-opacity-[80%]">
+      <div className="container mx-auto flex flex-row align-center terminal-color">
         <p className="text-xl md:text-2xl cursor-pointer self-center">blakemulnix.io</p>
         <div className="grow flex place-content-end space-x-4 self-center justify-content-end">
           <a href="https://www.github.com/blakemulnix">

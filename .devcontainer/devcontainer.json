@@ -15,13 +15,19 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "GitHub.copilot-chat",
-        "GitHub.copilot",
-        "dbaeumer.vscode-eslint",
-        "amazonwebservices.aws-toolkit-vscode",
-        "GitHub.codespaces",
-        "ms-vscode-remote.remote-containers"
-      ]
+		"GitHub.copilot-chat",
+		"GitHub.copilot",
+		"dbaeumer.vscode-eslint",
+		"amazonwebservices.aws-toolkit-vscode",
+		"GitHub.codespaces",
+		"ms-vscode-remote.remote-containers",
+		"esbenp.prettier-vscode",
+		"dsznajder.es7-react-js-snippets",
+		"4ops.terraform",
+		"infeng.vscode-react-typescript",
+		"erd0s.terraform-autocomplete",
+		"gamunu.vscode-yarn"
+	]
     }
   },
   "portsAttributes": {

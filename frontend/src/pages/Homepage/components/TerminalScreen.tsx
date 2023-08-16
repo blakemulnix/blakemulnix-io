@@ -16,8 +16,8 @@ const TerminalScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className="grow flex flex-col flex-nowrap md:rounded-b-xl overflow-auto p-6 bg-white bg-opacity-[5%]">
-      <div className="terminal text-xl md:text-2xl space-y-5">
+    <div className="grow flex flex-col flex-nowrap md:rounded-b-xl overflow-auto p-6 bg-stone-950 bg-opacity-[70%]">
+      <div className="terminal-color text-xl md:text-2xl space-y-5">
         <TerminalPrompt displayState={displayState} />
         {displayState === DisplayState.CommandSelection && (
           <CommandSelectionContent setDisplayState={setDisplayState} />
