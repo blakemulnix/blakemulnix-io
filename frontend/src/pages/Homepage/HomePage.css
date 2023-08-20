@@ -29,6 +29,11 @@
     animation: cursor 1s infinite;
   }
   
+  p.cursor-after::after {
+    content: "█";
+    animation: cursor 1s infinite;
+  }
+
   @keyframes cursor {
     5% {
       text-shadow: 0 0 0px rgba(255, 255, 255, 0.4), 0 0 1px #65a8df,

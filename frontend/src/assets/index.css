@@ -10,7 +10,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-color: black;
-  font-family: "Ubuntu", monospace;
+  font-family: "Ubuntu", sans;
 }
 
 .full-screen-height {

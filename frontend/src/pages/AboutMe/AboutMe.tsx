@@ -1,53 +1,21 @@
-import Footer from "../Homepage/components/TerminalFooter";
+import "./AboutMe.css";
+import ExperienceSection from "./components/ExperienceSection";
+import AboutMeSection from "./components/AboutMeSection";
+import Header from "./components/Header";
+import Backdrop from "./components/Backdrop";
+import Footer from "./components/Footer";
 
 export function AboutMe() {
   return (
-    <div className="bg-gradient-to-br from-stone-800 to-stone-950 text-white font-mono">
-      <div className="mx-auto w-full max-w-screen-xl flex flex-col xl:py-6">
-        <div
-          className="bg-gradient-to-r from-stone-700 to-lime-800
-        max-w-screen-xl w-full mx-auto xl:rounded-xl px-8 py-4 bg-opacity-75"
-        >
-          <div className="container mx-auto flex flex-row align-center">
-            <p className="text-xl md:text-2xl cursor-pointer self-center">
-              blakemulnix.io
-            </p>
-            <div className="grow flex place-content-end space-x-4 self-center justify-content-end">
-              <a href="https://www.github.com/blakemulnix">
-                <img
-                  src="images/github-icon.png"
-                  alt="github"
-                  className="w-8 h-8 m:w-12 m:h-12
-              transition ease-in-out hover:scale-110"
-                />
-              </a>
-              <a href="https://www.linkedin.com/in/blakemulnix">
-                <img
-                  src="images/linkedin-icon.png"
-                  alt="github"
-                  className="w-8 h-8 m:w-12 m:h-12
-              transition ease-in-out hover:scale-110"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-6 justify-between py-6 bg-opacity-[5%]">
-          <div className="h-72 w-80 bg-gradient-to-bl from-stone-700 to-lime-800 rounded-xl p-3">
-            Some content
-          </div>
-          <div className="h-72 w-80 bg-gradient-to-bl from-stone-700 to-lime-800 rounded-xl p-3">
-            Some content
-          </div>
-          <div className="h-72 w-80 bg-gradient-to-bl from-stone-700 to-lime-800 rounded-xl p-3">
-            Some content
-          </div>
-          <div className="h-72 w-80 bg-gradient-to-bl from-stone-700 to-lime-800 rounded-xl p-3">
-            Some content
-          </div>
-        </div>
-
-        <Footer />
+    <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0 text-stone-300">
+      <Backdrop />
+      <div className="lg:flex lg:justify-between lg:gap-4">
+        <Header />
+        <main className="pt-24 lg:w-1/2 lg:py-24">
+          <AboutMeSection />
+          <ExperienceSection />
+          <Footer />
+        </main>
       </div>
     </div>
   );

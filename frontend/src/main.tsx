@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Homepage from "./pages/Homepage/Homepage";
-import "./utils/ViewHeight"
+import "./utils/ViewHeight";
 
 import "./assets/index.css";
 import {
@@ -13,15 +13,11 @@ import AboutMe from "./pages/AboutMe/AboutMe";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Homepage />,
-  },
-  {
     path: "/index.html",
     element: <Navigate to="/" />,
   },
   {
-    path: "/aboutme",
+    path: "/",
     element: <AboutMe />,
   },
 ]);
