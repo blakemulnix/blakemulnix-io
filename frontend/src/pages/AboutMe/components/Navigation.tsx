@@ -7,55 +7,51 @@ enum NavSelection {
   Projects = "projects",
 }
 
-const Navigation = () => {
-  const [navSelection, setNavSelection] = useState(NavSelection.About);
+interface NavigationLinkProps {
+  href: string;
+  text: string;
+  navSelection: NavSelection;
+}
 
+const Navigation = () => {
+  const [activeNav, setActiveNav] = useState(NavSelection.About);
+  
+  const NavigationLink = ({
+    href,
+    text,
+    navSelection,
+  }: NavigationLinkProps) => {
+    return (
+      <li>
+        <a
+          href={href}
+          className={classNames("group flex items-center py-3", {
+            active: activeNav === navSelection,
+          })}
+          onClick={() => setActiveNav(navSelection)}
+        >
+          <span className="nav-indicator mr-4 h-px w-8 bg-stone-400 transition-all group-hover:w-16 group-hover:bg-stone-100 group-focus-visible:w-16 group-focus-visible:bg-stone-100 motion-reduce:transition-none"></span>
+          <span className="nav-text text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-stone-100 group-focus-visible:text-stone-100">
+            {text}
+          </span>
+        </a>
+      </li>
+    );
+  };
 
   return (
     <nav className="nav hidden lg:block" aria-label="In-page jump links">
       <ul className="mt-16 w-max">
-        <li>
-          <a
-            className={classNames("group flex items-center py-3", {
-              active: navSelection === NavSelection.About,
-            })}
-            onClick={() => setNavSelection(NavSelection.About)}
-            href="#about"
-          >
-            <span className="nav-indicator mr-4 h-px w-8 bg-stone-400 transition-all group-hover:w-16 group-hover:bg-stone-100 group-focus-visible:w-16 group-focus-visible:bg-stone-100 motion-reduce:transition-none"></span>
-            <span className="nav-text text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-stone-100 group-focus-visible:text-stone-100">
-              About
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            className={classNames("group flex items-center py-3", {
-              active: navSelection === NavSelection.Experience,
-            })}
-            onClick={() => setNavSelection(NavSelection.Experience)}
-            href="#experience"
-          >
-            <span className="nav-indicator mr-4 h-px w-8 bg-stone-400 transition-all group-hover:w-16 group-hover:bg-stone-100 group-focus-visible:w-16 group-focus-visible:bg-stone-100 motion-reduce:transition-none"></span>
-            <span className="nav-text text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-stone-100 group-focus-visible:text-stone-100">
-              Experience
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            className={classNames("group flex items-center py-3", {
-              active: navSelection === NavSelection.Projects,
-            })}
-            onClick={() => setNavSelection(NavSelection.Projects)}
-            href="#projects"
-          >
-            <span className="nav-indicator mr-4 h-px w-8 bg-stone-400 transition-all group-hover:w-16 group-hover:bg-stone-100 group-focus-visible:w-16 group-focus-visible:bg-stone-100 motion-reduce:transition-none"></span>
-            <span className="nav-text text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-stone-100 group-focus-visible:text-stone-100">
-              Projects
-            </span>
-          </a>
-        </li>
+        <NavigationLink
+          href="#about"
+          text="About"
+          navSelection={NavSelection.About}
+        />
+        <NavigationLink
+          href="#experience"
+          text="Experience"
+          navSelection={NavSelection.Experience}
+        />
       </ul>
     </nav>
   );

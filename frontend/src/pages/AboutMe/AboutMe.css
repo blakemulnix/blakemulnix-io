@@ -1,15 +1,9 @@
-@import "https://fonts.googleapis.com/css?family=Ubuntu";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  font-family: "Ubuntu", sans-serif;
 }
 
 .bg-carbondale-base {
@@ -29,32 +23,3 @@ body {
   --tw-text-opacity: 1;
   color: rgb(226 232 240 / var(--tw-text-opacity));
 }
-
-/* /* p.cursor-after::after {
-  content: "█";
-  animation: cursor 1s infinite;
-
-} */
-
-/* @keyframes cursor {
-  0% {
-    opacity: 0%;
-  }
-  100% {
-    opacity: 100%;
-  }
-}
-
-.cursor {
-  display: inline-block;
-  position: relative;
-  top: 0.05em;
-  left: -0.05em;
-  transform: scale(0.7, 0.8);
-  -webkit-animation-name: cursor;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-iteration-count: infinite;
-  animation-name: cursor;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}  */
