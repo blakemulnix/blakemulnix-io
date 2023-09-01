@@ -1,7 +1,3 @@
-# Note: this may be missing a "depends_on" clause somewhere
-# it seemed to fail on first apply and then succeed, indicating 
-# something was out of order.
-
 # www domain bucket
 resource "aws_s3_bucket" "www" {
   bucket = "${var.www_domain_name}"
@@ -83,6 +79,8 @@ resource "aws_s3_bucket_policy" "root_bucket_policy" {
       }
     ]
   })
+
+    depends_on = [aws_s3_bucket_public_access_block.root_bucket_public_access_block]
 }
 
 resource "aws_s3_bucket_ownership_controls" "root_bucket_ownership_control" {

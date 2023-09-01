@@ -1,4 +1,1 @@
-Initialize terraform and create new test backend
-Grab arn of production route53 zone
-Add entry for test.blakemulnix.io to redirect to test.blakemulnix.io route53 zone
-Do infrastructure exactly as in prod with www.test.blakemulnix.io and test.blakemulnix.io urls
+

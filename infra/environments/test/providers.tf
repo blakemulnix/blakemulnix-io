@@ -5,16 +5,16 @@ provider "aws" {
 # Terraform S3 Backend config and resources
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-pw-prod-bmulnix"
+    bucket         = "terraform-state-pw-test-bmulnix"
     key            = "global/s3/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-state-locking-pw-prod"
+    dynamodb_table = "terraform-state-locking"
     encrypt        = true
   }
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-state-pw-prod-bmulnix"
+  bucket = "terraform-state-pw-test-bmulnix"
   lifecycle {
     prevent_destroy = true
   }
@@ -37,7 +37,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_s3_ecry
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-state-locking-pw-prod"
+  name         = "terraform-state-locking-pw-test"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 

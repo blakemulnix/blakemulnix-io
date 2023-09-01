@@ -14,18 +14,19 @@ deploy() {
     yarn dev
     ;;
     
-  public)
+  prod)
     echo "Executing steps to deploy to the web..."
     # Build infra
     echo "Building Terraform Infra..."
-    cd infra/
+    cd infra/environments/prod
     terraform apply
     root_distribution_id=$(terraform output -json root_distribution_id | tr -d '"')
     www_distribution_id=$(terraform output -json www_distribution_id | tr -d '"')
 
     # Build frontend
     echo "Building frontend..."
-    cd ../frontend/portfolio/
+    cd /workspaces/blakemulnix-io
+    cd frontend/portfolio/
     yarn build
 
     # Deploy frontend
