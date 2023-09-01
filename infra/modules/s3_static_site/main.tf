@@ -1,5 +1,10 @@
+# Note: this may be missing a "depends_on" clause somewhere
+# it seemed to fail on first apply and then succeed, indicating 
+# something was out of order.
+
+# www domain bucket
 resource "aws_s3_bucket" "www" {
-  bucket = var.www_domain_name
+  bucket = "${var.www_domain_name}"
 }
 
 resource "aws_s3_bucket_policy" "www_bucket_policy" {
@@ -59,8 +64,9 @@ resource "aws_s3_bucket_website_configuration" "www_bucket_website_configuration
   }
 }
 
+# root domain bucket
 resource "aws_s3_bucket" "root" {
-  bucket = var.root_domain_name
+  bucket = "${var.root_domain_name}"
 }
 
 resource "aws_s3_bucket_policy" "root_bucket_policy" {
@@ -110,7 +116,7 @@ resource "aws_s3_bucket_website_configuration" "root_bucket_website_configuratio
   bucket = aws_s3_bucket.root.id
 
   redirect_all_requests_to {
-    host_name = var.www_domain_name
+    host_name = "${var.www_domain_name}"
     protocol  = "https"
   }
 }
