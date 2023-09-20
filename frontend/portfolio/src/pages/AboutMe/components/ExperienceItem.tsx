@@ -3,7 +3,7 @@ interface ExperienceItemProps {
   company: string;
   companySite: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
   description: string;
   technologies: string[];
 }
@@ -17,6 +17,9 @@ const ExperienceItem = ({
   description,
   technologies,
 }: ExperienceItemProps) => {
+  console.log(`endDate: ${endDate}`);
+
+
   return (
     <li className="mb-12">
       <div className="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
@@ -25,8 +28,9 @@ const ExperienceItem = ({
           className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-stone-300 sm:col-span-2"
           aria-label="2018 to Present"
         >
-          {startDate} - <br />
-          {endDate}
+          <div className="flex items-center">
+            <span className="mr-1.5">{startDate} - {endDate ? endDate : "Present"}</span>
+          </div>
         </header>
         <div className="z-10 sm:col-span-6">
           <h3 className="font-medium leading-snug text-stone-200">

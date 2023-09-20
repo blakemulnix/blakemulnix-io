@@ -12,6 +12,22 @@ const ExperienceSection = () => {
       <SectionTitle title="Experience" />
       <div>
         <ol className="group/list">
+        <ExperienceItem
+            title="Software Consultant"
+            company="Source Allies"
+            companySite="https://www.sourceallies.com/"
+            startDate="September 2022"
+            description="In my current role as a consultant, I leverage my software engineering expertise 
+            to empower partners in achieving their technology goals. My specialization lies in building 
+            cutting-edge enterprise applications on the cloud."
+            technologies={[
+              "React",
+              "Node.js",
+              "TypeScript",
+              "GCP",
+              "Azure",
+            ]}
+          />
           <ExperienceItem
             title="Software Engineer"
             company="Gravity Legal"
