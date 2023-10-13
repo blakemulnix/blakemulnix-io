@@ -11,7 +11,7 @@ const AboutMeSection = () => {
       <div>
         <p className="mb-4">
           In 2010, my first steps into the world of technology began with the humble task 
-          of configuring a Minecraft server for my middle school friends and I. 
+          of configuring a Minecraft server for my middle school friends. 
           Since then, my early curiosity in technology has bloomed into a deep
           appreciation of its potential to enrich our lives.
         </p>
@@ -38,9 +38,9 @@ const AboutMeSection = () => {
         </p>
         <p className="mb-4">
           In my current position as a consultant at
-           <HighlightLink text=" Source Allies" url="https://www.sourceallies.com" />{" "}
+           <HighlightLink text=" Source Allies" url="https://www.sourceallies.com" />{", "}
           I am applying my expertise in the realm of cloud applications and infrastructure. 
-          I have the pleasure working with an incredible team of experts to help our partners to 
+          I have the pleasure of working with an incredible team of experts to help our partners to 
           deliver high-quality software solutions.
         </p>
         <p className="mb-4">
