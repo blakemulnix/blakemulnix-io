@@ -17,9 +17,9 @@ const Header = () => {
         <p className="mt-4 mb-4 max-w-xs md:text-md font-medium leading-normal h-[5em] pr-2">
           <ReactTyped
             strings={[
-              "Building powerful, scalable, and beautiful digital experiences on the cloud",
+              "Building powerful and beautiful digital experiences on the cloud",
             ]}
-            typeSpeed={20}
+            typeSpeed={30}
             cursorChar="|"
             showCursor={true}
           />

@@ -7,8 +7,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import AboutMe from "./pages/AboutMe/AboutMe";
+import ErrorPage from "./pages/AboutMe/Error";
 
 const router = createBrowserRouter([
+  {
+    path: "/error.html",
+    element: <ErrorPage />,
+  },
   {
     path: "/index.html",
     element: <Navigate to="/" />,

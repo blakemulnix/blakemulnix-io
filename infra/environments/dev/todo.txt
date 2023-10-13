@@ -1,4 +1,2 @@
-Initialize terraform and create new test backend
-Grab arn of production route53 zone
-Add entry for dev.blakemulnix.io to redirect to dev.blakemulnix.io route53 zone
-Set up minimal infrastructure with s3 static site (no www redirect)
+Set up VPC to host dev.blakemulnix.io
+Deploy s3 static site for that domain

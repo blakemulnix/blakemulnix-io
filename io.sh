@@ -10,7 +10,7 @@ deploy() {
   local)
     # Deploy locally to localhost:3000
     echo "Deploying locally..."
-    cd frontend/portfolio/
+    cd frontend/
     yarn dev
     ;;
     
@@ -26,11 +26,11 @@ deploy() {
     # Build frontend
     echo "Building frontend..."
     cd /workspaces/blakemulnix-io
-    cd frontend/portfolio/
+    cd frontend/
     yarn build
 
     # Deploy frontend
-    echo "Deploying portfolio to S3..."
+    echo "Deploying to S3..."
     yarn deploy
 
     # Invalidate CloudFront Distribution
