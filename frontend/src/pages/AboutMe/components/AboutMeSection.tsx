@@ -17,9 +17,9 @@ const AboutMeSection = () => {
         </p>
         <p className="mb-4">
           In my career thus far, I have had the privilege of building software
-          for a large
+          for a large {" "}
           <HighlightLink
-            text=" defense company"
+            text="defense company"
             url="https://www.collinsaerospace.com"
           />
           , a small tech shop in the{" "}
@@ -42,8 +42,8 @@ const AboutMeSection = () => {
           in the legal tech industry.
         </p>
         <p className="mb-4">
-          In my current position as a consultant at
-           <HighlightLink text=" Source Allies" url="https://www.sourceallies.com" />{", "}
+          In my current position as a consultant at {" "}
+           <HighlightLink text="Source Allies" url="https://www.sourceallies.com" />{", "}
           I am applying my expertise in the realm of cloud applications and infrastructure. 
           I have the pleasure of working with an incredible team of experts to help our partners in 
           their delivery of high-quality software solutions.
