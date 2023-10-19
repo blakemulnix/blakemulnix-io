@@ -14,7 +14,7 @@ const Header = () => {
         <h2 className="mt-3 text-lg md:text-xl font-medium tracking-tight sm:text-xl text-stone-100">
           Cloud Engineer
         </h2>
-        <p className="mt-4 mb-4 max-w-xs md:text-md font-medium leading-normal h-[5em] pr-2">
+        <p className="mt-4 mb-8 max-w-xs md:text-md font-medium leading-normal h-[5em] pr-2">
           <ReactTyped
             strings={[
               "Building powerful and beautiful digital experiences on the cloud",
@@ -25,8 +25,8 @@ const Header = () => {
           />
         </p>
         <Navigation />
+        <SocialLinks />
       </div>
-      <SocialLinks />
     </header>
   );
 };

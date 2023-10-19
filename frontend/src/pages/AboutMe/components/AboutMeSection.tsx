@@ -27,6 +27,11 @@ const AboutMeSection = () => {
             text="railroad industry"
             url="https://www.herzog.com"
           />
+          , the {" "}
+          <HighlightLink
+            text="Department of Energy"
+            url="https://www.ameslab.gov/"
+          />
           , an{" "}
           <HighlightLink
             text="insurance corporation"
@@ -40,8 +45,8 @@ const AboutMeSection = () => {
           In my current position as a consultant at
            <HighlightLink text=" Source Allies" url="https://www.sourceallies.com" />{", "}
           I am applying my expertise in the realm of cloud applications and infrastructure. 
-          I have the pleasure of working with an incredible team of experts to help our partners to 
-          deliver high-quality software solutions.
+          I have the pleasure of working with an incredible team of experts to help our partners in 
+          their delivery of high-quality software solutions.
         </p>
         <p className="mb-4">
           When I am not plugging away in VSCode, you'll find me planning another
