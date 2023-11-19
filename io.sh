@@ -14,8 +14,24 @@ deploy() {
     yarn dev
     ;;
     
+
+  test)
+    echo "Executing steps to deploy test..."
+
+    # Build NextJS Static Site
+    echo "Building NextJS Static Site..."
+    cd /workspaces/blakemulnix-io
+    cd frontend/
+    yarn build
+
+    # Deploy via SST
+    echo "Deploying via SST..."
+    npx sst deploy
+
+    ;; 
+
   prod)
-    echo "Executing steps to deploy to the web..."
+    echo "Executing steps to deploy to prod..."
     # Build infra
     echo "Building Terraform Infra..."
     cd infra/environments/prod
