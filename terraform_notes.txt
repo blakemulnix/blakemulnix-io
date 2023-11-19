@@ -1,3 +1,0 @@
-terraform apply -var_file=prod.tfvars
-
- terraform apply -var-file=environments/test.tfvars

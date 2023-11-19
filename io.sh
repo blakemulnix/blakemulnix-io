@@ -31,7 +31,7 @@ deploy() {
 
     # Deploy frontend
     echo "Deploying to S3..."
-    yarn deploy
+    aws s3 sync out/ s3://www.blakemulnix.io --delete
 
     # Invalidate CloudFront Distribution
     echo "Invalidating Cloudfront distribution..."
