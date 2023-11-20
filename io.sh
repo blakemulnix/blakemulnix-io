@@ -8,7 +8,7 @@ deploy() {
   cd /workspaces/blakemulnix-io
 
   case "$app" in
-  portfolio)
+  portfolio | blog)
     case "$environment" in
     local)
       # Deploy locally to localhost:3000
@@ -36,21 +36,6 @@ deploy() {
       echo "Invalid environment: $environment"
       exit 1
       ;;
-    esac
-    ;;
-
-  blog)
-    case "$environment" in
-      local)
-        # Deploy locally for blog...
-        ;;
-      test | prod)
-        # Deploy to the specified environment for blog...
-        ;;
-      *)
-        echo "Invalid environment: $environment"
-        exit 1
-        ;;
     esac
     ;;
 
