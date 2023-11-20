@@ -8,15 +8,16 @@ export default {
       region: "us-east-1",
     };
   },
+
   stacks(app) {
     app.stack(function Site({ stack }) {
-      // const site = new NextjsSite(stack, "site");
-
       const site = new StaticSite(stack, "Site", {
         path: "out",
         customDomain: {
-          domainName: "test.blakemulnix.io",
-          domainAlias: "www.test.blakemulnix.io",
+          domainName:
+            stack.stage === "prod" ? "blakemulnix.io" : `${stack.stage}.blakemulnix.io`,
+          domainAlias:
+          stack.stage === "prod" ? "www.blakemulnix.io" : `www.${stack.stage}.blakemulnix.io`,
           hostedZone: "blakemulnix.io",
         },
       });
