@@ -4,7 +4,7 @@ import { StaticSite } from "sst/constructs";
 export default {
   config(_input) {
     return {
-      name: "frontend",
+      name: "portfolio",
       region: "us-east-1",
     };
   },
@@ -23,7 +23,7 @@ export default {
       });
 
       stack.addOutputs({
-        SiteUrl: site.url,
+        SiteUrl: site.customDomainUrl,
       });
     });
   },

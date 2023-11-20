@@ -1,36 +1,61 @@
 #!/bin/bash
 
 deploy() {
-  local environment="$1"
+  local app="$1"
+  local environment="$2"
 
   # Change to the desired directory
   cd /workspaces/blakemulnix-io
 
-  case "$environment" in
-  local)
-    # Deploy locally to localhost:3000
-    echo "Deploying locally..."
-    cd frontend/
-    yarn dev
+  case "$app" in
+  portfolio)
+    case "$environment" in
+    local)
+      # Deploy locally to localhost:3000
+      echo "Deploying locally for $app..."
+      cd $app/
+      yarn dev
+      ;;
+
+    test | prod)
+      # Deploy to the specified environment
+      echo "Executing steps to deploy $app to $environment..."
+
+      # Build NextJS Static Site
+      echo "Building NextJS Static Site for $app..."
+      cd /workspaces/blakemulnix-io
+      cd $app/
+      yarn build
+
+      # Deploy via SST
+      echo "Deploying $app via SST..."
+      npx sst deploy --stage $environment
+      ;;
+
+    *)
+      echo "Invalid environment: $environment"
+      exit 1
+      ;;
+    esac
     ;;
 
-  test | prod)
-    # Deploy to the specified environment
-    echo "Executing steps to deploy to $environment..."
-
-    # Build NextJS Static Site
-    echo "Building NextJS Static Site..."
-    cd /workspaces/blakemulnix-io
-    cd frontend/
-    yarn build
-
-    # Deploy via SST
-    echo "Deploying via SST..."
-    npx sst deploy --stage $environment
+  blog)
+    case "$environment" in
+      local)
+        # Deploy locally for blog...
+        ;;
+      test | prod)
+        # Deploy to the specified environment for blog...
+        ;;
+      *)
+        echo "Invalid environment: $environment"
+        exit 1
+        ;;
+    esac
     ;;
 
   *)
-    echo "Invalid environment: $environment"
+    echo "Invalid app: $app"
     exit 1
     ;;
   esac
