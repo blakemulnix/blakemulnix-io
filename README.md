@@ -6,7 +6,7 @@ This website showcases my software engineering skills and tells who I am (as wel
 
 This website serves as an online portfolio to highlight my software engineering expertise, projects, and professional background. It includes the following key features:
 
-- **Frontend**: The frontend is built using TypeScript and React, providing an interactive and responsive user interface. Tailwind CSS is used for styling, ensuring a modern and visually appealing design. It uses the NextJS framework for static site generation.
+- **Frontend**: The frontend is built using [TypeScript](www.typescriptlang.org) and [React](react.dev), providing an interactive and responsive user interface and leveraging the [Next.js](nextjs.org) framework for static site generation. [Tailwind CSS](tailwindcss.com) is used for styling, ensuring a modern and visually appealing design.
 
 - **Infrastructure**: The website is deployed on AWS using various services:
   - Amazon S3: Static assets and content are hosted in an S3 bucket.
@@ -14,7 +14,7 @@ This website serves as an online portfolio to highlight my software engineering 
   - Amazon Route 53: Custom domain routing is managed using Route 53.
   - AWS ACM: SSL/TLS certificates are managed using AWS Certificate Manager for secure communication.
 
-- **Terraform**: The infrastructure provisioning is automated using Terraform. The `infra` directory contains Terraform code to define the AWS resources required for the website deployment.
+- **SST**: The infrastructure provisioning is automated using [SST](sst.dev), a framework for building serverless applications.
 
 - **Bash scripting**: I have automated the tasks for deploying locally and deploying to the web using the `io.sh` bash script.
 
