@@ -24,6 +24,7 @@ export default {
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
+        CloudfrontUrl: site.url
       });
     });
   },
