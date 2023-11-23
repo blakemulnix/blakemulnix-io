@@ -15,7 +15,7 @@ const Backdrop = ({ onImageLoad  }: BackdropProps) => {
         alt="Background image of Carbondale, Colorado"
         onLoad={onImageLoad}
       />
-      <div className="backdrop-blur-[5px] bg-stone-950/40 h-full w-full"></div>
+      <div className="backdrop-blur-[8px] bg-stone-950/40 h-full w-full"></div>
     </div>
   );
 };

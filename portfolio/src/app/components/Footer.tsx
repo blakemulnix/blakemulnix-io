@@ -3,7 +3,7 @@ import HighlightLink from "./HighlightLink";
 
 const Footer = () => {
   return (
-    <footer className="max-w-md pb-8 text-sm text-stone-200 sm:pb-0">
+    <footer className="max-w-md pb-8 text-sm text-stone-100 sm:pb-0">
       <p>
         Coded in{" "}
         <HighlightLink
@@ -14,7 +14,7 @@ const Footer = () => {
         <HighlightLink text="React" url="https://react.dev/" /> and{" "}
         <HighlightLink text="Tailwind CSS" url="https://tailwindcss.com/" />.
         Deployed with{" "}
-        <HighlightLink text="Terraform" url="https://www.terraform.io/" /> and
+        <HighlightLink text="SST" url="https://sst.dev/" /> and{" "}
         hosted on <HighlightLink text="AWS" url="https://aws.amazon.com/" />.{" "}
         Check out the source code on{" "}
         <HighlightLink
