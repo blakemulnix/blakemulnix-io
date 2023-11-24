@@ -10,7 +10,7 @@ export default function LoadingScreenContainer({ children }: { children: React.R
   const handleImageLoad = () => {
     setTimeout(() => {
       setDoAnimation(true);
-    }, 1000);
+    }, 250);
   };
 
   const loadingScreenStyle = `
@@ -37,41 +37,16 @@ export default function LoadingScreenContainer({ children }: { children: React.R
     }
   `;
 
-  const fadeInOutAnimation = `
-    @keyframes fadeInOut {
-      0% {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.2);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1);
-      }
-    }
-  `;
-
   return (
     <>
       <style>{fadeOutAnimation}</style>
-      <style>{fadeInOutAnimation}</style>
 
       {renderLoading && (
-        <>
-          <div
-            className={loadingScreenStyle}
-            onAnimationEnd={() => setRenderLoading(false)}
-            style={doAnimation ? { animation: "fadeOut 1s ease-in-out forwards" } : {}}
-          ></div>
-          <div className={animatedTextStyle} >
-            <div className="pb-[10rem]" style={{ animation: "fadeInOut 2s ease-in-out forwards" }}>
-            Howdy!
-            </div>
-          </div>
-        </>
+        <div
+          className={loadingScreenStyle}
+          onAnimationEnd={() => setRenderLoading(false)}
+          style={doAnimation ? { animation: "fadeOut 1s ease-in-out forwards" } : {}}
+        />
       )}
       <Backdrop onImageLoad={handleImageLoad} />
       {children}
