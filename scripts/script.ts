@@ -61,5 +61,7 @@ import {
     }
   }
   
+  console.log('Arguments:', process.argv.slice(2));
+
   run();
   
