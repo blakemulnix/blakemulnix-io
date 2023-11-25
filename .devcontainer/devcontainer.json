@@ -1,15 +1,10 @@
 {
   "name": "Node.js & TypeScript",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {
       "version": "latest"
     },
-    // "ghcr.io/devcontainers/features/terraform:1": {
-    //   "version": "latest",
-    //   "tflint": "latest",
-    //   "terragrunt": "latest"
-    // }
   },
   "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
   "customizations": {
@@ -23,9 +18,7 @@
 		"ms-vscode-remote.remote-containers",
 		"esbenp.prettier-vscode",
 		"dsznajder.es7-react-js-snippets",
-		"4ops.terraform",
 		"infeng.vscode-react-typescript",
-		"erd0s.terraform-autocomplete",
 		"gamunu.vscode-yarn"
 	]
     }
@@ -35,15 +28,5 @@
       "label": "Frontend",
       "onAutoForward": "openPreview"
     }
-  },
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "yarn install",
-  // Configure tool-specific properties.
-  // "customizations": {},
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+  }
 }

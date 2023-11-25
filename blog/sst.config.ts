@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { StaticSite } from "sst/constructs";
+import { Bucket, NextjsSite } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -11,19 +11,32 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const site = new StaticSite(stack, "Site", {
+      const hostedZone = "blakemulnix.io";
+      const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
+      const wwwDomain = `www.${rootDomain}`;
+
+      const blogPostBucket = new Bucket(stack, "blogPosts", {
+        cors: [
+          {
+            allowedMethods: ["GET"],
+            allowedOrigins: [`*.${rootDomain}`],
+          },
+        ],
+      });
+
+      const site = new NextjsSite(stack, "BlogSite", {
         path: "out",
         customDomain: {
-          domainName:
-            stack.stage === "prod" ? "blog.blakemulnix.io" : `${stack.stage}.blog.blakemulnix.io`,
-          domainAlias:
-          stack.stage === "prod" ? "www.blog.blakemulnix.io" : `www.${stack.stage}.blog.blakemulnix.io`,
-          hostedZone: "blakemulnix.io",
+          domainName: rootDomain,
+          domainAlias: wwwDomain,
+          hostedZone: hostedZone,
         },
+        bind: [blogPostBucket],
       });
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
+        BlogPostBucketUrl: blogPostBucket.cdk.bucket.bucketDomainName
       });
     });
   },

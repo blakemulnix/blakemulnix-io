@@ -17,7 +17,7 @@ deploy() {
       yarn dev
       ;;
 
-    test | prod)
+    dev | test | prod)
       # Deploy to the specified environment
       echo "Executing steps to deploy $app to $environment..."
 
