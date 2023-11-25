@@ -8,7 +8,7 @@ export default {
       region: "us-east-1",
     };
   },
-
+  
   stacks(app) {
     app.stack(function Site({ stack }) {
       const hostedZone = "blakemulnix.io";
@@ -25,7 +25,6 @@ export default {
       });
 
       const site = new NextjsSite(stack, "BlogSite", {
-        path: "out",
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
@@ -36,8 +35,9 @@ export default {
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
-        BlogPostBucketUrl: blogPostBucket.cdk.bucket.bucketDomainName
+        BlogPostBucketName: blogPostBucket.bucketName
       });
+      
     });
   },
 } satisfies SSTConfig;

@@ -22,10 +22,10 @@ deploy() {
       echo "Executing steps to deploy $app to $environment..."
 
       # Build NextJS Static Site
-      echo "Building NextJS Static Site for $app..."
+      # echo "Building NextJS Static Site for $app..."
       cd /workspaces/blakemulnix-io
       cd $app/
-      yarn build
+      # yarn build
 
       # Deploy via SST
       echo "Deploying $app via SST..."
