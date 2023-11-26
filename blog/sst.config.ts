@@ -15,6 +15,8 @@ export default {
       const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
       const wwwDomain = `www.${rootDomain}`;
 
+      // const STRIPE_KEY = new Config.Secret(stack, "STRIPE_KEY");
+
       const blogPostBucket = new Bucket(stack, "blogPosts", {
         cors: [
           {
@@ -30,7 +32,7 @@ export default {
           domainAlias: wwwDomain,
           hostedZone: hostedZone,
         },
-        bind: [blogPostBucket],
+        bind: [blogPostBucket], // todo add secret
       });
 
       stack.addOutputs({
