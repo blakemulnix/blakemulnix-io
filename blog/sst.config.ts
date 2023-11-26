@@ -10,14 +10,10 @@ export default {
   },
   
   stacks(app) {
-    // console.log(`process.env.MY_VAR: ${process.env.MY_VAR}`)
-
     app.stack(function Site({ stack }) {
       const hostedZone = "blakemulnix.io";
       const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
       const wwwDomain = `www.${rootDomain}`;
-
-      // const STRIPE_KEY = new Config.Secret(stack, "STRIPE_KEY");
 
       const blogPostBucket = new Bucket(stack, "blogPosts", {
         cors: [
@@ -34,7 +30,7 @@ export default {
           domainAlias: wwwDomain,
           hostedZone: hostedZone,
         },
-        bind: [blogPostBucket], // todo add secret
+        bind: [blogPostBucket]
       });
 
       stack.addOutputs({
