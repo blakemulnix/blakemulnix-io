@@ -1,4 +1,4 @@
-import { getBucketNameFromStack, uploadFileToS3 } from "./s3utils";
+import { getBucketNameFromStack, uploadFileToS3 } from "./utils/s3utils";
 
 const stackName = "test-blog-Site";
 const bucketNameOutputKey = "BlogPostBucketName";

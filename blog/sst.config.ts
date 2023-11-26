@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { Bucket, NextjsSite } from "sst/constructs";
+import { Bucket, Config, NextjsSite } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -10,6 +10,8 @@ export default {
   },
   
   stacks(app) {
+    // console.log(`process.env.MY_VAR: ${process.env.MY_VAR}`)
+
     app.stack(function Site({ stack }) {
       const hostedZone = "blakemulnix.io";
       const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
@@ -21,7 +23,7 @@ export default {
         cors: [
           {
             allowedMethods: ["GET"],
-            allowedOrigins: [`*.${rootDomain}`],
+            allowedOrigins: [`*`],
           },
         ],
       });
