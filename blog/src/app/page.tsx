@@ -1,14 +1,10 @@
+import React from 'react'
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import Image from "next/image";
+import { Config } from "sst/node/config";
 
-const region = "us-east-1";
-
-async function getFileFromS3(bucketName: string, objectKey: string): Promise<any> {
-  const s3Client = new S3Client({
-    region,
-  });
-
+async function getFileFromS3(s3Client: S3Client, bucketName: string, objectKey: string): Promise<any> {
   try {
     const response = await s3Client.send(
       new GetObjectCommand({
@@ -30,11 +26,8 @@ async function getFileFromS3(bucketName: string, objectKey: string): Promise<any
   }
 }
 
-async function getImageUrlFromS3(bucketName: string, objectKey: string): Promise<string | null> {
-  const s3Client = new S3Client({ region });
-
+async function getImageUrlFromS3(s3Client: S3Client, bucketName: string, objectKey: string): Promise<string | null> {
   try {
-    // Get a signed URL for the image
     const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: objectKey,
@@ -50,11 +43,24 @@ async function getImageUrlFromS3(bucketName: string, objectKey: string): Promise
 }
 
 export default async function Home() {
+  const region = Config.AWS_REGION;
+  const awsCredentials = {
+    accessKeyId: Config.AWS_ACCESS_KEY_ID,
+    secretAccessKey: Config.AWS_SECRET_ACCESS_KEY
+  }
+
+  const s3Client = new S3Client({
+    region: region,
+    credentials: awsCredentials
+  });
+
   const bucketName = "test-blog-site-blogpostsbucketbbaf6d0f-rfwphopaugeu";
   const filename = "textfile.txt";
   const imageName = "carbondale.jpg";
-  const content = await getFileFromS3(bucketName, filename);
-  const imageUrl = await getImageUrlFromS3(bucketName, imageName);
+  const content = await getFileFromS3(s3Client, bucketName, filename);
+  const imageUrl = await getImageUrlFromS3(s3Client, bucketName, imageName);
+
+  console.log(Config.NEW_SECRET)
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-stone-100">

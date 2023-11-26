@@ -24,13 +24,17 @@ export default {
         ],
       });
 
+      const AWS_ACCESS_KEY_ID = new Config.Secret(stack, "AWS_ACCESS_KEY_ID");
+      const AWS_SECRET_ACCESS_KEY = new Config.Secret(stack, "AWS_SECRET_ACCESS_KEY");
+      const AWS_REGION = new Config.Secret(stack, "AWS_REGION");
+
       const site = new NextjsSite(stack, "BlogSite", {
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
           hostedZone: hostedZone,
         },
-        bind: [blogPostBucket]
+        bind: [blogPostBucket, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION],
       });
 
       stack.addOutputs({

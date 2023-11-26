@@ -20,15 +20,21 @@ deploy() {
     dev | test | prod)
       # Deploy to the specified environment
       echo "Executing steps to deploy $app to $environment..."
-
-      # Build NextJS Static Site
-      # echo "Building NextJS Static Site for $app..."
       cd /workspaces/blakemulnix-io
       cd $app/
-      # yarn build
 
-      # Deploy via SST
-      echo "Deploying $app via SST..."
+      # Set secret values
+      echo "Setting secrets for $app in $environment environment via SST..."
+      awsAccessKeyId=$(aws configure get aws_access_key_id)
+      awsSecretAccessKey=$(aws configure get aws_secret_access_key)
+      awsRegion=$(aws configure get region)
+
+      npx sst secrets set --stage $environment AWS_ACCESS_KEY_ID $awsAccessKeyId
+      npx sst secrets set --stage $environment AWS_SECRET_ACCESS_KEY $awsSecretAccessKey
+      npx sst secrets set --stage $environment AWS_REGION $awsRegion
+
+      # Build and deploy via SST
+      echo "Deploying $app to $environment via SST..."
       npx sst deploy --stage $environment
       ;;
 
