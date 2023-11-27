@@ -8,7 +8,7 @@ export default {
       region: "us-east-1",
     };
   },
-  
+
   stacks(app) {
     app.stack(function Site({ stack }) {
       const hostedZone = "blakemulnix.io";
@@ -16,6 +16,7 @@ export default {
       const wwwDomain = `www.${rootDomain}`;
 
       const blogPostBucket = new Bucket(stack, "blogPosts", {
+        name: process.env.BLOGPOST_BUCKET_NAME,
         cors: [
           {
             allowedMethods: ["GET"],
@@ -27,6 +28,7 @@ export default {
       const AWS_ACCESS_KEY_ID = new Config.Secret(stack, "AWS_ACCESS_KEY_ID");
       const AWS_SECRET_ACCESS_KEY = new Config.Secret(stack, "AWS_SECRET_ACCESS_KEY");
       const AWS_REGION = new Config.Secret(stack, "AWS_REGION");
+      const BLOGPOST_BUCKET_NAME = new Config.Secret(stack, "BLOGPOST_BUCKET_NAME");
 
       const site = new NextjsSite(stack, "BlogSite", {
         customDomain: {
@@ -34,14 +36,13 @@ export default {
           domainAlias: wwwDomain,
           hostedZone: hostedZone,
         },
-        bind: [blogPostBucket, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION],
+        bind: [blogPostBucket, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, BLOGPOST_BUCKET_NAME],
       });
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
-        BlogPostBucketName: blogPostBucket.bucketName
+        BlogPostBucketName: blogPostBucket.bucketName,
       });
-      
     });
   },
 } satisfies SSTConfig;

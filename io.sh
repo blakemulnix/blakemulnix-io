@@ -2,14 +2,14 @@
 
 deploy() {
   local app="$1"
-  local environment="$2"
+  local env="$2"
 
   # Change to the desired directory
   cd /workspaces/blakemulnix-io
 
   case "$app" in
   portfolio | blog)
-    case "$environment" in
+    case "$env" in
     local)
       # Deploy locally to localhost:3000
       echo "Deploying locally for $app..."
@@ -18,28 +18,30 @@ deploy() {
       ;;
 
     dev | test | prod)
-      # Deploy to the specified environment
-      echo "Executing steps to deploy $app to $environment..."
+      # Deploy to the specified env
+      echo "Executing steps to deploy $app to $env..."
       cd /workspaces/blakemulnix-io
       cd $app/
 
-      # Set secret values
-      echo "Setting secrets for $app in $environment environment via SST..."
-      awsAccessKeyId=$(aws configure get aws_access_key_id)
-      awsSecretAccessKey=$(aws configure get aws_secret_access_key)
-      awsRegion=$(aws configure get region)
-
-      npx sst secrets set --stage $environment AWS_ACCESS_KEY_ID $awsAccessKeyId
-      npx sst secrets set --stage $environment AWS_SECRET_ACCESS_KEY $awsSecretAccessKey
-      npx sst secrets set --stage $environment AWS_REGION $awsRegion
+      # Only set secrets for the blog app
+      if [ "$app" == "blog" ]; then
+        # Set secret values
+        echo "Setting secrets for $app in $env env via SST..."
+        export $(cat .env.$env | xargs)
+        cat .env.$env > .env
+        npx sst secrets set --stage $env AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
+        npx sst secrets set --stage $env AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
+        npx sst secrets set --stage $env AWS_REGION $AWS_REGION
+        npx sst secrets set --stage $env BLOGPOST_BUCKET_NAME $BLOGPOST_BUCKET_NAME
+      fi
 
       # Build and deploy via SST
-      echo "Deploying $app to $environment via SST..."
-      npx sst deploy --stage $environment
+      echo "Deploying $app to $env via SST..."
+      npx sst deploy --stage $env
       ;;
 
     *)
-      echo "Invalid environment: $environment"
+      echo "Invalid env: $env"
       exit 1
       ;;
     esac
@@ -52,6 +54,20 @@ deploy() {
   esac
 }
 
+upload-blogposts() {
+  local env="$1"
+  echo "Uploading blog posts to $env env"
+
+  # Set proper env vars
+  echo "Setting env variables for $env env"
+  cd /workspaces/blakemulnix-io/blog
+  export $(cat .env.$env | xargs)
+
+  # Run upload script
+  cd /workspaces/blakemulnix-io/scripts
+  ts-node upload-blogposts.ts
+}
+
 main() {
   local command="$1"
   shift
@@ -59,6 +75,9 @@ main() {
   case "$command" in
   deploy)
     deploy "$@"
+    ;;
+  upload-blogposts) 
+    upload-blogposts "$@"
     ;;
   # Add other commands here
   *)

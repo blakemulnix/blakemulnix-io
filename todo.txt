@@ -1,0 +1,284 @@
+Blog post storage set up ::
+Upload entire directory to S3 (with images and files)
+Store data on posts in DynamoDB?
+Json files for metadata?
+
+
+Blog post rendering ::
+Render using markdown-to-jsx with custom tailwind styled components
+Add custom loader for images
+
+
+
+Route: /post/123 ::
+Show specific blog post
+Folder structure: app/post/postId/page.js	
+
+Questions:
+Use posts?
+Use generateStaticParams?
+
+
+API Route: /posts ::
+Return list of blog posts and tags
+Fetch from DynamoDB or load from S3?
+DynamoDB would make it easier to arbritarly add things like date etc.. could be done thru JSON, if fetching thru s3, json is already there
+
+Read from S3 would elimate need for RDS
+SSR plus caching would make it slow once and then fast
+
+
+
+
+
+
+
+Code for uploading entire directory structure from ChatGPT
+
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { promises as fsPromises, statSync, readdirSync, readFileSync } from "fs";
+import { join, relative } from "path";
+
+const s3Client = new S3Client({ region: "your-region" });
+const bucketName = "your-bucket-name";
+const localBaseDirectory = "/path/to/local/directory";
+
+async function uploadDirectory(localDirectory: string, s3Prefix: string = "") {
+  try {
+    const files = readdirSync(localDirectory);
+
+    for (const file of files) {
+      const filePath = join(localDirectory, file);
+      const s3Key = join(s3Prefix, relative(localBaseDirectory, filePath));
+
+      if (statSync(filePath).isDirectory()) {
+        // If it's a directory, recursively upload its contents
+        await uploadDirectory(filePath, s3Key);
+      } else {
+        // If it's a file, upload it
+        const fileContent = readFileSync(filePath);
+
+        const uploadParams = {
+          Bucket: bucketName,
+          Key: s3Key,
+          Body: fileContent,
+        };
+
+        await s3Client.send(new PutObjectCommand(uploadParams));
+        console.log(`File ${s3Key} uploaded successfully.`);
+      }
+    }
+  } catch (error) {
+    console.error(`Error uploading directory ${localDirectory}:`, error);
+  }
+}
+
+// Start the upload from the base directory
+uploadDirectory(localBaseDirectory);
+
+
+
+Code for downloading entire directory ::
+
+import { S3Client, ListObjectsCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { promises as fsPromises } from "fs";
+import { join, dirname } from "path";
+
+const s3Client = new S3Client({ region: "your-region" });
+const bucketName = "your-bucket-name";
+const localBaseDirectory = "/path/to/local/directory"; // The directory where you want to save the downloaded files
+
+async function listObjects(prefix: string = ""): Promise<string[]> {
+  try {
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: prefix,
+    };
+
+    const response = await s3Client.send(new ListObjectsCommand(listParams));
+    return response.Contents?.map((object) => object.Key || "") || [];
+  } catch (error) {
+    console.error(`Error listing objects for prefix ${prefix}:`, error);
+    return [];
+  }
+}
+
+async function downloadObjects(keys: string[]) {
+  for (const key of keys) {
+    const downloadParams = {
+      Bucket: bucketName,
+      Key: key,
+    };
+
+    try {
+      const response = await s3Client.send(new GetObjectCommand(downloadParams));
+      const fileContent = await response.Body?.getBuffer();
+
+      if (fileContent) {
+        const localFilePath = join(localBaseDirectory, key);
+        await fsPromises.mkdir(dirname(localFilePath), { recursive: true });
+        await fsPromises.writeFile(localFilePath, fileContent);
+        console.log(`File ${key} downloaded successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error downloading object ${key}:`, error);
+    }
+  }
+}
+
+async function fetchAllFiles() {
+  const objectKeys = await listObjects();
+  await downloadObjects(objectKeys);
+}
+
+// Start the download process
+fetchAllFiles();
+
+
+
+Code for fetching all .md and .json files and getting presigned urls for images:
+
+import { S3Client, ListObjectsCommand, GetObjectCommand, getSignedUrl } from "@aws-sdk/client-s3";
+import { promises as fsPromises } from "fs";
+import { join, dirname, extname } from "path";
+
+const s3Client = new S3Client({ region: "your-region" });
+const bucketName = "your-bucket-name";
+const localBaseDirectory = "/path/to/local/directory";
+
+async function listObjects(prefix: string = ""): Promise<string[]> {
+  try {
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: prefix,
+    };
+
+    const response = await s3Client.send(new ListObjectsCommand(listParams));
+    return response.Contents?.map((object) => object.Key || "") || [];
+  } catch (error) {
+    console.error(`Error listing objects for prefix ${prefix}:`, error);
+    return [];
+  }
+}
+
+async function downloadObjects(keys: string[]) {
+  const markdownAndJsonKeys: string[] = [];
+  const imageKeys: string[] = [];
+
+  for (const key of keys) {
+    const downloadParams = {
+      Bucket: bucketName,
+      Key: key,
+    };
+
+    try {
+      const response = await s3Client.send(new GetObjectCommand(downloadParams));
+      const fileContent = await response.Body?.getBuffer();
+
+      if (fileContent) {
+        const localFilePath = join(localBaseDirectory, key);
+
+        // Determine file extension
+        const ext = extname(key).toLowerCase();
+
+        if (ext === ".md" || ext === ".json") {
+          // For Markdown and JSON files, save locally
+          await fsPromises.mkdir(dirname(localFilePath), { recursive: true });
+          await fsPromises.writeFile(localFilePath, fileContent);
+          markdownAndJsonKeys.push(key);
+          console.log(`File ${key} downloaded successfully.`);
+        } else if (ext === ".jpg" || ext === ".jpeg" || ext === ".png") {
+          // For images, generate a pre-signed URL
+          const signedUrl = await getSignedUrl(s3Client, new GetObjectCommand({
+            Bucket: bucketName,
+            Key: key,
+          }, { expiresIn: 60 * 60 })); // URL expires in 1 hour
+          imageKeys.push({ key, signedUrl });
+          console.log(`Pre-signed URL generated for ${key}.`);
+        }
+      }
+    } catch (error) {
+      console.error(`Error downloading object ${key}:`, error);
+    }
+  }
+
+  console.log("Markdown and JSON keys:", markdownAndJsonKeys);
+  console.log("Image keys with pre-signed URLs:", imageKeys);
+}
+
+async function fetchAllFiles() {
+  const objectKeys = await listObjects();
+  await downloadObjects(objectKeys);
+}
+
+// Start the download process
+fetchAllFiles();
+
+
+
+
+Fetch all JSON files and put them in a big list/object ::
+
+import { S3Client, ListObjectsCommand, GetObjectCommand, getSignedUrl } from "@aws-sdk/client-s3";
+import { promises as fsPromises } from "fs";
+import { join, dirname, extname } from "path";
+
+const s3Client = new S3Client({ region: "your-region" });
+const bucketName = "your-bucket-name";
+const localBaseDirectory = "/path/to/local/directory";
+
+async function listObjects(prefix: string = ""): Promise<string[]> {
+  try {
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: prefix,
+    };
+
+    const response = await s3Client.send(new ListObjectsCommand(listParams));
+    return response.Contents?.map((object) => object.Key || "") || [];
+  } catch (error) {
+    console.error(`Error listing objects for prefix ${prefix}:`, error);
+    return [];
+  }
+}
+
+async function downloadJsonObjects(keys: string[]): Promise<object[]> {
+  const jsonObjects: object[] = [];
+
+  for (const key of keys) {
+    const downloadParams = {
+      Bucket: bucketName,
+      Key: key,
+    };
+
+    try {
+      const response = await s3Client.send(new GetObjectCommand(downloadParams));
+      const fileContent = await response.Body?.getBuffer();
+
+      if (fileContent) {
+        const ext = extname(key).toLowerCase();
+
+        if (ext === ".json") {
+          const jsonContent = JSON.parse(fileContent.toString("utf-8"));
+          jsonObjects.push({ key, content: jsonContent });
+          console.log(`JSON file ${key} downloaded successfully.`);
+        }
+      }
+    } catch (error) {
+      console.error(`Error downloading JSON object ${key}:`, error);
+    }
+  }
+
+  return jsonObjects;
+}
+
+async function fetchJsonFiles() {
+  const objectKeys = await listObjects();
+  const jsonObjects = await downloadJsonObjects(objectKeys);
+
+  console.log("JSON objects:", jsonObjects);
+}
+
+// Start the download process
+fetchJsonFiles();
+
