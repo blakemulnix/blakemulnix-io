@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { Bucket, Config, NextjsSite } from "sst/constructs";
+import { AppSyncApi, NextjsSite, Table } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -11,37 +11,65 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
+      // ### GraphQL - DynamoDb backend
+      // Create a notes table
+      const notesTable = new Table(stack, "Notes", {
+        fields: {
+          id: "string",
+        },
+        primaryIndex: { partitionKey: "id" },
+      });
+
+      // Create the AppSync GraphQL API
+      const api = new AppSyncApi(stack, "AppSyncApi", {
+        schema: "packages/functions/src/graphql/schema.graphql",
+        defaults: {
+          function: {
+            // Bind the table name to the function
+            bind: [notesTable],
+          },
+        },
+        dataSources: {
+          notes: "packages/functions/src/main.handler",
+        },
+        resolvers: {
+          "Query    listNotes": "notes",
+          "Query    getNoteById": "notes",
+          "Mutation createNote": "notes",
+          "Mutation updateNote": "notes",
+          "Mutation deleteNote": "notes",
+        },
+      });
+
+      // Show the AppSync API Id and API Key in the output
+      stack.addOutputs({
+        ApiId: api.apiId,
+        ApiUrl: api.url,
+        ApiKey: api.cdk.graphqlApi.apiKey || "",
+      });
+
+      // ### Frontend
       const hostedZone = "blakemulnix.io";
       const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
       const wwwDomain = `www.${rootDomain}`;
 
-      const blogPostBucket = new Bucket(stack, "blogPosts", {
-        name: process.env.BLOGPOST_BUCKET_NAME,
-        cors: [
-          {
-            allowedMethods: ["GET"],
-            allowedOrigins: [`*`],
-          },
-        ],
-      });
-
-      const AWS_ACCESS_KEY_ID = new Config.Secret(stack, "AWS_ACCESS_KEY_ID");
-      const AWS_SECRET_ACCESS_KEY = new Config.Secret(stack, "AWS_SECRET_ACCESS_KEY");
-      const AWS_REGION = new Config.Secret(stack, "AWS_REGION");
-      const BLOGPOST_BUCKET_NAME = new Config.Secret(stack, "BLOGPOST_BUCKET_NAME");
-
       const site = new NextjsSite(stack, "BlogSite", {
+        path: "packages/frontend",
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
           hostedZone: hostedZone,
         },
-        bind: [blogPostBucket, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, BLOGPOST_BUCKET_NAME],
+        bind: [api],
+        environment: {
+          GRAPHQL_API_ID: api.apiId,
+          GRAPHQL_API_URL: api.url,
+          GRAPHQL_API_KEY: api.cdk.graphqlApi.apiKey || "",
+        }
       });
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
-        BlogPostBucketName: blogPostBucket.bucketName,
       });
     });
   },

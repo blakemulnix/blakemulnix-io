@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# How to create a GraphQL API with AWS AppSync
+
+An example serverless app created with SST.
 
 ## Getting Started
 
-First, run the development server:
+[**Read the tutorial**](https://sst.dev/examples/how-to-create-a-serverless-graphql-api-with-aws-appsync.html)
+
+Install the example.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+$ npx create-sst@latest --template=examples/graphql-appsync
+# Or with Yarn
+$ yarn create sst --template=examples/graphql-appsync
+# Or with PNPM
+$ pnpm create sst --template=examples/graphql-appsync
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Start the Live Lambda Development environment.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+$ npm sst start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Once your local environment is ready, [head over to the AppSync console](https://console.aws.amazon.com/appsync).
 
-## Learn More
+Here you can run queries and mutations and make changes locally to test your Lambda resolvers.
 
-To learn more about Next.js, take a look at the following resources:
+```graphql
+mutation createNote {
+  createNote(note: { id: "001", content: "My note" }) {
+    id
+    content
+  }
+}
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+query getNoteById {
+  getNoteById(noteId: "001") {
+    id
+    content
+  }
+}
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+query listNotes {
+  listNotes {
+    id
+    content
+  }
+}
 
-## Deploy on Vercel
+mutation updateNote {
+  updateNote(note: { id: "001", content: "My updated note" }) {
+    id
+    content
+  }
+}
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+mutation deleteNote {
+  deleteNote(noteId: "001")
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Commands
+
+### `npm run dev`
+
+Starts the local Lambda development environment.
+
+### `npm run build`
+
+Build your app and synthesize your stacks.
+
+Generates a `.build/` directory with the compiled files and a `.build/cdk.out/` directory with the synthesized CloudFormation stacks.
+
+### `npm run deploy [stack]`
+
+Deploy all your stacks to AWS. Or optionally deploy a specific stack.
+
+### `npm run remove [stack]`
+
+Remove all your stacks and all of their resources from AWS. Or optionally remove a specific stack.
+
+## Documentation
+
+Learn more about SST.
+
+- [Docs](https://docs.sst.dev)
+- [sst](https://docs.sst.dev/packages/sst)
+
+## Community
+
+[Follow us on Twitter](https://twitter.com/sst_dev) or [post on our forums](https://discourse.sst.dev).

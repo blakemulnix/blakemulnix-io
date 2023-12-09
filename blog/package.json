@@ -1,34 +1,24 @@
 {
   "name": "blog",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "sst bind next dev",
-    "build": "sst bind next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.456.0",
-    "@aws-sdk/s3-request-presigner": "^3.456.0",
-    "markdown-to-jsx": "^7.3.2",
-    "next": "14.0.3",
-    "react": "^18",
-    "react-dom": "^18",
-    "ts-node": "^10.9.1"
+    "dev": "sst dev",
+    "build": "sst build",
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "console": "sst console",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
+    "sst": "^2.38.4",
     "aws-cdk-lib": "2.110.1",
     "constructs": "10.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.3",
-    "postcss": "^8",
-    "sst": "^2.36.6",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
-  }
+    "typescript": "^5.3.3",
+    "@tsconfig/node18": "^18.2.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -23,18 +23,6 @@ deploy() {
       cd /workspaces/blakemulnix-io
       cd $app/
 
-      # Only set secrets for the blog app
-      if [ "$app" == "blog" ]; then
-        # Set secret values
-        echo "Setting secrets for $app in $env env via SST..."
-        export $(cat .env.$env | xargs)
-        cat .env.$env > .env
-        npx sst secrets set --stage $env AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
-        npx sst secrets set --stage $env AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
-        npx sst secrets set --stage $env AWS_REGION $AWS_REGION
-        npx sst secrets set --stage $env BLOGPOST_BUCKET_NAME $BLOGPOST_BUCKET_NAME
-      fi
-
       # Build and deploy via SST
       echo "Deploying $app to $env via SST..."
       npx sst deploy --stage $env
