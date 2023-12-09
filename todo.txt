@@ -2,61 +2,61 @@ DONE ::
 Blog post storage set up ::
 Upload entire directory to S3 (with images and files)
 Json files for metadata
+Build DynamoDB with GraphQL on top
+Set frontend environment vars in SST config
+Set up SST console
 
 TODO ::
 
-Today ::
+Create basic admin frontend
+  Create login with AWS auth at blog.blakemulnix.io/admin
+  Create graphql schema / functionality for adding basic piece of data like quote
+  Create basic form for adding simple content
+  Add basic display of that content to homepage
 
-Build DynamoDB with GraphQL on top
+Create basic management form for blog posts
+  Create graphql schema / functionality
+  Create basic form
+  Show blog posts on site in super basic way
+  Enhance form to render markdown preview
+  Add cool styling for markdown rendering
+
+Create decent looking frontend that shows just blog posts
+  Route "/" 
+    Decent homepage with blurb
+    Shows list of blog posts and tags
+    Enable search and/or filtering by title and tag
+  Route "/post/123"
+    Later: Use generateStaticParams to prerender pages for all blogposts
+
+Update blog post management to enable adding of images
+  Add display of images to preview (just drop in public folder for now)
+  Spike into hosting images on AWS somehow
+    Better than having them in public 
+    Create ability to upload images from admin console
+    Track images in dynamo db
+    Show hosted images in preview
 
 
 
-All ideas ::
+Loose Ideas ::::
 
-Create homepage ::
-welcome blurb
-list blog posts
-cool styling
-
-DO GRAPHQL FIRST to minimze script rework
-https://sst.dev/examples/how-to-create-a-serverless-graphql-api-with-aws-appsync.html
-
-set up SST console?
-
-look into grabbing sst objects/outputs directly isntead of using env variables / outputs
-https://sst.dev/examples/how-to-use-dynamodb-in-your-serverless-app.html
-
-Iterate on CMS ::
-Create DynamoDB schema for all data
-Decide structure for S3 images
-How can I host videos?
-Build graphql api on top of Contents
-  Add queries that enable fetching of presigned URLs
-  Add mutations for adding in Contents
-Iterate on CMS frontned
-  Ability to edit markdown blogposts with live preview
-  Ability to add other simple items (recipes, quotes)
-  Images
-    Ability to add images
-    Ability to live preview with images
-    Ability to select various images display styles
-
-Add integrations:
-Spotify for whatever is cool: playlists, liked songs, etc
-Github for a select set of repositories, descriptions, links, urls
+Add integrations ::
+  Spotify for whatever is cool: playlists, liked songs, etc
+  Github for a select set of repositories, descriptions, links, urls
 
 Frontend design ::
-Home page
-Click arrow or swipe right and left to "roll" through pages
-Dim in out pages as transitioned?
-Maybe add menu as well to do the same
-Rolling menu with center item and items to left and right that are progressively more dirname
-Roll to page and scroll content per page
-Likely want one large statically generated page with all pages and then render components as needed on the pages
+  Home page
+  Click arrow or swipe right and left to "roll" through pages
+  Dim in out pages as transitioned?
+  Maybe add menu as well to do the same
+  Rolling menu with center item and items to left and right that are progressively more dirname
+  Roll to page and scroll content per page
+  Likely want one large statically generated page with all pages and then render components as needed on the pages
 
-Add sections:
-repos, quotes, movies, artists, albums, songs, videos, photos
-certifications
+Add sections ::
+  repos, quotes, movies, artists, albums, songs, videos, photos
+  certifications
 
 maybe split into two sides:
 tech / adventure
@@ -66,124 +66,8 @@ carousel: https://ej2.syncfusion.com/react/documentation/carousel/animations-and
 https://ej2.syncfusion.com/react/documentation/carousel/animations-and-transitions
 Test script 
 
-
-Create script for generating blog file template ::
-Create template .md and json with proper structure
-take in tags and grab date 
-
-Blog post rendering ::
-Render using markdown-to-jsx with custom tailwind styled components
-Add custom loader for images
-
-
-use graphql...
-take in / update url with next navigation for different areas of top level static page
-guess it cant be static since it takes params? figure this out
-end goal is navigatable to the whole site without redirecting, but also navigatable
-from a url like blog.com/post/1 or blog.com/quote/2
-
 Framer motion for pretty population of page as loaded or as scrolled
 
-
-
-Route: / ::
-Home page that uses SSR to list out blog posts
-
-Route: /post/123 ::
-Show specific blog post
-Folder structure: app/posts/postId/page.js	
-Use generateStaticParams to prerender pages for all blogposts
-
 SEO :: 
-determine what needs done here
-blog.blakemulnix.io doesn't even show up given a direct google search
-
-
-
-
-
-
-
-
-
-
-
-
-
-Code for fetching all .md and .json files and getting presigned urls for images:
-
-import { S3Client, ListObjectsCommand, GetObjectCommand, getSignedUrl } from "@aws-sdk/client-s3";
-import { promises as fsPromises } from "fs";
-import { join, dirname, extname } from "path";
-
-const s3Client = new S3Client({ region: "your-region" });
-const bucketName = "your-bucket-name";
-const localBaseDirectory = "/path/to/local/directory";
-
-async function listObjects(prefix: string = ""): Promise<string[]> {
-  try {
-    const listParams = {
-      Bucket: bucketName,
-      Prefix: prefix,
-    };
-
-    const response = await s3Client.send(new ListObjectsCommand(listParams));
-    return response.Contents?.map((object) => object.Key || "") || [];
-  } catch (error) {
-    console.error(`Error listing objects for prefix ${prefix}:`, error);
-    return [];
-  }
-}
-
-async function downloadObjects(keys: string[]) {
-  const markdownAndJsonKeys: string[] = [];
-  const imageKeys: string[] = [];
-
-  for (const key of keys) {
-    const downloadParams = {
-      Bucket: bucketName,
-      Key: key,
-    };
-
-    try {
-      const response = await s3Client.send(new GetObjectCommand(downloadParams));
-      const fileContent = await response.Body?.getBuffer();
-
-      if (fileContent) {
-        const localFilePath = join(localBaseDirectory, key);
-
-        // Determine file extension
-        const ext = extname(key).toLowerCase();
-
-        if (ext === ".md" || ext === ".json") {
-          // For Markdown and JSON files, save locally
-          await fsPromises.mkdir(dirname(localFilePath), { recursive: true });
-          await fsPromises.writeFile(localFilePath, fileContent);
-          markdownAndJsonKeys.push(key);
-          console.log(`File ${key} downloaded successfully.`);
-        } else if (ext === ".jpg" || ext === ".jpeg" || ext === ".png") {
-          // For images, generate a pre-signed URL
-          const signedUrl = await getSignedUrl(s3Client, new GetObjectCommand({
-            Bucket: bucketName,
-            Key: key,
-          }, { expiresIn: 60 * 60 })); // URL expires in 1 hour
-          imageKeys.push({ key, signedUrl });
-          console.log(`Pre-signed URL generated for ${key}.`);
-        }
-      }
-    } catch (error) {
-      console.error(`Error downloading object ${key}:`, error);
-    }
-  }
-
-  console.log("Markdown and JSON keys:", markdownAndJsonKeys);
-  console.log("Image keys with pre-signed URLs:", imageKeys);
-}
-
-async function fetchAllFiles() {
-  const objectKeys = await listObjects();
-  await downloadObjects(objectKeys);
-}
-
-// Start the download process
-fetchAllFiles();
+Manage SEO at:
+https://search.google.com/search-console/
