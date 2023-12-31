@@ -1,5 +1,8 @@
 import { SSTConfig } from "sst";
 import { AppSyncApi, NextjsSite, Table } from "sst/constructs";
+import * as cdk from "aws-cdk-lib";
+import * as appsync from "aws-cdk-lib/aws-appsync";
+
 
 export default {
   config(_input) {
@@ -11,8 +14,12 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
-      // ### GraphQL - DynamoDb backend
-      // Create a notes table
+      const hostedZone = "blakemulnix.io";
+      const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
+      const wwwDomain = `www.${rootDomain}`;
+      const apiDomain = `api.${rootDomain}`;
+
+      // ### DynamoDB Table
       const notesTable = new Table(stack, "Notes", {
         fields: {
           id: "string",
@@ -20,12 +27,15 @@ export default {
         primaryIndex: { partitionKey: "id" },
       });
 
-      // Create the AppSync GraphQL API
+      /// AppSync GraphQL API
       const api = new AppSyncApi(stack, "AppSyncApi", {
+        customDomain: {
+          domainName: apiDomain,
+          hostedZone: hostedZone,
+        },
         schema: "packages/functions/src/graphql/schema.graphql",
         defaults: {
           function: {
-            // Bind the table name to the function
             bind: [notesTable],
           },
         },
@@ -39,9 +49,20 @@ export default {
           "Mutation updateNote": "notes",
           "Mutation deleteNote": "notes",
         },
+        cdk: {
+          graphqlApi: {
+            authorizationConfig: {
+              defaultAuthorization: {
+                authorizationType: appsync.AuthorizationType.API_KEY,
+                apiKeyConfig: {
+                  expires: cdk.Expiration.after(cdk.Duration.days(365)),
+                },
+              }
+            }
+          }
+        }
       });
 
-      // Show the AppSync API Id and API Key in the output
       stack.addOutputs({
         ApiId: api.apiId,
         ApiUrl: api.url,
@@ -49,10 +70,6 @@ export default {
       });
 
       // ### Frontend
-      const hostedZone = "blakemulnix.io";
-      const rootDomain = stack.stage === "prod" ? `blog.${hostedZone}` : `${stack.stage}.blog.${hostedZone}`;
-      const wwwDomain = `www.${rootDomain}`;
-
       const site = new NextjsSite(stack, "BlogSite", {
         path: "packages/frontend",
         customDomain: {

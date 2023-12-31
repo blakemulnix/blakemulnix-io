@@ -29,9 +29,19 @@ Create decent looking frontend that shows just blog posts
   Route "/post/123"
     Later: Use generateStaticParams to prerender pages for all blogposts
 
-Update blog post management to enable adding of images
+Update blog post management to enable adding of images (use SST clients to access bucket)
   Add display of images to preview (just drop in public folder for now)
   Spike into hosting images on AWS somehow
+    idea::
+      Images that are uploaded go to S3
+      Server syncs and downloads images from S3 to public once that upload is complete
+      Server syncs with S3 upon startup
+    idea 2::
+      it would be nice to have all images at images.blakemulnix.io/id+size
+      this could be an iteration upon the first implementation
+        move from storing into S3 and move to storing into images.bm.io
+        once the image is uploaded it should be available to use
+        would this still work with next image optimization?
     Better than having them in public 
     Create ability to upload images from admin console
     Track images in dynamo db
