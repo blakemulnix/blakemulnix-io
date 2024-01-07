@@ -22,6 +22,9 @@ export default {
       // const hostedZone = route53.HostedZone.fromLookup(stack, "Zone", { domainName: hostedZoneDomain });
       const nextAuthUrl = stack.stage === "codespace" ? "http://localhost:3000" : `https://${rootDomain}`;
 
+      const protocol = stack.stage === "codespace" ? "http://" : "https://";
+      const rootDomainWithProtocol = `${protocol}${rootDomain}`;
+
       // ### Admin Cognito User Pool
       const adminUserPool = new Cognito(stack, "AdminUserPool", {
         login: ["email"],
@@ -54,7 +57,6 @@ export default {
       });
 
       // ### AppSync GraphQL API
-      // TODO lock down CORS
       const notesTable = new Table(stack, "Notes", {
         fields: {
           id: "string",
@@ -72,9 +74,9 @@ export default {
           function: {
             bind: [notesTable],
             url: {
-              cors: { // TODO lock down CORS
-                allowOrigins: ["*"],
-                allowMethods: ["*"],
+              cors: {
+                allowOrigins: [rootDomainWithProtocol],
+                allowMethods: ["POST"],
                 allowHeaders: ["*"],
               },
             }
@@ -115,7 +117,6 @@ export default {
         },
         bind: [gqlApi],
         environment: {
-          // GRAPHQL_API_URL: gqlApi.customDomainUrl!,
           NEXT_PUBLIC_GRAPHQL_API_URL: gqlApi.customDomainUrl!,
           COGNITO_CLIENT_ID: adminUserPool.cdk.userPoolClient.userPoolClientId,
           COGNITO_CLIENT_SECRET: adminUserPool.cdk.userPoolClient.userPoolClientSecret.toString(),
