@@ -9,5 +9,27 @@ const handler = NextAuth({
       issuer: process.env.COGNITO_ISSUER!,
     }),
   ],
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.user = {
+          email: profile!.email
+        }
+      }
+
+      // console.log("account", account)
+      // console.log("profile", profile)
+
+      return token
+    },
+    async session({ session, token, user }) {
+      session.accessToken = token.accessToken
+      session.user = token.user
+      // console.log("user", user)
+
+      return session
+    }
+  }
 });
 export { handler as GET, handler as POST };

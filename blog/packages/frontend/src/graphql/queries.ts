@@ -1,4 +1,4 @@
-import { graphql } from '../types/gql/gql';
+import { gql as graphql } from '@apollo/client';
 
 export const LIST_NOTES = graphql(`
   query listNotes {
