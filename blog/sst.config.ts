@@ -1,8 +1,9 @@
 import { SSTConfig } from "sst";
-import { AppSyncApi, NextjsSite, Table, Cognito } from "sst/constructs";
+import { AppSyncApi, NextjsSite, Table, Cognito, Function } from "sst/constructs";
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import { OAuthScope } from "aws-cdk-lib/aws-cognito";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import { Duration } from "aws-cdk-lib/core/lib/duration";
 
 export default {
   config(_input) {
@@ -64,6 +65,14 @@ export default {
         primaryIndex: { partitionKey: "id" },
       });
 
+      const authorizer = new Function(stack, "AuthorizerFn", {
+        handler: "packages/functions/src/authorizer.handler",
+        environment: {
+          COGNITO_REGION: stack.region,
+          COGNITO_USER_POOL_ID: adminUserPool.cdk.userPool.userPoolId,
+        }
+      });
+
       const gqlApi = new AppSyncApi(stack, "GraphQlAPI", {
         customDomain: {
           domainName: apiDomain,
@@ -96,17 +105,16 @@ export default {
           graphqlApi: {
             authorizationConfig: {
               defaultAuthorization: {
-                authorizationType: appsync.AuthorizationType.USER_POOL,
-                userPoolConfig: {
-                  userPool: adminUserPool.cdk.userPool,
-                  defaultAction: appsync.UserPoolDefaultAction.ALLOW,
+                authorizationType: appsync.AuthorizationType.LAMBDA,
+                lambdaAuthorizerConfig: {
+                  handler: authorizer,
                 },
               },
             },
           },
         },
       });
-
+      
       // ### Frontend
       const blogSite = new NextjsSite(stack, "BlogSite", {
         path: "packages/frontend",
@@ -118,6 +126,7 @@ export default {
         bind: [gqlApi],
         environment: {
           NEXT_PUBLIC_GRAPHQL_API_URL: gqlApi.customDomainUrl!,
+          GRAPHQL_API_URL: gqlApi.customDomainUrl!,
           COGNITO_CLIENT_ID: adminUserPool.cdk.userPoolClient.userPoolClientId,
           COGNITO_CLIENT_SECRET: adminUserPool.cdk.userPoolClient.userPoolClientSecret.toString(),
           COGNITO_ISSUER: `https://cognito-idp.${stack.region}.amazonaws.com/${adminUserPool.cdk.userPool.userPoolId}`,
@@ -128,7 +137,8 @@ export default {
       stack.addOutputs({
         SiteUrl: blogSite.customDomainUrl,
         GraphqlApiUrl: gqlApi.customDomainUrl,
-        NextAuthURL: nextAuthUrl
+        NextAuthURL: nextAuthUrl,
+        GqlApiArn: gqlApi.cdk.graphqlApi.arn,
       });
     });
   },

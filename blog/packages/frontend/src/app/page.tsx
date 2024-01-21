@@ -1,39 +1,40 @@
-"use client";
+import { CREATE_NOTE, LIST_NOTES } from "@/graphql/queries";
+import { getSsrApolloClient } from "@/graphql/ssrClient";
 import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react"
-import {Button} from '@nextui-org/button'; 
-import { getApolloClient } from "@/graphql/client";
-import GraphqlData from "@/components/GraphqlData";
-import GraphqlProvider from "@/providers/GraphqlProvider";
 
-export default function Page() {
-  
-  const { data: session, status } = useSession();
+export default async function Page() {
+  const { data } = await getSsrApolloClient().query({
+    query: LIST_NOTES,
+  });
 
-  if (status === "loading") {
-    return <div>Loading...</div>
+  let error;
+  try {
+    const { data } = await getSsrApolloClient().mutate({
+      mutation: CREATE_NOTE,
+      variables: {
+        title: "test",
+        content: "test",
+      },
+    });
+  } catch (e) {
+    error = e;
   }
 
-  if (status === "authenticated") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold">Hello {session.user?.email}</h1>
-        </div>
-        <Button onClick={() => signOut()}>Sign out</Button>
-        <div>
-          <p>Graphql data</p>
-        </div>
-        <GraphqlProvider>
-          <GraphqlData />
-        </GraphqlProvider>
-      </div>
-    )
-  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <Button onClick={() => signIn('cognito')}>Sign in</Button>      
+      Server side rendering
+      <div>
+        <h1>Notes</h1>
+        {data.listNotes.map((note: any) => (
+          <div key={note.id}>
+            <h2>{note.title}</h2>
+            <p>{note.content}</p>
+          </div>
+        ))}
+      </div>
+      <h1>Mutation</h1>
+      <div>{JSON.stringify(error)}</div>
     </div>
-  )
+  );
 }
