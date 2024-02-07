@@ -2,8 +2,7 @@ import { SSTConfig } from "sst";
 import { AppSyncApi, NextjsSite, Table, Cognito, Function } from "sst/constructs";
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import { OAuthScope } from "aws-cdk-lib/aws-cognito";
-import * as route53 from "aws-cdk-lib/aws-route53";
-import { Duration } from "aws-cdk-lib/core/lib/duration";
+// import * as route53 from "aws-cdk-lib/aws-route53";
 
 export default {
   config(_input) {
@@ -20,9 +19,7 @@ export default {
       const rootDomain = stack.stage === "prod" ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`;
       const wwwDomain = `www.${rootDomain}`;
       const apiDomain = `api.${rootDomain}`;
-      // const hostedZone = route53.HostedZone.fromLookup(stack, "Zone", { domainName: hostedZoneDomain });
       const nextAuthUrl = stack.stage === "codespace" ? "http://localhost:3000" : `https://${rootDomain}`;
-
       const protocol = stack.stage === "codespace" ? "http://" : "https://";
       const rootDomainWithProtocol = `${protocol}${rootDomain}`;
 
@@ -137,8 +134,6 @@ export default {
       stack.addOutputs({
         SiteUrl: blogSite.customDomainUrl,
         GraphqlApiUrl: gqlApi.customDomainUrl,
-        NextAuthURL: nextAuthUrl,
-        GqlApiArn: gqlApi.cdk.graphqlApi.arn,
       });
     });
   },

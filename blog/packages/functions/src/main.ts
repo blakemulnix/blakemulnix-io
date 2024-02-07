@@ -16,15 +16,8 @@ type AppSyncEvent = {
 };
 
 export async function handler(
-  event: AppSyncEvent,
-  context: any
+  event: AppSyncEvent
 ): Promise<Record<string, unknown>[] | Note | string | null | undefined> {
-  // console.log("event", event);
-
-  // console.log("####!!!!!! event.info.fieldName", event.info.fieldName);
-  // console.log('event', event)
-  // console.log(`typeof context`, typeof context);
-  // console.log(`context`, context);
 
   switch (event.info.fieldName) {
     case "listNotes":

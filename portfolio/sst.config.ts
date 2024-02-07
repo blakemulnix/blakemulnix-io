@@ -11,20 +11,22 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
+      const hostedZoneDomain = "blakemulnix.io";
+      const rootDomain = stack.stage === "prod" ? `${hostedZoneDomain}` : `${stack.stage}.${hostedZoneDomain}`;
+      const wwwDomain = `www.${rootDomain}`;
+
       const site = new StaticSite(stack, "Site", {
         path: "out",
         customDomain: {
-          domainName:
-            stack.stage === "prod" ? "blakemulnix.io" : `${stack.stage}.blakemulnix.io`,
-          domainAlias:
-          stack.stage === "prod" ? "www.blakemulnix.io" : `www.${stack.stage}.blakemulnix.io`,
+          domainName: rootDomain,
+          domainAlias: wwwDomain,
           hostedZone: "blakemulnix.io",
         },
       });
 
       stack.addOutputs({
         SiteUrl: site.customDomainUrl,
-        CloudfrontUrl: site.url
+        CloudfrontUrl: site.url,
       });
     });
   },

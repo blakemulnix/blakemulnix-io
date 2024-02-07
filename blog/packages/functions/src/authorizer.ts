@@ -2,12 +2,10 @@ import { AppSyncAuthorizerEvent, AppSyncAuthorizerResult } from "aws-lambda";
 import jwt, { Secret, VerifyOptions, JwtHeader, JwtPayload } from "jsonwebtoken";
 import jwksClient, { JwksClient, SigningKey } from "jwks-rsa";
 
-// Initialize JWKS client
 const client: JwksClient = jwksClient({
   jwksUri: `https://cognito-idp.${process.env.COGNITO_REGION}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
 });
 
-// Function to retrieve the signing key
 function getKey(header: JwtHeader, callback: (err: Error | null, signingKey?: Secret) => void): void {
   client.getSigningKey(header.kid as string, (err, key?: SigningKey) => {
     if (err) {
@@ -20,9 +18,6 @@ function getKey(header: JwtHeader, callback: (err: Error | null, signingKey?: Se
 }
 
 export const handler = async (event: AppSyncAuthorizerEvent): Promise<AppSyncAuthorizerResult> => {
-  console.log("event", event);
-  console.log("event.requestContext.operationName!", event.requestContext.operationName!);
-
   if (["listNotes", "getNoteById"].includes(event.requestContext.operationName!)) {
     return {
       isAuthorized: true,
