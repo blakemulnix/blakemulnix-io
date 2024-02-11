@@ -42,20 +42,6 @@ deploy() {
   esac
 }
 
-upload-blogposts() {
-  local env="$1"
-  echo "Uploading blog posts to $env env"
-
-  # Set proper env vars
-  echo "Setting env variables for $env env"
-  cd /workspaces/blakemulnix-io/blog
-  export $(cat .env.$env | xargs)
-
-  # Run upload script
-  cd /workspaces/blakemulnix-io/scripts
-  ts-node upload-blogposts.ts
-}
-
 main() {
   local command="$1"
   shift
@@ -63,9 +49,6 @@ main() {
   case "$command" in
   deploy)
     deploy "$@"
-    ;;
-  upload-blogposts) 
-    upload-blogposts "$@"
     ;;
   # Add other commands here
   *)

@@ -16,7 +16,8 @@ export default {
       const wwwDomain = `www.${rootDomain}`;
 
       const site = new StaticSite(stack, "Site", {
-        path: "out",
+        path: "build",
+        buildCommand: "yarn build",
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
