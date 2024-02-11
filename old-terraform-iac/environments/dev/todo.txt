@@ -1,0 +1,2 @@
+Set up VPC to host dev.blakemulnix.io
+Deploy s3 static site for that domain
