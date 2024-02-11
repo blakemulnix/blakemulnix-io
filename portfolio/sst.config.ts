@@ -11,8 +11,8 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const hostedZoneDomain = "blakemulnix.io";
-      const rootDomain = stack.stage === "prod" ? `${hostedZoneDomain}` : `${stack.stage}.${hostedZoneDomain}`;
+      const hostedZone = "blakemulnix.io";
+      const rootDomain = stack.stage === "prod" ? `${hostedZone}` : `${stack.stage}.${hostedZone}`;
       const wwwDomain = `www.${rootDomain}`;
 
       const site = new StaticSite(stack, "Site", {
@@ -21,7 +21,7 @@ export default {
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
-          hostedZone: "blakemulnix.io",
+          hostedZone: hostedZone,
         },
       });
 

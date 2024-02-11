@@ -4,15 +4,11 @@ import SectionTitle from "./SectionTitle";
 
 const ExperienceSection = () => {
   return (
-    <section
-      id="experience"
-      className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
-      aria-label="Work experience"
-    >
+    <section id="experience" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Work experience">
       <SectionTitle title="Experience" />
       <div>
         <ol className="group/list">
-        <ExperienceItem
+          <ExperienceItem
             title="Software Consultant"
             company="Source Allies"
             companySite="https://www.sourceallies.com/"
@@ -20,13 +16,7 @@ const ExperienceSection = () => {
             description="In my current role as a consultant, I leverage my software engineering expertise 
             to empower partners in achieving their technology goals. My specialization lies in building 
             cutting-edge enterprise applications on the cloud."
-            technologies={[
-              "React",
-              "Node.js",
-              "TypeScript",
-              "GCP",
-              "Azure",
-            ]}
+            technologies={["React", "Node.js", "TypeScript", "GCP", "Azure"]}
           />
           <ExperienceItem
             title="Software Engineer"
@@ -38,15 +28,7 @@ const ExperienceSection = () => {
             for law firms and legal tech companies. Automated QA through the development of a Cypress test 
             suite, providing comprehensive end-to-end test coverage. Lead integration testing during an 
             overhaul of the payment processing flow."
-            technologies={[
-              "React",
-              "Node.js",
-              "TypeScript",
-              "TypeORM",
-              "Cypress",
-              "MySQL",
-              "AWS",
-            ]}
+            technologies={["React", "Node.js", "TypeScript", "TypeORM", "Cypress", "MySQL", "AWS"]}
           />
           <ExperienceItem
             title="Software Engineer II"
@@ -59,16 +41,7 @@ const ExperienceSection = () => {
             experiences like home page, messaging, and user profile. Led an effort to integrate a 
             new customer segment after an acquisition, working closely with many teams across the
             company."
-            technologies={[
-              "JavaEE",
-              "JSP",
-              "Websphere",
-              "DB2",
-              "Python",
-              "Flask",
-              "API Gateway",
-              "AWS",
-            ]}
+            technologies={["JavaEE", "JSP", "Websphere", "DB2", "Python", "Flask", "API Gateway", "AWS"]}
           />
           <ExperienceItem
             title="Software Scientist"
@@ -92,16 +65,7 @@ const ExperienceSection = () => {
             developing a LiDAR-based app for railroad clearance analysis, taking on a technical 
             lead role for an in-house compensation management application, and modernizing a 
             small proprietary desktop railroad data validation software into a web-based solution."
-            technologies={[
-              "Tornado",
-              "Angular",
-              "Python",
-              "Bootstrap",
-              "SQLAlchemy",
-              "Docker",
-              "C#",
-              "WPF",
-            ]}
+            technologies={["Tornado", "Angular", "Python", "Bootstrap", "SQLAlchemy", "Docker", "C#", "WPF"]}
           />
           <ExperienceItem
             title="Software Engineering Intern"

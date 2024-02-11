@@ -19,13 +19,6 @@ export default function LoadingScreenContainer({ children }: { children: React.R
     bg-stone-900
   `;
 
-  const animatedTextStyle = `
-    fixed top-0 left-0 h-screen w-screen
-    flex justify-center items-center
-    z-50 text-4xl font-bold
-    text-stone-100
-  `;
-
   const fadeOutAnimation = `
     @keyframes fadeOut {
       from {

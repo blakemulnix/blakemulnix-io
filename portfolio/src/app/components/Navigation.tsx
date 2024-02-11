@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import classNames from "classnames";
 import { useState } from "react";
@@ -17,12 +17,8 @@ interface NavigationLinkProps {
 
 const Navigation = () => {
   const [activeNav, setActiveNav] = useState(NavSelection.About);
-  
-  const NavigationLink = ({
-    href,
-    text,
-    navSelection,
-  }: NavigationLinkProps) => {
+
+  const NavigationLink = ({ href, text, navSelection }: NavigationLinkProps) => {
     return (
       <li>
         <a
@@ -44,16 +40,8 @@ const Navigation = () => {
   return (
     <nav className="nav hidden lg:block" aria-label="In-page jump links">
       <ul className="mt-16 w-max">
-        <NavigationLink
-          href="#about"
-          text="About"
-          navSelection={NavSelection.About}
-        />
-        <NavigationLink
-          href="#experience"
-          text="Experience"
-          navSelection={NavSelection.Experience}
-        />
+        <NavigationLink href="#about" text="About" navSelection={NavSelection.About} />
+        <NavigationLink href="#experience" text="Experience" navSelection={NavSelection.Experience} />
       </ul>
     </nav>
   );
