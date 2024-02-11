@@ -37,9 +37,9 @@ export default {
                 authorizationCodeGrant: true
               },
               scopes: [
-                OAuthScope.PHONE,
-                OAuthScope.EMAIL,
-                OAuthScope.OPENID,
+                // OAuthScope.PHONE,
+                // OAuthScope.EMAIL,
+                // OAuthScope.OPENID,
                 OAuthScope.PROFILE,
               ],
               callbackUrls: [`${nextAuthUrl}/api/auth/callback/cognito`],

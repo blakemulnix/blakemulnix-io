@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 interface BackdropProps {
-  onImageLoad: () => void;
+  onImageLoad: () => void
 }
 
 const Backdrop = ({ onImageLoad }: BackdropProps) => {
@@ -11,7 +11,7 @@ const Backdrop = ({ onImageLoad }: BackdropProps) => {
       <Image
         src="/carbondale.jpg"
         fill={true}
-        style={{ objectFit: "cover" }}
+        style={{ objectFit: 'cover' }}
         className="w-full h-auto"
         alt="Background image of Carbondale, Colorado"
         onLoad={onImageLoad}
@@ -19,7 +19,7 @@ const Backdrop = ({ onImageLoad }: BackdropProps) => {
       />
       <div className="backdrop-blur-[8px] bg-stone-950/40 h-full w-full"></div>
     </div>
-  );
-};
+  )
+}
 
-export default Backdrop;
+export default Backdrop

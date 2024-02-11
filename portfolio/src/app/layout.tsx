@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "blakemulnix.io",
-  description: `Blake Mulnix: Cloud Engineer crafting powerful, beautiful digital experiences. 
+  title: "Blake Mulnix - Cloud Engineer",
+  description: `Crafting powerful and beautiful digital experiences on the cloud. 
                 Expertise ranging from front-end design to cloud infrastructure.`,
 };
 
