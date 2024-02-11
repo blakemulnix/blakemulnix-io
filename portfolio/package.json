@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "sst bind next dev",
     "build": "next build",
+    "deploy:prod": "sst deploy --stage prod",
+    "deploy:test": "sst deploy --stage test",
+    "remove:test": "sst remove --stage test",
     "start": "npx serve@latest out",
     "lint": "next lint"
   },
