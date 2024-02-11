@@ -1,102 +1,106 @@
-import { SSTConfig } from "sst";
-import { AppSyncApi, NextjsSite, Table, Cognito, Function } from "sst/constructs";
-import * as appsync from "aws-cdk-lib/aws-appsync";
-import { OAuthScope } from "aws-cdk-lib/aws-cognito";
-// import * as route53 from "aws-cdk-lib/aws-route53";
+import { SSTConfig } from 'sst'
+import { AppSyncApi, NextjsSite, Table, Cognito, Function } from 'sst/constructs'
+import * as appsync from 'aws-cdk-lib/aws-appsync'
+import * as cdk from 'aws-cdk-lib'
+import { OAuthScope } from 'aws-cdk-lib/aws-cognito'
 
 export default {
   config(_input) {
     return {
-      name: "blog",
-      region: "us-east-1",
-    };
+      name: 'blog',
+      region: 'us-east-1',
+    }
   },
 
   stacks(app) {
     app.stack(function Site({ stack }) {
-      // ### DNS and URLs
-      const hostedZoneDomain = "blakemulnix.io";
-      const rootDomain = stack.stage === "prod" ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`;
-      const wwwDomain = `www.${rootDomain}`;
-      const apiDomain = `api.${rootDomain}`;
-      const nextAuthUrl = stack.stage === "codespace" ? "http://localhost:3000" : `https://${rootDomain}`;
-      const protocol = stack.stage === "codespace" ? "http://" : "https://";
-      const rootDomainWithProtocol = `${protocol}${rootDomain}`;
+      const removalPolicy = stack.stage === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
 
-      // ### Admin Cognito User Pool
-      const adminUserPool = new Cognito(stack, "AdminUserPool", {
-        login: ["email"],
+      // DNS and URLs (Route53, CloudFront, ACM, etc.)
+      const hostedZoneDomain = 'blakemulnix.io'
+      const rootDomain = stack.stage === 'prod' ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`
+      const wwwDomain = `www.${rootDomain}`
+      const apiDomain = `api.${rootDomain}`
+      const nextAuthUrl = stack.stage === 'codespace' ? 'http://localhost:3000' : `https://${rootDomain}`
+      const protocol = stack.stage === 'codespace' ? 'http://' : 'https://'
+      const rootDomainWithProtocol = `${protocol}${rootDomain}`
+
+      // Admin User Pool (Cognito)
+      const adminUserPool = new Cognito(stack, 'BlogAdminUserPool', {
+        login: ['email'],
         cdk: {
           userPool: {
+            removalPolicy: removalPolicy,
             selfSignUpEnabled: false,
           },
           userPoolClient: {
             generateSecret: true,
             oAuth: {
               flows: {
-                authorizationCodeGrant: true
+                authorizationCodeGrant: true,
               },
-              scopes: [
-                // OAuthScope.PHONE,
-                // OAuthScope.EMAIL,
-                // OAuthScope.OPENID,
-                OAuthScope.PROFILE,
-              ],
+              scopes: [OAuthScope.PROFILE],
               callbackUrls: [`${nextAuthUrl}/api/auth/callback/cognito`],
             },
           },
         },
-      });
+      })
 
-      adminUserPool.cdk.userPool.addDomain("Domain", {
+      adminUserPool.cdk.userPool.addDomain('BlogCognitoDomain', {
         cognitoDomain: {
           domainPrefix: `${stack.stage}-blog-blakemulnix-io`,
         },
-      });
+      })
 
-      // ### AppSync GraphQL API
-      const notesTable = new Table(stack, "Notes", {
+      // Notes Table (DynamoDB)
+      const notesTable = new Table(stack, 'BlogNotes', {
         fields: {
-          id: "string",
+          id: 'string',
         },
-        primaryIndex: { partitionKey: "id" },
-      });
+        primaryIndex: { partitionKey: 'id' },
+        cdk: {
+          table: {
+            removalPolicy: removalPolicy,
+          },
+        },
+      })
 
-      const authorizer = new Function(stack, "AuthorizerFn", {
-        handler: "packages/functions/src/authorizer.handler",
+      // GraphQL API (AppSync)
+      const authorizer = new Function(stack, 'BlogGraphqlAuthorizerFn', {
+        handler: 'packages/functions/src/authorizer.handler',
         environment: {
           COGNITO_REGION: stack.region,
           COGNITO_USER_POOL_ID: adminUserPool.cdk.userPool.userPoolId,
-        }
-      });
+        },
+      })
 
-      const gqlApi = new AppSyncApi(stack, "GraphQlAPI", {
+      const gqlApi = new AppSyncApi(stack, 'BlogGraphqlAPI', {
         customDomain: {
           domainName: apiDomain,
           hostedZone: hostedZoneDomain,
         },
-        schema: "packages/functions/src/graphql/schema.graphql",
+        schema: 'packages/functions/src/graphql/schema.graphql',
         defaults: {
           function: {
             bind: [notesTable],
             url: {
               cors: {
                 allowOrigins: [rootDomainWithProtocol],
-                allowMethods: ["POST"],
-                allowHeaders: ["*"],
+                allowMethods: ['POST'],
+                allowHeaders: ['*'],
               },
-            }
+            },
           },
         },
         dataSources: {
-          notes: "packages/functions/src/main.handler",
+          notes: 'packages/functions/src/main.handler',
         },
         resolvers: {
-          "Query    listNotes": "notes",
-          "Query    getNoteById": "notes",
-          "Mutation createNote": "notes",
-          "Mutation updateNote": "notes",
-          "Mutation deleteNote": "notes",
+          'Query    listNotes': 'notes',
+          'Query    getNoteById': 'notes',
+          'Mutation createNote': 'notes',
+          'Mutation updateNote': 'notes',
+          'Mutation deleteNote': 'notes',
         },
         cdk: {
           graphqlApi: {
@@ -110,11 +114,11 @@ export default {
             },
           },
         },
-      });
-      
-      // ### Frontend
-      const blogSite = new NextjsSite(stack, "BlogSite", {
-        path: "packages/frontend",
+      })
+
+      // Frontend (Next.js via OpenNext)
+      const blogSite = new NextjsSite(stack, 'BlogNextJsSite', {
+        path: 'packages/frontend',
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
@@ -127,14 +131,15 @@ export default {
           COGNITO_CLIENT_ID: adminUserPool.cdk.userPoolClient.userPoolClientId,
           COGNITO_CLIENT_SECRET: adminUserPool.cdk.userPoolClient.userPoolClientSecret.toString(),
           COGNITO_ISSUER: `https://cognito-idp.${stack.region}.amazonaws.com/${adminUserPool.cdk.userPool.userPoolId}`,
+          NEXTAUTH_SECRET: process.env.$NEXTAUTH_SECRET!,
           NEXTAUTH_URL: nextAuthUrl,
         },
-      });
+      })
 
       stack.addOutputs({
         SiteUrl: blogSite.customDomainUrl,
         GraphqlApiUrl: gqlApi.customDomainUrl,
-      });
-    });
+      })
+    })
   },
-} satisfies SSTConfig;
+} satisfies SSTConfig

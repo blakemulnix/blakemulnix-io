@@ -18,15 +18,11 @@ const handler = NextAuth({
         }
       }
 
-      // console.log("account", account)
-      // console.log("profile", profile)
-
       return token
     },
     async session({ session, token, user }) {
       session.accessToken = token.accessToken
       session.user = token.user
-      // console.log("user", user)
 
       return session
     }
