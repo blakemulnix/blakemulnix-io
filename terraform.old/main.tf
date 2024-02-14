@@ -1,6 +1,6 @@
 # Note: If this zone is being newly created, the name servers on the registered 
-#      domain will need to be updated to point to the name servers provided by
-#      the Route53 zone.
+# domain will need to be updated to point to the name servers provided by
+# the Route53 zone.
 module "route53_zone_with_tls_cert" {
   source = "../../modules/route53_zone_with_tls_cert"
 

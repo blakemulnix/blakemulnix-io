@@ -4,23 +4,23 @@
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {
       "version": "latest"
-    },
+    }
   },
   "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-		"GitHub.copilot-chat",
-		"GitHub.copilot",
-		"dbaeumer.vscode-eslint",
-		"amazonwebservices.aws-toolkit-vscode",
-		"GitHub.codespaces",
-		"ms-vscode-remote.remote-containers",
-		"esbenp.prettier-vscode",
-		"dsznajder.es7-react-js-snippets",
-		"infeng.vscode-react-typescript",
-		"gamunu.vscode-yarn"
-	]
+        "GitHub.copilot-chat",
+        "GitHub.copilot",
+        "dbaeumer.vscode-eslint",
+        "amazonwebservices.aws-toolkit-vscode",
+        "GitHub.codespaces",
+        "ms-vscode-remote.remote-containers",
+        "esbenp.prettier-vscode",
+        "dsznajder.es7-react-js-snippets",
+        "infeng.vscode-react-typescript",
+        "gamunu.vscode-yarn"
+      ]
     }
   },
   "portsAttributes": {

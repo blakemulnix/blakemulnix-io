@@ -9,7 +9,7 @@ export default async function updateNote(note: Note): Promise<Note> {
     Key: { id: note.id },
     ReturnValues: "UPDATED_NEW",
     UpdateExpression: "SET content = :content",
-    TableName: Table.Notes.tableName,
+    TableName: Table.blogNotes.tableName,
     ExpressionAttributeValues: { ":content": note.content },
   };
 

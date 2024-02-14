@@ -6,7 +6,7 @@ const dynamoDb = new DynamoDB.DocumentClient();
 export default async function deleteNote(noteId: string): Promise<string> {
   const params = {
     Key: { id: noteId },
-    TableName: Table.Notes.tableName,
+    TableName: Table.blogNotes.tableName,
   };
 
   await dynamoDb.delete(params).promise();

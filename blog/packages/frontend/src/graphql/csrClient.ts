@@ -11,5 +11,11 @@ export const getCsrApolloClient = (accessToken: string) => {
       },
     }),
     cache: new InMemoryCache(),
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'cache-only',
+        pollInterval: 0
+      }
+    }
   });
 };

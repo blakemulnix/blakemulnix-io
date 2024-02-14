@@ -53,7 +53,7 @@ export default {
       })
 
       // Notes Table (DynamoDB)
-      const notesTable = new Table(stack, 'BlogNotes', {
+      const notesTable = new Table(stack, 'blogNotes', {
         fields: {
           id: 'string',
         },

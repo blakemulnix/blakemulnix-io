@@ -9,7 +9,7 @@ export default async function createNote(note: Note): Promise<Note> {
 
   const params = {
     Item: note as Record<string, unknown>,
-    TableName: Table.Notes.tableName,
+    TableName: Table.blogNotes.tableName,
   };
 
   console.log("params", params);
