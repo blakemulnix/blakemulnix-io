@@ -12,11 +12,11 @@ const ExperienceSection = () => {
             title="Software Consultant"
             company="Source Allies"
             companySite="https://www.sourceallies.com/"
-            startDate="September 2022"
+            startDate="September 2023"
             description="In my current role as a consultant, I leverage my software engineering expertise 
             to empower partners in achieving their technology goals. My specialization lies in building 
             cutting-edge enterprise applications on the cloud."
-            technologies={["React", "Node.js", "TypeScript", "GCP", "Azure"]}
+            technologies={["Next.js", "Node.js", "TypeScript", "C#", "AWS", "Azure", "Bicep", "GraphQL"]}
           />
           <ExperienceItem
             title="Software Engineer"
