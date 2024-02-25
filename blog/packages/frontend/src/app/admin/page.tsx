@@ -1,62 +1,33 @@
 'use client'
-import { LIST_NOTES } from '@/graphql/queries'
-import { ListNotesQuery } from '@/types/gql/graphql'
+import PostPreview from '@/components/admin/PostPreview'
+import { LIST_POSTS } from '@/graphql/queries'
+import { ListPostsQuery } from '@/types/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { Button } from '@nextui-org/react'
 import Link from 'next/link'
 import React from 'react'
 
-/*
-todo list out blog posts with edit and delete buttons
-add create button
-*/
-export default function AdminHome() {
-  const { data, loading, error } = useQuery<ListNotesQuery>(LIST_NOTES, {
-    fetchPolicy: 'standby'
-  })
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>
-  }
-
-  console.log('rerender')
+export default function Page(): JSX.Element {
+  const { data, loading, error, refetch } = useQuery<ListPostsQuery>(LIST_POSTS)
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-8">
-      <span>
-      Hello this is where the admin page will be
-
-      </span>
-      <Link href="/admin/create">
-        <Button color='primary' className="mt-4">Create Note</Button>
-      </Link>
+    <div className="flex flex-col justify-center">
+      <div className="flex flex-row justify-between mb-4">
+        <h1 className="text-3xl">Posts</h1>
+        <Link href="/admin/create">
+          <Button color="primary" size="md">
+            Create Post
+          </Button>
+        </Link>
+      </div>
+      {loading && <div>Loading...</div>}
+      {error && <div>There as an error loading the blog posts.</div>}
+      {!loading && !error && data?.listPosts?.length === 0 && <div>No posts found</div>}
+      <div className='flex flex-col gap-4'>
+        {data?.listPosts?.map((post, idx) => (
+          <PostPreview key={idx} post={post} refetch={refetch} />
+        ))}
+      </div>
     </div>
   )
 }
-
-// export default async function Page() {
-//   const gqlClient = getSsrApolloClient()
-
-//   const results = await gqlClient.query<ListNotesQuery>({
-//     query: LIST_NOTES,
-//   })
-
-//   const notes = results.data.listNotes as Note[]
-
-//   return (
-//     <>
-//       <Navbar />
-//       <div className="flex flex-col items-center gap-4">
-//         {notes.map((note) => (
-//           <div key={note.id} className="flex grow p-4 rounded-md bg-stone-600">
-//             <h2 className="text-xl">{note.content}</h2>
-//           </div>
-//         ))}
-//       </div>
-//     </>
-//   )
-// }

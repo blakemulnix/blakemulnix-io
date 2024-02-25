@@ -1,41 +1,44 @@
 'use client'
-import { CREATE_NOTE } from '@/graphql/queries'
-import { CreateNoteMutation } from '@/types/gql/graphql'
+import { CREATE_POST } from '@/graphql/queries'
+import { CreatePostMutation } from '@/types/gql/graphql'
 import { useMutation } from '@apollo/client'
 import { Button, Input, Textarea } from '@nextui-org/react'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function Create() {
-  const [id, setId] = React.useState('')
+  const router = useRouter()
+  const [title, setTitle] = React.useState('')
   const [content, setContent] = React.useState('')
 
-  const [createNote] = useMutation<CreateNoteMutation>(CREATE_NOTE)
+  const [createPost, { loading, called, error }] = useMutation<CreatePostMutation>(CREATE_POST)
 
-  const handleCreateNote = async () => {
+  const handleCreatePost = async () => {
     try {
-      await createNote({
+      await createPost({
         variables: {
-          note: {
-            id,
+          createPostInput: {
+            title,
             content,
           },
         },
       })
+      router.push('/admin')
     } catch (error) {
       console.error('error:', error)
     }
   }
 
   return (
-    <div className="flex flex-row justify-center">
-      {/* refactor this to container */}
-      <div className="flex flex-col max-w-[1280px] grow px-6 gap-4"> 
-        <div className="flex flex-col">
-          <h1 className='text-2xl mb-6'>Create a New Note</h1>
-          <Input label="ID" value={id} onValueChange={setId} size='lg' className='max-w-xs mb-4' />
-          <Textarea label="Content" value={content} size='lg' onValueChange={setContent} className='max-w-2xl mb-4' />
-          <Button color='primary' className="w-fit" onClick={handleCreateNote}>Create Note</Button>
-        </div>
+    <div className="flex flex-row w-full">
+      <div className="flex flex-col basis-4/6">
+        <h1 className="text-2xl mb-6">Create a New Post</h1>
+        <Input label="Title" value={title} onValueChange={setTitle} size="lg" className="max-w-xs mb-4" />
+        <Textarea label="Content" value={content} size="lg" onValueChange={setContent} className="max-w-2xl mb-4" />
+        <Button color="primary" className="w-fit" onClick={handleCreatePost} isLoading={loading}>
+          Create Post
+        </Button>
+        {error && <div>There was an error creating the post.</div>}
       </div>
     </div>
   )

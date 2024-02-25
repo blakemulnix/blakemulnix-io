@@ -5975,25 +5975,6 @@ aws-cdk-lib@2.110.1:
     table "^6.8.1"
     yaml "1.10.2"
 
-aws-cdk-lib@^2.38.0:
-  version "2.117.0"
-  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.117.0.tgz#9079e256c334108add9252a89c22cf46e7c2e542"
-  integrity sha512-My5T4hn34H6+tnZxKK2VlcvGI2N5SjqGt9lXWADcahdobuUcNizYrls7h/vcQ3BfwcZ5/tHTKtivkNyL8I1LDg==
-  dependencies:
-    "@aws-cdk/asset-awscli-v1" "^2.2.201"
-    "@aws-cdk/asset-kubectl-v20" "^2.1.2"
-    "@aws-cdk/asset-node-proxy-agent-v6" "^2.0.1"
-    "@balena/dockerignore" "^1.0.2"
-    case "1.6.3"
-    fs-extra "^11.2.0"
-    ignore "^5.3.0"
-    jsonschema "^1.4.1"
-    minimatch "^3.1.2"
-    punycode "^2.3.1"
-    semver "^7.5.4"
-    table "^6.8.1"
-    yaml "1.10.2"
-
 aws-crt@^1.18.3:
   version "1.19.0"
   resolved "https://registry.npmjs.org/aws-crt/-/aws-crt-1.19.0.tgz"
@@ -6658,7 +6639,7 @@ constant-case@^3.0.4:
     tslib "^2.0.3"
     upper-case "^2.0.2"
 
-constructs@10.3.0, constructs@^10.3.0:
+constructs@10.3.0:
   version "10.3.0"
   resolved "https://registry.npmjs.org/constructs/-/constructs-10.3.0.tgz"
   integrity sha512-vbK8i3rIb/xwZxSpTjz3SagHn1qq9BChLEfy5Hf6fB3/2eFbrwt2n9kHwQcS0CPTRBesreeAcsJfMq2229FnbQ==
@@ -7736,7 +7717,7 @@ fs-constants@^1.0.0:
   resolved "https://registry.npmjs.org/fs-constants/-/fs-constants-1.0.0.tgz"
   integrity sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==
 
-fs-extra@^11.1.1, fs-extra@^11.2.0:
+fs-extra@^11.1.1:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.2.0.tgz#e70e17dfad64232287d01929399e0ea7c86b0e5b"
   integrity sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==
@@ -8142,7 +8123,7 @@ ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.2.1:
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
 
-ignore@^5.2.0, ignore@^5.2.4, ignore@^5.3.0:
+ignore@^5.2.0, ignore@^5.2.4:
   version "5.3.0"
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.3.0.tgz"
   integrity sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==
@@ -10711,9 +10692,9 @@ sst-aws-cdk@2.110.1-1:
   optionalDependencies:
     fsevents "2.3.2"
 
-sst@^2.38.4:
+sst@2.38.4, sst@^2.38.4:
   version "2.38.4"
-  resolved "https://registry.npmjs.org/sst/-/sst-2.38.4.tgz"
+  resolved "https://registry.yarnpkg.com/sst/-/sst-2.38.4.tgz#c1749a8b15e99f5d9501ef9c3ae014f7e5c3785b"
   integrity sha512-tpJg/PXGGW80rD6DpdueFEXfEqF0kOBzD1NwrwrmhkPspYFcQoai48ijxQtTnO1x5JWjJs0oOGBeOuHXxuAp6Q==
   dependencies:
     "@aws-cdk/aws-apigatewayv2-alpha" "^2.110.1-alpha.0"

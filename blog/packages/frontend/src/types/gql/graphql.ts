@@ -16,67 +16,77 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CreatePostInput = {
+  content: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  createNote?: Maybe<Note>;
-  deleteNote?: Maybe<Scalars['String']['output']>;
-  updateNote?: Maybe<Note>;
+  createPost?: Maybe<Post>;
+  deletePost?: Maybe<Post>;
+  updatePost?: Maybe<Post>;
 };
 
 
-export type MutationCreateNoteArgs = {
-  note: NoteInput;
+export type MutationCreatePostArgs = {
+  createPostInput: CreatePostInput;
 };
 
 
-export type MutationDeleteNoteArgs = {
-  noteId: Scalars['String']['input'];
+export type MutationDeletePostArgs = {
+  postId: Scalars['String']['input'];
 };
 
 
-export type MutationUpdateNoteArgs = {
-  note: UpdateNoteInput;
+export type MutationUpdatePostArgs = {
+  updatePostInput: UpdatePostInput;
 };
 
-export type Note = {
-  __typename?: 'Note';
+export type Post = {
+  __typename?: 'Post';
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-};
-
-export type NoteInput = {
-  content: Scalars['String']['input'];
-  id: Scalars['ID']['input'];
+  title: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  getNoteById?: Maybe<Note>;
-  listNotes?: Maybe<Array<Maybe<Note>>>;
+  getPostById?: Maybe<Post>;
+  listPosts?: Maybe<Array<Maybe<Post>>>;
 };
 
 
-export type QueryGetNoteByIdArgs = {
-  noteId: Scalars['String']['input'];
+export type QueryGetPostByIdArgs = {
+  postId: Scalars['String']['input'];
 };
 
-export type UpdateNoteInput = {
+export type UpdatePostInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type ListNotesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ListPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListNotesQuery = { __typename?: 'Query', listNotes?: Array<{ __typename?: 'Note', id: string, content: string } | null> | null };
+export type ListPostsQuery = { __typename?: 'Query', listPosts?: Array<{ __typename?: 'Post', id: string, title: string, content: string } | null> | null };
 
-export type CreateNoteMutationVariables = Exact<{
-  note: NoteInput;
+export type CreatePostMutationVariables = Exact<{
+  createPostInput: CreatePostInput;
 }>;
 
 
-export type CreateNoteMutation = { __typename?: 'Mutation', createNote?: { __typename?: 'Note', id: string, content: string } | null };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost?: { __typename?: 'Post', title: string, content: string } | null };
+
+export type DeletePostMutationVariables = Exact<{
+  postId: Scalars['String']['input'];
+}>;
 
 
-export const ListNotesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"listNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<ListNotesQuery, ListNotesQueryVariables>;
-export const CreateNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"note"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"NoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"note"},"value":{"kind":"Variable","name":{"kind":"Name","value":"note"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<CreateNoteMutation, CreateNoteMutationVariables>;
+export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', title: string, content: string, id: string } | null };
+
+
+export const ListPostsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"listPosts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPosts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<ListPostsQuery, ListPostsQueryVariables>;
+export const CreatePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createPostInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatePostInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createPostInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createPostInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<CreatePostMutation, CreatePostMutationVariables>;
+export const DeletePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeletePost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<DeletePostMutation, DeletePostMutationVariables>;

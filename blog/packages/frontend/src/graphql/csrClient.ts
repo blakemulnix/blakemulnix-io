@@ -1,5 +1,7 @@
 import { createHttpLink, ApolloClient, InMemoryCache } from "@apollo/client";
 
+const cache = new InMemoryCache()
+
 export const getCsrApolloClient = (accessToken: string) => {
   const GRAPHQL_API_URL = process.env.NEXT_PUBLIC_GRAPHQL_API_URL!;
 
@@ -10,7 +12,7 @@ export const getCsrApolloClient = (accessToken: string) => {
         Authorization: "Bearer " + accessToken,
       },
     }),
-    cache: new InMemoryCache(),
+    cache: cache,
     defaultOptions: {
       query: {
         fetchPolicy: 'cache-only',

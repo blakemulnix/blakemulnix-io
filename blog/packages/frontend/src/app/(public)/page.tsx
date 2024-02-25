@@ -1,37 +1,39 @@
 import React from 'react'
 import { getSsrApolloClient } from '@/graphql/ssrClient'
-import { LIST_NOTES } from '@/graphql/queries'
-import { ListNotesQuery, Note } from '@/types/gql/graphql'
+import { LIST_POSTS } from '@/graphql/queries'
+import { ListPostsQuery, Post } from '@/types/gql/graphql'
 import { Navbar } from '@nextui-org/react'
 
 export const dynamic = 'force-dynamic'
 
-const containerClasses = 'flex flex-col items-center gap-4'
+const postPreview = (post: Post) => (
+  <div className="flex flex-col gap-y-2 w-full p-4 max-w-2xl border border-gray-200 rounded-md">
+    <h2 className="text-xl font-bold">{post?.title}</h2>
+    <p className="text-stone-400 line-clamp-2">{post?.content}</p>
+  </div>
+)
 
 export default async function Page() {
   const gqlClient = getSsrApolloClient()
 
-  const results = await gqlClient.query<ListNotesQuery>({
-    query: LIST_NOTES,
+  const results = await gqlClient.query<ListPostsQuery>({
+    query: LIST_POSTS,
   })
 
-  const notes = results.data.listNotes as Note[]
+  const posts = results.data.listPosts as Post[]
 
-  if (notes.length === 0) {
+  if (posts.length === 0) {
     return (
-      <div className={containerClasses}>
-        <h1 className='text-xl'>No notes found</h1>
+      <div className="flex flex-col gap-4">
+        <h1 className="text-3xl">No posts found</h1>
       </div>
     )
   }
 
   return (
-      <div className={containerClasses}>
-        {notes.map((note) => (
-          <div key={note.id} className="flex grow p-4 rounded-md bg-stone-600">
-            <h2 className="text-xl">{note.content}</h2>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-3xl">Posts</h1>
+      {posts.map((post) => postPreview(post))}
+    </div>
   )
 }

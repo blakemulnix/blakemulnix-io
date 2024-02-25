@@ -6,7 +6,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   return (
     <>
       <Navbar />
-      {children}
+      <div className="max-w-[1280px] px-6 gap-4 mx-auto">{children}</div>
     </>
   )
 }

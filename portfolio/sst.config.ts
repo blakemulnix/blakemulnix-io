@@ -2,8 +2,7 @@ import { SSTConfig } from "sst";
 import { StaticSite } from "sst/constructs";
 
 export default {
-  // config() provides configuration for this SST app 
-  // (usually just the app name and AWS region)
+  // 
   config(_input) {
     return {
       name: "portfolio",
@@ -11,7 +10,7 @@ export default {
     };
   },
 
-  // SST apps are composed of one or more "stacks" that are
+  // An SST "app" is composed of one or more "stacks" that are
   // themselves composed of one or more "constructs"
   //
   // App <- Stack(s) <- Construct(s) 
@@ -32,8 +31,7 @@ export default {
       });
 
       stack.addOutputs({
-        SiteUrl: site.customDomainUrl,
-        CloudfrontUrl: site.url,
+        SiteUrl: site.customDomainUrl
       });
     });
   },

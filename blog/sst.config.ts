@@ -17,6 +17,9 @@ export default {
       const removalPolicy = stack.stage === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
 
       // DNS and URLs (Route53, CloudFront, ACM, etc.)
+      //              Produnction ::              Test Stage :: 
+      // Frontend:    blog.blakemulnix.io         test.blog.blakemulnix.io
+      // API:         api.blog.blakemulnix.io     api.test.blog.blakemulnix.io
       const hostedZoneDomain = 'blakemulnix.io'
       const rootDomain = stack.stage === 'prod' ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`
       const wwwDomain = `www.${rootDomain}`
@@ -34,6 +37,9 @@ export default {
             selfSignUpEnabled: false,
           },
           userPoolClient: {
+            idTokenValidity: cdk.Duration.days(1),
+            accessTokenValidity: cdk.Duration.days(1),
+            refreshTokenValidity: cdk.Duration.days(30),
             generateSecret: true,
             oAuth: {
               flows: {
@@ -52,8 +58,8 @@ export default {
         },
       })
 
-      // Notes Table (DynamoDB)
-      const notesTable = new Table(stack, 'blogNotes', {
+      // Posts Table (DynamoDB)
+      const postsTable = new Table(stack, 'blogPosts', {
         fields: {
           id: 'string',
         },
@@ -82,7 +88,7 @@ export default {
         schema: 'packages/functions/src/graphql/schema.graphql',
         defaults: {
           function: {
-            bind: [notesTable],
+            bind: [postsTable],
             url: {
               cors: {
                 allowOrigins: [rootDomainWithProtocol],
@@ -93,14 +99,14 @@ export default {
           },
         },
         dataSources: {
-          notes: 'packages/functions/src/main.handler',
+          Posts: 'packages/functions/src/main.handler',
         },
         resolvers: {
-          'Query    listNotes': 'notes',
-          'Query    getNoteById': 'notes',
-          'Mutation createNote': 'notes',
-          'Mutation updateNote': 'notes',
-          'Mutation deleteNote': 'notes',
+          'Query    listPosts': 'Posts',
+          'Query    getPostById': 'Posts',
+          'Mutation createPost': 'Posts',
+          'Mutation updatePost': 'Posts',
+          'Mutation deletePost': 'Posts',
         },
         cdk: {
           graphqlApi: {
@@ -131,7 +137,7 @@ export default {
           COGNITO_CLIENT_ID: adminUserPool.cdk.userPoolClient.userPoolClientId,
           COGNITO_CLIENT_SECRET: adminUserPool.cdk.userPoolClient.userPoolClientSecret.toString(),
           COGNITO_ISSUER: `https://cognito-idp.${stack.region}.amazonaws.com/${adminUserPool.cdk.userPool.userPoolId}`,
-          NEXTAUTH_SECRET: process.env.$NEXTAUTH_SECRET!,
+          NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET!,
           NEXTAUTH_URL: nextAuthUrl,
         },
       })

@@ -32,12 +32,12 @@ export default function AdminNavbar() {
   return (
     <NextNavbar className="mb-6 bg-default-100" height='5rem' maxWidth='xl'>
       <NavbarBrand className="flex flex-col gap-1 items-start">
-        <span className="font-medium text-2xl text-inherit">Blake&apos;s Blog</span>
+        <span className="font-medium text-2xl text-inherit">Blog Prototype</span>
         <span className="font-medium text-lg tracking-widest text-inherit">Admin Console</span>
       </NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button color="primary" variant='ghost' onClick={() => signOut()}>
+          <Button color="primary" variant='ghost' onClick={() => signOut({})}>
             Sign out
           </Button>
         </NavbarItem>

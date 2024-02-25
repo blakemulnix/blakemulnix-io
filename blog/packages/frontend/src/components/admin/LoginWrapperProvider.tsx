@@ -13,7 +13,7 @@ export default function LoginWrapperProvider({ children }: { children: React.Rea
   const { data: session, status } = nextAuthUseSession()
   
   if (status === 'loading') {
-    return <div className="flex flex-col p-8 text-xl items-center">Loading login wrapper...</div>
+    return <div className="flex flex-col p-8 text-xl items-center">Loading...</div>
   }
 
   if (status === 'authenticated') {

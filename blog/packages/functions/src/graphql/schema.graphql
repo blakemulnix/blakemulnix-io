@@ -1,25 +1,27 @@
-type Note {
+type Post {
   id: ID!
+  title: String!
   content: String!
 }
 
-input NoteInput {
-  id: ID!
+input CreatePostInput {
+  title: String!
   content: String!
 }
 
-input UpdateNoteInput {
+input UpdatePostInput {
   id: ID!
+  title: String
   content: String
 }
 
 type Query {
-  listNotes: [Note]
-  getNoteById(noteId: String!): Note
+  listPosts: [Post]
+  getPostById(postId: String!): Post
 }
 
 type Mutation {
-  createNote(note: NoteInput!): Note
-  deleteNote(noteId: String!): String
-  updateNote(note: UpdateNoteInput!): Note
+  createPost(createPostInput: CreatePostInput!): Post
+  updatePost(updatePostInput: UpdatePostInput!): Post
+  deletePost(postId: String!): Post
 }

@@ -17,8 +17,15 @@ function getKey(header: JwtHeader, callback: (err: Error | null, signingKey?: Se
   });
 }
 
+const publicQueryOperations = ["listPosts", "getPostById"];
+
 export const handler = async (event: AppSyncAuthorizerEvent): Promise<AppSyncAuthorizerResult> => {
-  if (["listNotes", "getNoteById"].includes(event.requestContext.operationName!)) {
+
+  console.log(`### Operation: ${event.requestContext.operationName}`)
+  // console.log("HERE")
+
+  if (publicQueryOperations.includes(event.requestContext.operationName!)) {
+    console.info("Public operation authorized")
     return {
       isAuthorized: true,
     };
@@ -41,6 +48,7 @@ export const handler = async (event: AppSyncAuthorizerEvent): Promise<AppSyncAut
     });
 
     // Token is valid
+    console.info("Protected operation authorized")
     return { isAuthorized: true };
   } catch (error) {
     console.error("Token validation error", error);

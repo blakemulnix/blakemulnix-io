@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <LoginWrapperProvider>
           <GraphqlClientSideProvider>
             <AdminNavbar />
-            {children}
+              <div className="max-w-[1280px] px-6 gap-4 mx-auto">{children}</div>
           </GraphqlClientSideProvider>
         </LoginWrapperProvider>
       </SessionProvider>

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { CREATE_NOTE, LIST_NOTES } from "@/graphql/queries";
+import { CREATE_POST, LIST_POSTS } from "@/graphql/queries";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { v4 as uuidv4 } from 'uuid';
@@ -12,9 +12,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export default function GraphqlData() {
-  const { data: notesResponse, loading } = useQuery(LIST_NOTES);
+  const { data: notesResponse, loading } = useQuery(LIST_POSTS);
 
-  const [createNote, { data: mutationResponse }] = useMutation(CREATE_NOTE, {
+  const [createNote, { data: mutationResponse }] = useMutation(CREATE_POST, {
     variables: {
       note: {
         id: uuidv4(),
