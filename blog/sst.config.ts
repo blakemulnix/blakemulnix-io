@@ -14,12 +14,10 @@ export default {
 
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const removalPolicy = stack.stage === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
-
       // DNS and URLs (Route53, CloudFront, ACM, etc.)
-      //              Produnction ::              Test Stage :: 
-      // Frontend:    blog.blakemulnix.io         test.blog.blakemulnix.io
-      // API:         api.blog.blakemulnix.io     api.test.blog.blakemulnix.io
+      //              Production ::               Non-production :: 
+      // Frontend:    blog.blakemulnix.io         {stage}.blog.blakemulnix.io
+      // API:         api.blog.blakemulnix.io     api.{stage}.blog.blakemulnix.io
       const hostedZoneDomain = 'blakemulnix.io'
       const rootDomain = stack.stage === 'prod' ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`
       const wwwDomain = `www.${rootDomain}`
@@ -27,6 +25,9 @@ export default {
       const nextAuthUrl = stack.stage === 'codespace' ? 'http://localhost:3000' : `https://${rootDomain}`
       const protocol = stack.stage === 'codespace' ? 'http://' : 'https://'
       const rootDomainWithProtocol = `${protocol}${rootDomain}`
+
+      // Removal policy
+      const removalPolicy = stack.stage === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
 
       // Admin User Pool (Cognito)
       const adminUserPool = new Cognito(stack, 'BlogAdminUserPool', {
@@ -52,6 +53,7 @@ export default {
         },
       })
 
+      // Cognito Domain
       adminUserPool.cdk.userPool.addDomain('BlogCognitoDomain', {
         cognitoDomain: {
           domainPrefix: `${stack.stage}-blog-blakemulnix-io`,
@@ -71,7 +73,7 @@ export default {
         },
       })
 
-      // GraphQL API (AppSync)
+      // GraphQL Authorizer (Lambda)
       const authorizer = new Function(stack, 'BlogGraphqlAuthorizerFn', {
         handler: 'packages/functions/src/authorizer.handler',
         environment: {
@@ -80,6 +82,7 @@ export default {
         },
       })
 
+      // GraphQL API (AppSync)
       const gqlApi = new AppSyncApi(stack, 'BlogGraphqlAPI', {
         customDomain: {
           domainName: apiDomain,
