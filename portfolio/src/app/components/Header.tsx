@@ -1,5 +1,5 @@
-import Navigation from "./Navigation";
-import SocialLinks from "./SocialLinks";
+import Navigation from './Navigation'
+import SocialLinks from './SocialLinks'
 
 const Header = () => {
   return (
@@ -14,7 +14,7 @@ const Header = () => {
         <SocialLinks />
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

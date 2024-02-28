@@ -19,7 +19,8 @@ export default {
       // Frontend:    blog.blakemulnix.io         {stage}.blog.blakemulnix.io
       // API:         api.blog.blakemulnix.io     api.{stage}.blog.blakemulnix.io
       const hostedZoneDomain = 'blakemulnix.io'
-      const rootDomain = stack.stage === 'prod' ? `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`
+      const rootDomain = stack.stage === 'prod' ? 
+        `blog.${hostedZoneDomain}` : `${stack.stage}.blog.${hostedZoneDomain}`
       const wwwDomain = `www.${rootDomain}`
       const apiDomain = `api.${rootDomain}`
       const nextAuthUrl = stack.stage === 'codespace' ? 'http://localhost:3000' : `https://${rootDomain}`

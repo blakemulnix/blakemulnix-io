@@ -2,7 +2,6 @@ import { SSTConfig } from "sst";
 import { StaticSite } from "sst/constructs";
 
 export default {
-  // Configure app name and AWS region
   config(_input) {
     return {
       name: "portfolio",
@@ -10,16 +9,18 @@ export default {
     };
   },
 
-  // App <- Stack(s) <- Construct(s) 
   stacks(app) {
     app.stack(function Site({ stack }) {
+
+      // Set up the DNS / URLs
       const hostedZone = "blakemulnix.io";
       const rootDomain = stack.stage === "prod" ? "blakemulnix.io" : `${stack.stage}.blakemulnix.io`;
       const wwwDomain = `www.${rootDomain}`;
 
+      // Create a new StaticSite
       const site = new StaticSite(stack, "Site", {
-        path: "build",
         buildCommand: "yarn build",
+        path: "build",
         customDomain: {
           domainName: rootDomain,
           domainAlias: wwwDomain,
