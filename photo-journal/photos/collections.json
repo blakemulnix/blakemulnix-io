@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Iowa Gravel",
+    "description": "What's that smell? Oh, pig shit.",
+    "date": "Summer 2024",
+    "directory": "iowa-gravel-summer-2024",
+    "photos": [
+      {
+        "title": "Jack",
+        "filename": "jack-1.jpg"
+      },
+      {
+        "title": "Bike",
+        "filename": "bike-1.jpg"
+      },
+      {
+        "title": "Sunset",
+        "filename": "sunset-1.jpg"
+      }
+    ]
+  },
+  {
+    "title": "Utah Desert",
+    "description": "To the tune of Ennio Morricone's 'The Good, the Bad, and the Ugly'.",
+    "date": "Spring 2024",
+    "directory": "utah-desert-spring-2024",
+    "photos": [
+      {
+        "title": "Canyonlands",
+        "filename": "canyonlands-1.jpg"
+      },
+      {
+        "title": "Outback",
+        "filename": "outback-1.jpg"
+      },
+      {
+        "title": "mv",
+        "filename": "mv-1.jpg"
+      }
+    ]
+  }
+]

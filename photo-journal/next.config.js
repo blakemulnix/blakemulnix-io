@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: "build",
-};
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'cdn.test.photos.blakemulnix.io',
+        protocol: 'https',
+      },
+      {
+        hostname: 'cdn.photos.blakemulnix.io',
+        protocol: 'https',
+      },
+    ],
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

@@ -1,81 +1,100 @@
 'use client'
 
-import { useInView } from 'react-intersection-observer'
-import React, { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import SlideShowModal from './SlideShowModal'
+import PhotoListItem from './PhotoListItem'
 
 interface Photo {
-  id: string
-  url: string
-  alt: string
-  width: number
-  height: number
+  title: string;
+  filename: string;
+  thumbnailUrl: string;
+  originalUrl: string;
 }
 
-interface Trip {
-  id: string
-  name: string
-  date: string
-  location: string
+interface Collection {
+  title: string;
+  description: string;
+  date: string;
+  photosDir?: string;
+  photos: Photo[];
 }
 
-const Footer = () => {
-  const [trips, setTrips] = useState<Trip[]>([])
-  const [page, setPage] = useState(1)
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const { ref, inView } = useInView()
-
-  const loadMoreTrips = useCallback(async () => {
-    const response = await fetch(`/api/trips?page=${page}`)
-    const newTrips: Trip[] = await response.json()
-    setTrips((prev) => [...prev, ...newTrips])
-    setPage((prev) => prev + 1)
-  }, [page])
+const PhotoList = () => {
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [isSlideShowOpen, setIsSlideShowOpen] = useState(false);
 
   useEffect(() => {
-    if (inView) {
-      loadMoreTrips()
-    }
-  }, [inView, loadMoreTrips])
+    const fetchCollections = async () => {
+      try {
+        const response = await fetch('/api/photos');
+        const data = await response.json();
+        
+        if (!response.ok) throw new Error(data.error || 'Failed to fetch collections');
+        
+        setCollections(data.collections);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const openSlideShow = (trip: Trip, index: number) => {
-    setSelectedTrip(trip)
-    setSelectedPhotoIndex(index)
-    setIsModalOpen(true)
-  }
+    fetchCollections();
+  }, []);
+
+  const openSlideShow = (collection: Collection) => {
+    setSelectedCollection(collection);
+    setCurrentPhotoIndex(0);
+    setIsSlideShowOpen(true);
+  };
+
+  const handleNext = () => {
+    setCurrentPhotoIndex(prev => 
+      prev === (selectedCollection?.photos.length || 1) - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handlePrevious = () => {
+    setCurrentPhotoIndex(prev => 
+      prev === 0 ? (selectedCollection?.photos.length || 1) - 1 : prev - 1
+    );
+  };
+
+  if (loading) return (
+    <div className="space-y-8 mb-16">
+      {[1, 2, 3].map((_, index) => (
+        <PhotoListItem key={index} isLoading={true} />
+      ))}
+    </div>
+  );
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <div>
-        <div className="lg:flex lg:justify-between lg:gap-4">
-            <div className="flex flex-col gap-4 mb-8">
-              {trips.map((trip) => (
-                <section key={trip.id} className="mb-12" onClick={() => setIsModalOpen(true)}>
-                  <h2 className="text-xl font-bold mb-2">{trip.date}</h2>
-                  <h3 className="text-lg mb-4">{trip.location}</h3>
-                </section>
-              ))}
-            </div>
-            <div ref={ref} className="h-10" />
-        </div>
+    <>
+      <div className="space-y-8 mb-16">
+        {collections.map((collection, index) => (
+          <PhotoListItem
+            key={index}
+            collection={collection}
+            onClick={openSlideShow}
+          />
+        ))}
       </div>
 
-      {/* Modal Slideshow */}
-      {isModalOpen && selectedTrip && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-white text-2xl">
-            ×
-          </button>
+      <SlideShowModal
+        isOpen={isSlideShowOpen}
+        onClose={() => setIsSlideShowOpen(false)}
+        photos={selectedCollection?.photos || []}
+        currentPhotoIndex={currentPhotoIndex}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+      />
+    </>
+  );
+};
 
-          <div className="relative w-full h-full flex items-center justify-center">
-            modal!
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default Footer
+export default PhotoList;

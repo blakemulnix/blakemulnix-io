@@ -31,8 +31,9 @@ const AboutMeSection = () => {
         </p>
         <p className="mb-4">
           Outside of work, you&apos;ll find me on my gravel bike, road-tripping across the country, or trekking around
-          our deserts and national forests taking photos. See some highlights of my adventures in my{' '}
-          <HighlightLink text="photo journal" url="https://adventures.blakemulnix.com" />.
+          the western United States. 
+           {/* See some highlights of my adventures in my{' '}
+          <HighlightLink text="photo journal" url="https://adventures.blakemulnix.com" />. */}
         </p>
       </div>
     </section>

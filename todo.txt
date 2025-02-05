@@ -1,0 +1,5 @@
+add photo collections
+set up pagination
+
+create svg of self portrait for 
+left hand content

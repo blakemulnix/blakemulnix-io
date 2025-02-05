@@ -1,0 +1,26 @@
+Last spring I took a trip out west. Covered 6300 miles over 3 weeks. I hit CO, UT, AZ, CA (from south to north along the coast), NV, ID, and WY. I brought only a recently purchaes FujiFilm camera and took over 5000 photos. 
+
+Since then, I have been wanting to share those photos, but I'm not on any social media sites where I can share them. So, I took a bit of time to set up site where I can share some of the highlights from that trip and others.
+
+This was a fun little project. Here's how I built it:
+
+I set up some basic infrastructure with SST v2:
+  - An S3 bucket
+  - A lambda to create thumbnail photos that gets run when new photos are added
+  - A NextJS site
+    - frontend to fetch and display photos
+    - small API to surface the list of photos, their relevant metadata, and urls
+
+That all took less than 100 lines of infrastructure as code!
+
+Now, I can simply add some photos and text to a folder within my repo, do a `yarn deploy:prod`, and ba-da-boom,
+they are available for your viewing pleasure.
+
+You can check it out over at photos.blakemulnix.io
+
+Hopefully this provides me the long await motivation to sift through all those photos and make some edits!
+
+
+
+also add links on instagram and facebook that just link to my website
+
