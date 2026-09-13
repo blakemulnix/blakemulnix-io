@@ -52,17 +52,23 @@ needed.
 
 ## Infrastructure
 
+Everything the site needs is defined in CDK, including DNS. Nothing is created
+by hand in the console or with the CLI.
+
 CloudFront serves a private S3 bucket through Origin Access Control, so the
 bucket is never publicly readable. TLS comes from an ACM certificate in
-`us-east-1` (CloudFront's requirement), validated via DNS, and Route 53 holds
-A and AAAA aliases for both the apex and `www`.
+`us-east-1` (CloudFront's requirement), validated via DNS against the zone this
+app owns, and Route 53 holds A and AAAA aliases for both the apex and `www`.
 
-Two stacks:
+Three stacks:
 
 - **`SiteGithubOidc`** — the GitHub OIDC provider and the deploy role. Its trust
   policy is pinned to this repository and the `main` branch; any other
   repository presenting a token is rejected.
-- **`Site`** — bucket, distribution, certificate, and DNS records.
+- **`SiteDns`** — the public hosted zone, marked `RETAIN` so it survives stack
+  changes. Also holds `NS` records delegating subdomains to other project
+  accounts.
+- **`Site`** — bucket, distribution, certificate, and the apex/`www` records.
 
 CDK manages infrastructure only. Site content is published by `s3 sync`, so a
 copy change does not require a CloudFormation deployment.
@@ -71,7 +77,8 @@ copy change does not require a CloudFormation deployment.
 cd infra
 npm ci
 npx jest              # assertions over the synthesized templates
-npx cdk diff --all
+npx cdk synth         # works offline; no credentials or context lookups
+npx cdk diff
 npx cdk deploy --all
 ```
 
@@ -79,29 +86,45 @@ Account-specific values live in `cdk.json` context (`domainName`,
 `githubRepo`, `deployBranch`) and can be overridden per invocation with
 `-c domainName=...`.
 
-### One-time setup in a new AWS account
+### Delegating a subdomain to another account
 
-1. **Register or transfer the domain** into Route 53 so a hosted zone for
-   `blakemulnix.io` exists in the target account. The CDK app looks this zone up
-   by name and will not create it.
-2. **Bootstrap CDK**, once per account and region:
-   ```bash
-   cd infra && npx cdk bootstrap aws://<account-id>/us-east-1
-   ```
-3. **Deploy the stacks** with administrator credentials:
-   ```bash
-   npx cdk deploy --all
-   ```
-   `SiteGithubOidc` must exist before CI can authenticate. If the account
-   already has a GitHub OIDC provider, pass `-c createOidcProvider=false`.
-4. **Wire up GitHub.** Copy the `DeployRoleArn` output into a repository
-   variable named `AWS_DEPLOY_ROLE_ARN`, and create an environment named
-   `production` (both deploy workflows reference it, so it is also where you can
-   add a required reviewer).
-5. **Point DNS at the account** by updating the registrar's nameservers to the
-   hosted zone's, if the domain is registered elsewhere.
+To point `mycoolthing.blakemulnix.io` at a different project account, create a
+hosted zone for it in that account and add its name servers to the
+`delegations` context:
 
-After that, pushes to `main` deploy themselves.
+```json
+"delegations": [
+  { "subdomain": "mycoolthing", "nameServers": ["ns-1.awsdns-00.org", "..."] }
+]
+```
+
+`SiteDns` turns each entry into an `NS` record. The apex stays here.
+
+### The two steps CDK cannot do
+
+Domain _registration_ has no CloudFormation resource, so these are unavoidably
+manual:
+
+1. **Registering or transferring the domain** into the target account.
+   Transfers between accounts in the same organization must be accepted by the
+   receiving account within three days.
+2. **Pointing the registrar at the zone.** Deploy `SiteDns` first, read its
+   `NameServers` output, and set those as the domain's name servers. Until that
+   propagates the zone is not authoritative, and the certificate in `Site`
+   cannot pass DNS validation.
+
+Hence the deployment order for a new account:
+
+```bash
+cd infra
+npx cdk bootstrap aws://<account-id>/us-east-1
+npx cdk deploy SiteDns                      # then set name servers at registrar
+npx cdk deploy SiteGithubOidc Site          # once DNS is authoritative
+```
+
+Copy the `DeployRoleArn` output into a repository variable named
+`AWS_DEPLOY_ROLE_ARN`, and create a GitHub environment named `production`,
+which both deploy workflows reference.
 
 ## Deployment
 

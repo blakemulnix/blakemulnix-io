@@ -1,13 +1,48 @@
 import * as cdk from 'aws-cdk-lib'
 import { Match, Template } from 'aws-cdk-lib/assertions'
 
+import { DnsStack } from '../lib/dns-stack'
 import { GithubOidcStack } from '../lib/github-oidc-stack'
 import { SiteStack } from '../lib/site-stack'
 
 const env = { account: '123456789012', region: 'us-east-1' }
 
+/** Builds DnsStack and SiteStack the way bin/app.ts wires them together. */
+const buildSite = () => {
+  const app = new cdk.App()
+  const dns = new DnsStack(app, 'TestDns', { env, domainName: 'example.com' })
+  const site = new SiteStack(app, 'TestSite', {
+    env,
+    domainName: 'example.com',
+    hostedZone: dns.hostedZone,
+  })
+  return { dns, site }
+}
+
+describe('DnsStack', () => {
+  it('creates the hosted zone and retains it', () => {
+    const template = Template.fromStack(buildSite().dns)
+    template.hasResourceProperties('AWS::Route53::HostedZone', { Name: 'example.com.' })
+    template.hasResource('AWS::Route53::HostedZone', { DeletionPolicy: 'Retain' })
+  })
+
+  it('delegates subdomains to other accounts when configured', () => {
+    const app = new cdk.App()
+    const dns = new DnsStack(app, 'D', {
+      env,
+      domainName: 'example.com',
+      delegations: [{ subdomain: 'mycoolthing', nameServers: ['ns-1.awsdns-00.org', 'ns-2.awsdns-00.net'] }],
+    })
+    Template.fromStack(dns).hasResourceProperties('AWS::Route53::RecordSet', {
+      Name: 'mycoolthing.example.com.',
+      Type: 'NS',
+      ResourceRecords: ['ns-1.awsdns-00.org', 'ns-2.awsdns-00.net'],
+    })
+  })
+})
+
 describe('SiteStack', () => {
-  const template = Template.fromStack(new SiteStack(new cdk.App(), 'TestSite', { env, domainName: 'example.com' }))
+  const template = Template.fromStack(buildSite().site)
 
   it('keeps the origin bucket fully private', () => {
     template.hasResourceProperties('AWS::S3::Bucket', {

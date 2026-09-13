@@ -45,7 +45,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Diff
-        run: npx cdk diff --all || true
+        run: npx cdk diff || true
 
       - name: Deploy
         run: npx cdk deploy --all --require-approval never --progress events

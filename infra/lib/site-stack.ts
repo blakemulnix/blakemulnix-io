@@ -4,7 +4,8 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import type * as iam from 'aws-cdk-lib/aws-iam'
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam'
-import * as route53 from 'aws-cdk-lib/aws-route53'
+import type * as route53 from 'aws-cdk-lib/aws-route53'
+import { ARecord, AaaaRecord, RecordTarget } from 'aws-cdk-lib/aws-route53'
 import * as targets from 'aws-cdk-lib/aws-route53-targets'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import type { Construct } from 'constructs'
@@ -12,6 +13,11 @@ import type { Construct } from 'constructs'
 export interface SiteStackProps extends cdk.StackProps {
   /** Apex domain, e.g. blakemulnix.io. `www.` is added as an alias. */
   domainName: string
+  /**
+   * Zone created by DnsStack. Passed in rather than looked up so the zone is
+   * owned by CDK and needs no pre-existing account state.
+   */
+  hostedZone: route53.IHostedZone
   /**
    * CI role granted exactly the access needed to publish content: write to
    * this bucket and invalidate this distribution. Nothing wider.
@@ -31,10 +37,8 @@ export class SiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: SiteStackProps) {
     super(scope, id, props)
 
-    const { domainName, deployRole } = props
+    const { domainName, hostedZone, deployRole } = props
     const wwwDomain = `www.${domainName}`
-
-    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', { domainName })
 
     const bucket = new s3.Bucket(this, 'SiteBucket', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -111,14 +115,14 @@ export class SiteStack extends cdk.Stack {
       ],
     })
 
-    const target = route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
+    const target = RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
 
     for (const [name, recordName] of [
       ['Apex', undefined],
       ['Www', wwwDomain],
     ] as const) {
-      new route53.ARecord(this, `${name}ARecord`, { zone: hostedZone, recordName, target })
-      new route53.AaaaRecord(this, `${name}AaaaRecord`, { zone: hostedZone, recordName, target })
+      new ARecord(this, `${name}ARecord`, { zone: hostedZone, recordName, target })
+      new AaaaRecord(this, `${name}AaaaRecord`, { zone: hostedZone, recordName, target })
     }
 
     if (deployRole) {
