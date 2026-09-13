@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Tailwind 4 derives utilities directly from these custom
+ * properties, so `--color-ink-200` becomes `text-ink-200`, `bg-ink-200`, etc.
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Warm neutral scale, used for text and chrome. */
+  --color-ink-50: oklch(0.98 0.003 85);
+  --color-ink-100: oklch(0.94 0.004 85);
+  --color-ink-200: oklch(0.86 0.005 85);
+  --color-ink-300: oklch(0.74 0.006 85);
+  --color-ink-400: oklch(0.6 0.007 85);
+
+  /* Deep backdrop surfaces layered over the hero photograph. */
+  --color-surface-700: oklch(0.35 0.008 75);
+  --color-surface-800: oklch(0.26 0.008 75);
+  --color-surface-900: oklch(0.19 0.009 75);
+  --color-surface-950: oklch(0.13 0.01 75);
+
+  /* Accent, reserved for links and interactive affordances. */
+  --color-accent-100: oklch(0.92 0.045 225);
+  --color-accent-200: oklch(0.85 0.07 225);
+  --color-accent-300: oklch(0.78 0.1 225);
+  --color-accent-400: oklch(0.7 0.12 225);
+
+  /* Shared easing so motion feels consistent across components. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface-950);
+    color: var(--color-ink-200);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* A single, consistent focus ring for every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-300);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Respect the OS-level motion preference. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

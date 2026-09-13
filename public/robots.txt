@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blakemulnix.io/sitemap.xml
