@@ -126,13 +126,6 @@ export const DeckVariant = () => {
         <section className={panelClass} aria-label="Contact">
           <h2 className="font-display text-4xl font-semibold text-white sm:text-6xl">Let&apos;s talk.</h2>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <a
-              href={profile.resumeUrl}
-              className="w-fit rounded-full px-6 py-3 font-semibold text-neutral-900 transition hover:brightness-110"
-              style={{ backgroundColor: ACCENT }}
-            >
-              View resume
-            </a>
             <div className="flex gap-5">
               {socialLinks.map(({ label, url, Icon }) => (
                 <a

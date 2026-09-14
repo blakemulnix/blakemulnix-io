@@ -6,7 +6,6 @@ export const profile = {
   role: 'Software Consultant',
   tagline: 'I build reliable, scalable software on the cloud.',
   greeting: "Hey, I'm Blake",
-  resumeUrl: '/BlakeMulnixResume.pdf',
   location: 'Des Moines, Iowa',
 } as const
 

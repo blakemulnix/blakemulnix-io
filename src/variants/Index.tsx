@@ -9,7 +9,7 @@ const ACCENT = '#bef264'
 const allTech = [...new Set(experience.flatMap((e) => e.technologies))].sort()
 
 /**
- * The resume as a queryable dataset: type to filter, or narrow by stack. A
+ * The career as a queryable dataset: type to filter, or narrow by stack. A
  * command palette handles navigation, so the page needs no nav bar at all.
  */
 export const IndexVariant = () => {
@@ -160,9 +160,6 @@ export const IndexVariant = () => {
         </ol>
 
         <footer className="flex flex-wrap items-center gap-6 pt-8">
-          <a href={profile.resumeUrl} className="text-sm underline underline-offset-4" style={{ color: ACCENT }}>
-            resume.pdf
-          </a>
           {socialLinks.map(({ label, url }) => (
             <a
               key={label}
@@ -211,15 +208,6 @@ export const IndexVariant = () => {
                   </a>
                 </li>
               ))}
-              <li className="mt-1 border-t border-white/10 pt-1">
-                <a
-                  href={profile.resumeUrl}
-                  className="block px-4 py-2.5 text-sm hover:bg-white/5"
-                  style={{ color: ACCENT }}
-                >
-                  Open resume →
-                </a>
-              </li>
             </ul>
           </div>
         </div>

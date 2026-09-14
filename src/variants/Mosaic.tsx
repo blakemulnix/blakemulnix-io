@@ -50,20 +50,6 @@ export const MosaicVariant = () => {
             </div>
           </div>
 
-          {/* Resume + socials */}
-          <a
-            href={profile.resumeUrl}
-            className={`${tile} group flex flex-col justify-between hover:border-[#d4ff3f]/50`}
-          >
-            <span className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">Resume</span>
-            <span className="mt-6 flex items-end justify-between">
-              <span className="font-display text-xl font-semibold text-white">PDF</span>
-              <span className="text-2xl transition-transform group-hover:translate-x-1" style={{ color: ACCENT }}>
-                →
-              </span>
-            </span>
-          </a>
-
           <div className={`${tile} flex flex-col justify-between`}>
             <span className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">Elsewhere</span>
             <ul className="mt-6 flex gap-4">

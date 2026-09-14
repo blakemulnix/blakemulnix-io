@@ -126,26 +126,55 @@ export const RidgelineVariant = () => {
             </div>
           </div>
 
-          {/* Dashed spine, from Trail; node behaviour from Timeline */}
-          <ol className="relative border-l border-dashed pl-7 sm:pl-10" style={{ borderColor: `${MOSS}66` }}>
+          {/*
+            Alignment: --spine is the one x-axis, measured from the list's left
+            edge. The connector and every dot are positioned at that axis and
+            centred on it with a translate, so they cannot drift apart at any
+            breakpoint. --node-y matches the date line's 16px leading, which
+            puts each dot on the optical centre of that line.
+          */}
+          <ol className="relative pl-[var(--pad)] [--node-y:8px] [--pad:1.75rem] [--spine:9px] sm:[--pad:2.5rem]">
             {experience.map((e, i) => {
               const isActive = i === activeIndex
+              const isLast = i === experience.length - 1
+              const axis = 'calc(var(--spine) - var(--pad))'
+
               return (
                 <li
                   key={`${e.company}-${e.start}`}
                   ref={(el) => {
                     itemRefs.current[i] = el
                   }}
-                  className="relative pb-12"
+                  className="relative pb-12 last:pb-0"
                 >
+                  {/*
+                    The connector spans exactly one item's height starting at
+                    this dot's centre, so it lands on the next dot's centre and
+                    stops at the last one instead of trailing past it.
+                  */}
+                  {!isLast && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-[var(--node-y)] h-full w-px"
+                      style={{
+                        left: axis,
+                        transform: 'translateX(-50%)',
+                        backgroundImage: `repeating-linear-gradient(to bottom, ${MOSS}66 0 5px, transparent 5px 10px)`,
+                      }}
+                    />
+                  )}
+
                   <span
                     aria-hidden="true"
-                    className="absolute top-1.5 -left-[calc(1.75rem+9px)] flex h-4 w-4 items-center justify-center rounded-full transition-all sm:-left-[calc(2.5rem+9px)]"
+                    className="absolute top-[var(--node-y)] flex h-4 w-4 items-center justify-center rounded-full transition-all"
                     style={{
+                      left: axis,
+                      // Scale lives in the same transform as the centring
+                      // offsets; a separate transform would override them.
+                      transform: `translate(-50%, -50%) scale(${isActive ? 1.3 : 1})`,
                       backgroundColor: PINE,
                       border: `2px solid ${isActive ? OCHRE : `${MOSS}88`}`,
                       boxShadow: isActive ? `0 0 14px ${OCHRE}80` : 'none',
-                      transform: isActive ? 'scale(1.3)' : 'scale(1)',
                     }}
                   >
                     <span
@@ -154,7 +183,10 @@ export const RidgelineVariant = () => {
                     />
                   </span>
 
-                  <p className="font-mono text-[11px] tracking-widest uppercase" style={{ color: `${SAND}aa` }}>
+                  <p
+                    className="font-mono text-[11px] leading-4 tracking-widest uppercase"
+                    style={{ color: `${SAND}aa` }}
+                  >
                     {e.start} — {e.end ?? 'Present'}
                   </p>
                   <h3 className="mt-1.5 font-serif text-2xl font-semibold">{e.title}</h3>
@@ -191,13 +223,6 @@ export const RidgelineVariant = () => {
           className="mt-4 flex flex-wrap items-center justify-between gap-5 border-t pt-8"
           style={{ borderColor: `${SAND}22` }}
         >
-          <a
-            href={profile.resumeUrl}
-            className="rounded-full px-5 py-2.5 font-serif text-base font-semibold transition hover:brightness-105"
-            style={{ backgroundColor: OCHRE, color: PINE }}
-          >
-            Full resume
-          </a>
           <ul className="flex gap-5">
             {socialLinks.map(({ label, url, Icon }) => (
               <li key={label}>

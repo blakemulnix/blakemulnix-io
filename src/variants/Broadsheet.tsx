@@ -79,12 +79,6 @@ export const BroadsheetVariant = () => (
 
       {/* Colophon */}
       <footer className="flex flex-wrap items-center justify-between gap-4 py-8">
-        <a
-          href={profile.resumeUrl}
-          className="border-b-2 border-[#4a5d3a] font-serif text-lg font-semibold hover:border-[#a9563a]"
-        >
-          Full resume →
-        </a>
         <ul className="flex gap-5">
           {socialLinks.map(({ label, url, Icon }) => (
             <li key={label}>

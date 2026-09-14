@@ -6,7 +6,7 @@ import { experience } from '../data/experience'
 import { socialLinks } from '../data/social'
 
 const LIME = 'text-[#b8f52c]'
-const COMMANDS = ['about', 'experience', 'stack', 'links', 'resume', 'help', 'clear'] as const
+const COMMANDS = ['about', 'experience', 'stack', 'links', 'help', 'clear'] as const
 
 interface Line {
   id: number
@@ -87,15 +87,6 @@ const output = (cmd: string): ReactNode => {
           ))}
         </ul>
       )
-    case 'resume':
-      return (
-        <p>
-          <a href={profile.resumeUrl} className="text-[#b8f52c] underline decoration-dotted">
-            BlakeMulnixResume.pdf
-          </a>
-          <span className="text-neutral-500"> — opening…</span>
-        </p>
-      )
     case 'help':
       return (
         <div className="text-neutral-300">
@@ -133,7 +124,6 @@ export const TerminalVariant = () => {
       return
     }
     setLines((prev) => [...prev, { id: nextId.current++, prompt: cmd }, { id: nextId.current++, body: output(cmd) }])
-    if (cmd === 'resume') window.open(profile.resumeUrl, '_blank')
   }
 
   // Greet with the about block so the page is never an empty prompt.

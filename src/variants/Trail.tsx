@@ -103,17 +103,33 @@ export const TrailVariant = () => (
         <h2 className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: OCHRE }}>
           Waypoints
         </h2>
-        <ol className="mt-6 space-y-8 border-l border-dashed pl-7 sm:pl-10" style={{ borderColor: `${MOSS}66` }}>
+        <ol className="mt-6 pl-[var(--pad)] [--node-y:8px] [--pad:1.75rem] [--spine:9px] sm:[--pad:2.5rem]">
           {experience.map((e, i) => (
-            <li key={`${e.company}-${e.start}`} className="relative">
+            <li key={`${e.company}-${e.start}`} className="relative pb-8 last:pb-0">
+              {i < experience.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-[var(--node-y)] h-full w-px"
+                  style={{
+                    left: 'calc(var(--spine) - var(--pad))',
+                    transform: 'translateX(-50%)',
+                    backgroundImage: `repeating-linear-gradient(to bottom, ${MOSS}66 0 5px, transparent 5px 10px)`,
+                  }}
+                />
+              )}
               <span
                 aria-hidden="true"
-                className="absolute top-2 -left-[calc(1.75rem+1px)] flex h-4 w-4 items-center justify-center rounded-full sm:-left-[calc(2.5rem+1px)]"
-                style={{ backgroundColor: '#141d17', border: `2px solid ${OCHRE}` }}
+                className="absolute top-[var(--node-y)] flex h-4 w-4 items-center justify-center rounded-full"
+                style={{
+                  left: 'calc(var(--spine) - var(--pad))',
+                  transform: 'translate(-50%, -50%)',
+                  backgroundColor: '#141d17',
+                  border: `2px solid ${OCHRE}`,
+                }}
               >
                 <span className="h-1 w-1 rounded-full" style={{ backgroundColor: OCHRE }} />
               </span>
-              <p className="font-mono text-[11px] tracking-widest uppercase" style={{ color: `${SAND}aa` }}>
+              <p className="font-mono text-[11px] leading-4 tracking-widest uppercase" style={{ color: `${SAND}aa` }}>
                 {e.start} — {e.end ?? 'Present'}
                 <span className="ml-2" style={{ color: `${SAND}66` }}>
                   no. {experience.length - i}
@@ -144,13 +160,6 @@ export const TrailVariant = () => (
         className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t pt-8"
         style={{ borderColor: `${SAND}22` }}
       >
-        <a
-          href={profile.resumeUrl}
-          className="rounded-full px-5 py-2.5 font-serif text-base font-semibold text-[#141d17] transition hover:brightness-105"
-          style={{ backgroundColor: OCHRE }}
-        >
-          Full resume
-        </a>
         <ul className="flex gap-5">
           {socialLinks.map(({ label, url, Icon }) => (
             <li key={label}>

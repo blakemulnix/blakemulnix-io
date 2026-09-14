@@ -75,28 +75,38 @@ export const TimelineVariant = () => {
             </div>
           </div>
 
-          <ol className="relative border-l border-white/10 pl-6 sm:pl-10">
+          <ol className="relative pl-[var(--pad)] [--node-y:8px] [--pad:1.5rem] [--spine:9px] sm:[--pad:2.5rem]">
             {experience.map((e, i) => {
               const isActive = i === activeIndex
+              const isLast = i === experience.length - 1
+              const axis = 'calc(var(--spine) - var(--pad))'
               return (
                 <li
                   key={`${e.company}-${e.start}`}
                   ref={(el) => {
                     itemRefs.current[i] = el
                   }}
-                  className="relative pb-12"
+                  className="relative pb-12 last:pb-0"
                 >
-                  {/* Spine node */}
+                  {/* Connector spans one item, so it ends on the next dot. */}
+                  {!isLast && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-[var(--node-y)] h-full w-px bg-white/10"
+                      style={{ left: axis, transform: 'translateX(-50%)' }}
+                    />
+                  )}
                   <span
                     aria-hidden="true"
-                    className="absolute top-1.5 -left-[calc(1.5rem+1px)] h-2.5 w-2.5 rounded-full ring-4 ring-[#0a0b09] transition-all sm:-left-[calc(2.5rem+1px)]"
+                    className="absolute top-[var(--node-y)] h-2.5 w-2.5 rounded-full ring-4 ring-[#0a0b09] transition-all"
                     style={{
+                      left: axis,
+                      transform: `translate(-50%, -50%) scale(${isActive ? 1.35 : 1})`,
                       backgroundColor: isActive ? ACCENT : '#3f3f46',
                       boxShadow: isActive ? `0 0 16px ${ACCENT}` : 'none',
-                      transform: isActive ? 'scale(1.35)' : 'scale(1)',
                     }}
                   />
-                  <p className="font-mono text-[11px] tracking-widest text-neutral-400 uppercase">
+                  <p className="font-mono text-[11px] leading-4 tracking-widest text-neutral-400 uppercase">
                     {e.start} — {e.end ?? 'Present'}
                   </p>
                   <h3 className="font-display mt-2 text-xl font-semibold text-white sm:text-2xl">{e.title}</h3>
@@ -127,13 +137,6 @@ export const TimelineVariant = () => {
         </div>
 
         <footer className="mt-6 flex flex-wrap items-center gap-6 border-t border-white/10 pt-8">
-          <a
-            href={profile.resumeUrl}
-            className="rounded-full px-5 py-2.5 text-sm font-semibold text-neutral-900 transition hover:brightness-110"
-            style={{ backgroundColor: ACCENT }}
-          >
-            View resume
-          </a>
           <ul className="flex gap-5">
             {socialLinks.map(({ label, url, Icon }) => (
               <li key={label}>
