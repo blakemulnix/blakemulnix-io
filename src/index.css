@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* explorations/ holds parked designs that are never bundled; without this,
+   Tailwind scans them and emits utilities for markup no page renders. */
+@source not '../explorations';
+
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
