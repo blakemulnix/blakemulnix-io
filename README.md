@@ -9,7 +9,7 @@ My personal site: a single-page static résumé and introduction.
 | UI             | React 19 + TypeScript                                            |
 | Build          | Vite 8 (static output to `dist/`)                                |
 | Styling        | Tailwind CSS 4, configured in CSS via `@theme`                   |
-| Fonts          | Inter, self-hosted through Fontsource                            |
+| Fonts          | Inter, Fraunces and JetBrains Mono, self-hosted via Fontsource   |
 | Linting        | oxlint, Prettier                                                 |
 | Infrastructure | AWS CDK — S3 + CloudFront + ACM + Route 53                       |
 | CI/CD          | GitHub Actions, authenticating to AWS with OIDC (no stored keys) |
@@ -39,16 +39,15 @@ npm run dev        # http://localhost:5173
 
 ```
 src/
-  components/    Presentational components, one per file
-  data/          Résumé and social content, kept out of markup
-  hooks/         useActiveSection — scroll-spy for the sidebar nav
+  components/    Site.tsx is the page; Segments renders shared prose
+  data/          Experience and social content, kept out of markup
   index.css      Tailwind import and design tokens
-public/          Served verbatim: photo, résumé PDF, robots, sitemap
+public/          Served verbatim: favicon, robots, sitemap
 infra/           CDK app (see below)
 ```
 
-To update the résumé, edit `src/data/experience.ts`; no component changes
-needed.
+To update work history, edit `src/data/experience.ts`, and About copy
+`src/data/about.ts`; neither needs a component change.
 
 ## Infrastructure
 

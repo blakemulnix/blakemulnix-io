@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Segments } from '../components/Segments'
+import { Segments } from './Segments'
 import { aboutParagraphs, profile } from '../data/about'
 import { experience } from '../data/experience'
 import { socialLinks } from '../data/social'
@@ -12,13 +12,13 @@ const OCHRE = '#d9a05b'
 const MOSS = '#93b06e'
 
 /**
- * Timeline's scroll-tracked spine in Trail's earthy palette: the year readout
- * follows whichever role is in view, over a topographic ground.
+ * The site: a scroll-tracked spine over a topographic ground, where the year
+ * readout follows whichever role is currently in view.
  *
  * On small screens the sticky sidebar is replaced by a compact bar pinned to
  * the top, so the position feedback survives the loss of the side column.
  */
-export const RidgelineVariant = () => {
+export const Site = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const itemRefs = useRef<(HTMLLIElement | null)[]>([])
 
