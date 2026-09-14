@@ -1,29 +1,38 @@
-import { AboutSection } from './components/AboutSection'
-import { Backdrop } from './components/Backdrop'
-import { ExperienceSection } from './components/ExperienceSection'
-import { Footer } from './components/Footer'
-import { Header } from './components/Header'
+import { useEffect, useState } from 'react'
 
-export const App = () => (
-  <>
-    <a
-      href="#content"
-      className="focus:bg-surface-800 focus:text-ink-50 sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:px-4 focus:py-2"
-    >
-      Skip to content
-    </a>
+import { VariantPicker } from './components/VariantPicker'
+import { profile } from './data/about'
+import { variants } from './variants'
 
-    <Backdrop />
+const readVariantId = () => window.location.hash.replace(/^#\/?/, '')
 
-    <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-      <div className="lg:flex lg:justify-between lg:gap-8">
-        <Header />
-        <main id="content" className="lg:w-1/2 lg:py-24">
-          <AboutSection />
-          <ExperienceSection />
-          <Footer />
-        </main>
-      </div>
-    </div>
-  </>
-)
+export const App = () => {
+  const [id, setId] = useState(readVariantId)
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setId(readVariantId())
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const fallback = variants[0]
+  const current = variants.find((v) => v.id === id) ?? fallback
+
+  if (!current) throw new Error('No design variants are registered.')
+
+  useEffect(() => {
+    document.title = `${profile.name} — ${profile.role} · ${current.name}`
+  }, [current.name])
+
+  const Design = current.Component
+
+  return (
+    <>
+      <Design key={current.id} />
+      <VariantPicker variants={variants} current={current} />
+    </>
+  )
+}

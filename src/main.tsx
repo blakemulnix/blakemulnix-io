@@ -1,4 +1,7 @@
 import '@fontsource-variable/inter/wght.css'
+import '@fontsource-variable/jetbrains-mono/wght.css'
+import '@fontsource-variable/space-grotesk/wght.css'
+import '@fontsource-variable/fraunces/standard.css'
 import './index.css'
 
 import { StrictMode } from 'react'
