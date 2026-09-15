@@ -2,8 +2,7 @@
 
 /** Set large, and read as one block rather than separate paragraphs. */
 export const outsideLede = [
-  'I charge up my mental batteries by depleting my glycogen stores.',
-  '"Type 2 fun," they call it. Sometimes I bring my camera along.',
+  'I charge up my mental batteries by depleting my glycogen stores. "Type 2 fun," they call it. Sometimes I bring my camera along.',
 ]
 
 /** Body-size aside, sitting under the lede. */

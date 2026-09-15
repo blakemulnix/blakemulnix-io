@@ -94,4 +94,8 @@ writeFileSync(MANIFEST, JSON.stringify({ photos }, null, 2) + '\n')
 
 const unlabelled = photos.filter((p) => !p.location).length
 console.log(`${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`)
-console.log(unlabelled ? `${unlabelled} still need a location` : 'all photos have a location')
+console.log(
+  unlabelled
+    ? `${unlabelled} still need a location. Run \`npm run add-photos\` to fill them in.`
+    : 'all photos have a location',
+)

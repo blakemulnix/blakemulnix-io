@@ -10,7 +10,7 @@
  * loaded over file:// cannot write to disk, and typing labels into a page that
  * then asks you to copy JSON somewhere is how labels get lost.
  */
-import { execFileSync } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import path from 'node:path'
@@ -114,10 +114,42 @@ const server = createServer(async (req, res) => {
   send(res, 404, '{}')
 })
 
+/** Opens the page in whatever the platform considers the default browser. */
+const openBrowser = (url) => {
+  const command = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'explorer' : 'xdg-open'
+  // Detached and unreferenced, so a browser that stays open does not hold the
+  // server process alive, and a machine with no opener just carries on.
+  try {
+    const child = execFile(command, [url], { stdio: 'ignore' })
+    child.unref?.()
+    child.on?.('error', () => {})
+  } catch {
+    // Nothing to open with. The URL is printed either way.
+  }
+}
+
+/*
+ * A busy port is the likeliest failure here, usually a copy already running in
+ * another terminal, and the default for it is an unhandled 'error' event and a
+ * stack trace. Say what happened and what to do instead.
+ */
+server.on('error', (error) => {
+  if (error.code !== 'EADDRINUSE') throw error
+  console.error(`\n  Port ${PORT} is already in use.\n`)
+  console.error(`  If add-photos is already running, open http://localhost:${PORT}`)
+  console.error(`  Otherwise start it on another port:  PORT=${PORT + 1} npm run add-photos\n`)
+  process.exit(1)
+})
+
 server.listen(PORT, () => {
+  const url = `http://localhost:${PORT}`
   const { photos } = readManifest()
   const unlabelled = photos.filter((p) => !p.location).length
+
   console.log(`\n  ${photos.length} photos, ${unlabelled} still needing a location`)
-  console.log(`\n  Open http://localhost:${PORT}\n`)
+  console.log(`\n  →  ${url}\n`)
   console.log('  Labels save as you type. Ctrl+C when you are done.\n')
+
+  if (process.env.NO_OPEN) return
+  openBrowser(url)
 })
