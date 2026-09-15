@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Photo originals: large, and derivatives are committed instead
+photos/originals/

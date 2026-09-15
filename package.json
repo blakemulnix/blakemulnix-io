@@ -11,7 +11,8 @@
     "typecheck": "tsc -b",
     "lint:fix": "oxlint --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "photos": "node scripts/photos-manifest.mjs && node scripts/photos-build.mjs && node scripts/photos-label-page.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
