@@ -1,44 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { photos } from '../data/photos.generated'
 import { palette } from '../theme'
 import { Lightbox } from './Lightbox'
 import { photoSrc, photoSrcSet } from './photoSrc'
 
-/** Rendered up front; the rest arrive as you reach the bottom. */
-const INITIAL = 9
-const BATCH = 9
-
 /**
- * A masonry wall of photos that grows as you scroll.
+ * A masonry wall of every photo.
  *
  * CSS columns rather than a grid, so portrait, landscape and panoramic frames
- * tile without per-item row spans. Each frame reserves its aspect ratio and
- * shows a blurred placeholder while loading, so nothing shifts as photos
- * arrive. The initial count is fixed rather than measured, which keeps the
- * prerendered markup identical to the first client render.
+ * tile without per-item row spans. Each frame reserves its aspect ratio behind
+ * a blurred placeholder, so nothing shifts as photos arrive.
+ *
+ * Every photo is rendered up front rather than appended in batches as you
+ * scroll. Multi-column layout rebalances its columns whenever content changes,
+ * so appending moved photos that were already on screen into other columns:
+ * measured at nine of eighteen jumping column and position mid-scroll. Nothing
+ * is fetched early regardless, because each image is lazy.
  */
 export const PhotoWall = () => {
-  const [visible, setVisible] = useState(INITIAL)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const sentinel = useRef<HTMLDivElement>(null)
-
-  const hasMore = visible < photos.length
-
-  useEffect(() => {
-    const node = sentinel.current
-    if (!node || !hasMore) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setVisible((v) => Math.min(v + BATCH, photos.length))
-        }
-      },
-      { rootMargin: '600px 0px' }, // start fetching before they come into view
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [hasMore])
 
   const close = useCallback(() => setOpenIndex(null), [])
   const navigate = useCallback((i: number) => setOpenIndex(i), [])
@@ -46,7 +27,7 @@ export const PhotoWall = () => {
   return (
     <>
       <div className="columns-2 gap-2.5 sm:columns-3 sm:gap-3">
-        {photos.slice(0, visible).map((photo, i) => {
+        {photos.map((photo, i) => {
           const label = photo.location || photo.date
           return (
             <figure key={photo.slug} className="mb-2.5 break-inside-avoid sm:mb-3">
@@ -99,14 +80,6 @@ export const PhotoWall = () => {
           )
         })}
       </div>
-
-      {hasMore && (
-        <div ref={sentinel} className="py-8 text-center">
-          <span className="font-mono text-[11px] tracking-widest uppercase" style={{ color: `${palette.sand}59` }}>
-            Loading more
-          </span>
-        </div>
-      )}
 
       {openIndex !== null && <Lightbox photos={photos} index={openIndex} onClose={close} onNavigate={navigate} />}
     </>

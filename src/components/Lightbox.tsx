@@ -21,40 +21,52 @@ interface LightboxProps {
  */
 const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
   const [loaded, setLoaded] = useState(false)
+  const ratio = `${photo.width} / ${photo.height}`
 
   return (
-    // Sizes itself to the image, so the placeholder can sit exactly over it
-    // without needing to know the fitted dimensions.
-    <div className="relative inline-flex overflow-hidden rounded-xl shadow-2xl">
-      <img
-        // A cached image can finish before React attaches onLoad, which would
-        // leave it faded out for good, so the ref checks for that case too.
-        ref={(node) => {
-          if (node?.complete) setLoaded(true)
-        }}
-        onLoad={() => setLoaded(true)}
-        src={photoSrc(photo, 1800)}
-        srcSet={photoSrcSet(photo)}
-        sizes="(min-width: 1024px) 80vw, 100vw"
-        alt={photo.caption || label}
-        width={photo.width}
-        height={photo.height}
-        className="max-h-[68vh] w-auto max-w-full object-contain transition-opacity duration-400 ease-(--ease-out-soft) sm:max-h-[72vh]"
-        style={{ opacity: loaded ? 1 : 0 }}
-      />
-
+    <>
       {/*
-       * Blur-up, and nothing else. The placeholder cross-fades straight into
-       * the photo in one move: a spinner on top of it read as three separate
-       * loading stages rather than one, and the photo's own colours already
-       * say that something is arriving.
+       * The fitted size is computed in CSS rather than waiting on the image.
+       * Left to the width and height attributes the box measured 0x0 until the
+       * data arrived, which shoved the caption and the phone arrow row down by
+       * over 100px mid-load. `min()` picks whichever of the width and height
+       * limits binds first, so the box is exactly the photo's footprint from
+       * the first frame, and the placeholder and rounding line up with it.
        */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-cover bg-center blur-md transition-opacity duration-400 ease-(--ease-out-soft)"
-        style={{ backgroundImage: `url(${photo.lqip})`, opacity: loaded ? 0 : 1 }}
-      />
-    </div>
+        className="relative overflow-hidden rounded-xl shadow-2xl"
+        style={{ aspectRatio: ratio, width: `min(100cqw, calc(72svh * ${photo.width} / ${photo.height}))` }}
+      >
+        <img
+          // A cached image can finish before React attaches onLoad, which would
+          // leave it faded out for good, so the ref checks for that case too.
+          ref={(node) => {
+            if (node?.complete) setLoaded(true)
+          }}
+          onLoad={() => setLoaded(true)}
+          src={photoSrc(photo, 1800)}
+          srcSet={photoSrcSet(photo)}
+          sizes="(min-width: 1024px) 80vw, 100vw"
+          alt={photo.caption || label}
+          width={photo.width}
+          height={photo.height}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-400 ease-(--ease-out-soft)"
+          style={{ opacity: loaded ? 1 : 0 }}
+        />
+
+        {/*
+         * Blur-up, and nothing else. The placeholder cross-fades straight into
+         * the photo in one move: a spinner on top of it read as three separate
+         * loading stages rather than one, and the photo's own colours already
+         * say that something is arriving.
+         */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-cover bg-center blur-md transition-opacity duration-400 ease-(--ease-out-soft)"
+          style={{ backgroundImage: `url(${photo.lqip})`, opacity: loaded ? 0 : 1 }}
+        />
+      </div>
+    </>
   )
 }
 
@@ -170,7 +182,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        * controls in the corners stay clear of it.
        */}
       <figure
-        className="relative z-0 flex max-h-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20"
+        className="@container relative z-0 flex max-h-full w-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20"
         onClick={(e) => e.stopPropagation()}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}

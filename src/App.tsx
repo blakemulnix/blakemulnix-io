@@ -1,48 +1,21 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy } from 'react'
 
-import { DesignPicker } from './components/DesignPicker'
-import { profile } from './data/about'
-import { designs } from './designs'
+import { Rail } from './designs/Rail'
 
-/** The design that ships. The switcher below is a local review tool only. */
-const PRODUCTION_DESIGN = 'rail'
-
-const readDesignId = () => window.location.hash.replace(/^#\/?/, '')
-
-/**
- * Hash-routed gallery for comparing designs. Development only, so the review
- * chrome never reaches production and prerendered markup stays deterministic.
+/*
+ * The design that ships, imported directly.
+ *
+ * The review gallery is reached through a dynamic import that only exists in
+ * the development branch, so `vite build` drops it along with every parked
+ * design. Importing the registry here instead would ship all of them.
  */
-const DesignGallery = () => {
-  const [id, setId] = useState(readDesignId)
+const DesignGallery = import.meta.env.DEV ? lazy(() => import('./DesignGallery')) : null
 
-  useEffect(() => {
-    const onHashChange = () => {
-      setId(readDesignId())
-      window.scrollTo({ top: 0, behavior: 'instant' })
-    }
-    window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
-  }, [])
-
-  const current = designs.find((d) => d.id === id) ?? designs[0]
-  if (!current) throw new Error('No designs are registered.')
-
-  useEffect(() => {
-    document.title = `${profile.name}, ${profile.role} · ${current.name}`
-  }, [current.name])
-
-  const Design = current.Component
-  return (
-    <>
-      <Design key={current.id} />
-      <DesignPicker designs={designs} current={current} />
-    </>
+export const App = () =>
+  DesignGallery ? (
+    <Suspense fallback={null}>
+      <DesignGallery />
+    </Suspense>
+  ) : (
+    <Rail />
   )
-}
-
-const chosen = designs.find((d) => d.id === PRODUCTION_DESIGN)
-if (!chosen) throw new Error(`Unknown production design: ${PRODUCTION_DESIGN}`)
-const ProductionDesign = chosen.Component
-
-export const App = () => (import.meta.env.DEV ? <DesignGallery /> : <ProductionDesign />)
