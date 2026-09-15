@@ -1,3 +1,9 @@
+/** First professional role, used to derive years in the field. */
+export const CAREER_START_YEAR = 2014
+
+/** Recomputed at build time, so the figure never goes stale by hand. */
+export const yearsInCareer = new Date().getFullYear() - CAREER_START_YEAR
+
 /** A run of prose that may contain inline links. */
 export type Segment = string | { text: string; href: string }
 

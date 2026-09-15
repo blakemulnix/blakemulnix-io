@@ -1,3 +1,5 @@
+import { yearsInCareer } from './data/about'
+
 /**
  * One palette, with a role per colour so additions stay disciplined rather
  * than decorative.
@@ -15,8 +17,8 @@ export const palette = {
   ochre: '#d9a05b',
   /** Experience accent. */
   moss: '#93b06e',
-  /** Values accent. */
-  rust: '#c26244',
+  /** Values accent. Light enough for body text on the deep rust ground. */
+  rust: '#d4795c',
   /** Outside Work accent. */
   stone: '#8fb0c0',
   /** Legible chip text on a tinted fill. */
@@ -42,21 +44,21 @@ export const sections: Section[] = [
   {
     id: 'experience',
     label: 'Experience',
-    tagline: 'Twelve years, six teams, one throughline.',
+    tagline: `What I've been up to for ${yearsInCareer} years`,
     bg: palette.pine,
     accent: palette.moss,
   },
   {
     id: 'values',
     label: 'How I Work',
-    tagline: 'What I think is load-bearing for a team.',
-    bg: '#3f2119',
+    tagline: 'What I think a team needs to excel',
+    bg: '#2b1610',
     accent: palette.rust,
   },
   {
     id: 'outside',
     label: 'Outside Work',
-    tagline: 'Gravel, desert, and a tent past its prime.',
+    tagline: "Spoiler: it's mostly gravel biking",
     bg: '#1d3038',
     accent: palette.stone,
   },

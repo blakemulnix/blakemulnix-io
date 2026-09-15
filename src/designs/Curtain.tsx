@@ -74,20 +74,34 @@ export const Curtain = () => {
         aria-hidden={view === 'home'}
       >
         {section && Content && (
-          <div className="mx-auto max-w-3xl px-6 py-14 sm:px-8">
-            <button
-              onClick={home}
-              className="font-mono text-[11px] tracking-[0.25em] uppercase transition-opacity hover:opacity-70"
-              style={{ color: section.accent }}
+          <div>
+            {/* Pinned so the way out never scrolls away on a phone. */}
+            <div
+              className="sticky top-0 z-10 border-b backdrop-blur-md"
+              style={{ backgroundColor: `${background}e6`, borderColor: `${palette.sand}1f` }}
             >
-              ← Back
-            </button>
-            <h2 className="mt-6 font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
-            <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
-              {section.tagline}
-            </p>
-            <div className="mt-10">
-              <Content accent={section.accent} />
+              <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-6 py-3 sm:px-8">
+                <button onClick={home} className="-mx-2 flex items-center gap-2 px-2 py-1.5 font-medium">
+                  <span aria-hidden="true">←</span>
+                  <span className="text-sm">Back</span>
+                </button>
+                <span
+                  className="truncate font-mono text-[11px] tracking-[0.2em] uppercase"
+                  style={{ color: section.accent }}
+                >
+                  {section.label}
+                </span>
+              </div>
+            </div>
+
+            <div className="mx-auto max-w-3xl px-6 pt-10 pb-16 sm:px-8">
+              <h2 className="font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
+              <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
+                {section.tagline}
+              </p>
+              <div className="mt-10">
+                <Content accent={section.accent} />
+              </div>
             </div>
           </div>
         )}

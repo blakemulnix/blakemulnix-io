@@ -110,7 +110,7 @@ export const ExperienceSpine = () => {
                   className="font-mono text-[11px] leading-4 tracking-widest uppercase"
                   style={{ color: `${palette.sand}aa` }}
                 >
-                  {e.start} — {e.end ?? 'Present'}
+                  {e.start} - {e.end ?? 'Present'}
                 </p>
                 <h3 className="mt-1.5 font-serif text-2xl font-semibold">{e.title}</h3>
                 <a

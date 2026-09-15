@@ -54,7 +54,7 @@ export const DesignPicker = ({ designs, current }: DesignPickerProps) => {
               <a
                 key={d.id}
                 href={`#/${d.id}`}
-                title={`${d.name} — ${d.blurb}`}
+                title={`${d.name}: ${d.blurb}`}
                 aria-current={active ? 'page' : undefined}
                 className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
                   active ? 'bg-white text-neutral-900' : 'text-neutral-300 hover:bg-white/10 hover:text-white'

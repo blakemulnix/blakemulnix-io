@@ -1,4 +1,4 @@
-import { principles } from '../data/principles'
+import { principles, valuesLede } from '../data/principles'
 import { palette } from '../theme'
 
 /** Rust is reserved for this section, which keeps the added colour purposeful. */
@@ -7,9 +7,7 @@ export const HowIWork = () => (
     <h2 className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: palette.rust }}>
       How I Work
     </h2>
-    <p className="mt-4 max-w-2xl font-serif text-2xl leading-snug sm:text-3xl">
-      A few things I believe are load-bearing for any team that wants to ship well for a long time.
-    </p>
+    <p className="mt-4 max-w-2xl font-serif text-2xl leading-snug sm:text-3xl">{valuesLede}</p>
 
     <ol className="mt-12 space-y-12">
       {principles.map((p, i) => (

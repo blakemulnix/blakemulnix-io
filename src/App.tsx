@@ -29,7 +29,7 @@ const DesignGallery = () => {
   if (!current) throw new Error('No designs are registered.')
 
   useEffect(() => {
-    document.title = `${profile.name} — ${profile.role} · ${current.name}`
+    document.title = `${profile.name}, ${profile.role} · ${current.name}`
   }, [current.name])
 
   const Design = current.Component
