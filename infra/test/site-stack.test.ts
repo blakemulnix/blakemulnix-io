@@ -130,10 +130,14 @@ describe('GithubOidcStack', () => {
       env,
       githubRepo: 'owner/repo',
       deployBranch: 'main',
+      deployEnvironment: 'production',
     }),
   )
 
-  it('restricts the trust policy to one repository and branch', () => {
+  // GitHub swaps the `sub` claim depending on whether the job declares an
+  // environment, and trusting only the ref form silently breaks every deploy
+  // with "Not authorized to perform sts:AssumeRoleWithWebIdentity".
+  it('trusts both the environment and ref subject forms, and nothing else', () => {
     template.hasResourceProperties('AWS::IAM::Role', {
       AssumeRolePolicyDocument: Match.objectLike({
         Statement: Match.arrayWith([
@@ -142,13 +146,29 @@ describe('GithubOidcStack', () => {
             Condition: {
               StringEquals: {
                 'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-                'token.actions.githubusercontent.com:sub': 'repo:owner/repo:ref:refs/heads/main',
+                'token.actions.githubusercontent.com:sub': [
+                  'repo:owner/repo:environment:production',
+                  'repo:owner/repo:ref:refs/heads/main',
+                ],
               },
             },
           }),
         ]),
       }),
     })
+  })
+
+  it('scopes the trust to this repository only', () => {
+    const roles = template.findResources('AWS::IAM::Role')
+    const subjects = Object.values(roles).flatMap((role) =>
+      (
+        role.Properties.AssumeRolePolicyDocument.Statement as { Condition?: Record<string, Record<string, unknown>> }[]
+      ).flatMap((statement) => statement.Condition?.StringEquals?.['token.actions.githubusercontent.com:sub'] ?? []),
+    )
+    expect(subjects.length).toBeGreaterThan(0)
+    for (const subject of subjects as string[]) {
+      expect(subject.startsWith('repo:owner/repo:')).toBe(true)
+    }
   })
 
   it('grants only CDK bootstrap role assumption on its own', () => {

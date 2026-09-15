@@ -17,6 +17,7 @@ const app = new cdk.App()
 const domainName = app.node.tryGetContext('domainName') as string
 const githubRepo = app.node.tryGetContext('githubRepo') as string
 const deployBranch = (app.node.tryGetContext('deployBranch') as string | undefined) ?? 'main'
+const deployEnvironment = (app.node.tryGetContext('deployEnvironment') as string | undefined) ?? 'production'
 /**
  * Context set on the command line arrives as a string, so `-c flag=false`
  * yields "false" rather than the boolean. Comparing against `false` alone
@@ -50,7 +51,14 @@ const env: cdk.Environment = {
 
 const tags = { Project: 'blakemulnix-io', ManagedBy: 'cdk' }
 
-const oidc = new GithubOidcStack(app, 'SiteGithubOidc', { env, tags, githubRepo, deployBranch, createOidcProvider })
+const oidc = new GithubOidcStack(app, 'SiteGithubOidc', {
+  env,
+  tags,
+  githubRepo,
+  deployBranch,
+  deployEnvironment,
+  createOidcProvider,
+})
 
 // Phase one: the zone must be authoritative at the registrar before the
 // certificate in SiteStack can pass DNS validation.

@@ -11,6 +11,12 @@ export interface GithubOidcStackProps extends cdk.StackProps {
   /** Branch whose workflow runs may deploy. */
   deployBranch: string
   /**
+   * GitHub environment the deploy workflows declare. A job that names an
+   * environment gets a `sub` claim of `repo:<repo>:environment:<name>` rather
+   * than one naming the ref, so this has to be trusted explicitly.
+   */
+  deployEnvironment: string
+  /**
    * Set false if the account already has a GitHub OIDC provider, since an
    * account may only hold one provider per URL.
    */
@@ -31,7 +37,7 @@ export class GithubOidcStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: GithubOidcStackProps) {
     super(scope, id, props)
 
-    const { githubRepo, deployBranch, createOidcProvider = true } = props
+    const { githubRepo, deployBranch, deployEnvironment, createOidcProvider = true } = props
 
     const provider = createOidcProvider
       ? new iam.OpenIdConnectProvider(this, 'GithubOidcProvider', {
@@ -49,11 +55,23 @@ export class GithubOidcStack extends cdk.Stack {
       description: `Deploys ${githubRepo} from GitHub Actions`,
       maxSessionDuration: cdk.Duration.hours(1),
       assumedBy: new iam.OpenIdConnectPrincipal(provider, {
-        // Pin both the audience and the exact branch. Without the `sub`
-        // condition any repository on GitHub could assume this role.
+        // Pin the audience and the subject. Without a `sub` condition any
+        // repository on GitHub could assume this role.
+        //
+        // Two subjects are trusted because GitHub varies the claim by context:
+        // a job declaring `environment:` gets the environment form, and one
+        // without it gets the ref form. A list means "equals any of these".
+        //
+        // The environment form carries no branch, so the branch restriction
+        // for those jobs lives in GitHub as the environment's deployment
+        // branch policy. That policy is load-bearing: without it, a workflow
+        // on any branch that names this environment could deploy.
         StringEquals: {
           [`token.actions.githubusercontent.com:aud`]: GITHUB_OIDC_AUDIENCE,
-          [`token.actions.githubusercontent.com:sub`]: `repo:${githubRepo}:ref:refs/heads/${deployBranch}`,
+          [`token.actions.githubusercontent.com:sub`]: [
+            `repo:${githubRepo}:environment:${deployEnvironment}`,
+            `repo:${githubRepo}:ref:refs/heads/${deployBranch}`,
+          ],
         },
       }),
     })
