@@ -21,10 +21,7 @@ export const aboutParagraphs: Segment[][] = [
   [
     "These days I'm a consultant at ",
     { text: 'Source Allies', href: 'https://www.sourceallies.com' },
-    ', where I work on cloud applications and infrastructure with people who are unreasonably good at this. Together we help our partners build software they can stop worrying about.',
-  ],
-  [
-    'I do plenty of coaching in addition to coding. I help teams and organizations pick up the practices that make delivery predictable: test driven development, iterations small enough to correct cheaply, cutting scope instead of moving the date, and sweet developer tooling that makes engineers smile.',
+    ", where I build software with a crew that's unreasonably good at it. We do plenty of coaching in addition to coding, helping teams and organizations pick up the practices that make delivery predictable, test driven development chief among them.",
   ],
   [
     "Outside of work you'll find me on my gravel bike, road-tripping across the country, or trekking around the western United States.",
