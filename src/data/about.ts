@@ -23,7 +23,4 @@ export const aboutParagraphs: Segment[][] = [
     { text: 'Source Allies', href: 'https://www.sourceallies.com' },
     ", where I build software with a crew that's unreasonably good at it. We do plenty of coaching in addition to coding, helping teams and organizations pick up the practices that make delivery predictable, test driven development chief among them.",
   ],
-  [
-    "Outside of work you'll find me on my gravel bike, road-tripping across the country, or trekking around the western United States.",
-  ],
 ]
