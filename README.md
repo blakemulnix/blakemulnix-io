@@ -194,6 +194,24 @@ Copy the `DeployRoleArn` output into a repository variable named
 `AWS_DEPLOY_ROLE_ARN`, and create a GitHub environment named `production`,
 which both deploy workflows reference.
 
+Then restrict that environment to `main`:
+
+```bash
+gh api -X PUT repos/<owner>/<repo>/environments/production \
+  -F 'deployment_branch_policy[protected_branches]=false' \
+  -F 'deployment_branch_policy[custom_branch_policies]=true'
+gh api -X POST repos/<owner>/<repo>/environments/production/deployment-branch-policies \
+  -f name=main -f type=branch
+```
+
+This is not cosmetic. GitHub varies the OIDC `sub` claim by context: a job
+declaring an environment presents `repo:<owner>/<repo>:environment:production`,
+which names no branch, while a job without one presents
+`repo:<owner>/<repo>:ref:refs/heads/main`. `SiteGithubOidc` trusts both, so the
+only thing stopping a workflow on some other branch from deploying is this
+deployment branch policy. It lives in GitHub rather than CDK because it is a
+GitHub resource, which is exactly why it is easy to forget.
+
 ## Deployment
 
 | Workflow           | Trigger                            | Does                                      |
