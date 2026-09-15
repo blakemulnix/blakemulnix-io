@@ -43,7 +43,7 @@ export interface Section {
 export const sections: Section[] = [
   {
     id: 'experience',
-    label: 'Experience',
+    label: 'My Experience',
     tagline: `What I've been up to for ${yearsInCareer} years`,
     bg: palette.pine,
     accent: palette.moss,
@@ -57,7 +57,7 @@ export const sections: Section[] = [
   },
   {
     id: 'outside',
-    label: 'Outside Work',
+    label: 'Me Outside of Work',
     tagline: "Spoiler: it's mostly gravel biking",
     bg: '#1d3038',
     accent: palette.stone,

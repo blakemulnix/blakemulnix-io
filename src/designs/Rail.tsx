@@ -148,7 +148,10 @@ export const Rail = () => {
           {sections.map((s, i) => {
             const Content = sectionContent[s.id]
             const isOpen = view === s.id
-            const next = sections[(i + 1) % sections.length]
+            // Undefined on the last section, which sends you home instead of
+            // looping back to the first: a cycle with no end gives no signal
+            // that you have seen everything.
+            const next = sections[i + 1]
 
             return (
               <div
@@ -175,28 +178,26 @@ export const Rail = () => {
                 </div>
 
                 {/* Somewhere to go from the bottom of long content. */}
-                {next && (
-                  <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
-                    <button onClick={() => open(next.id)} className="group text-left">
+                <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
+                  <button onClick={() => (next ? open(next.id) : home())} className="group text-left">
+                    <span
+                      className="font-mono text-[11px] tracking-[0.25em] uppercase"
+                      style={{ color: `${palette.sand}8c` }}
+                    >
+                      {next ? 'Next' : 'That is everything'}
+                    </span>
+                    <span className="mt-1 flex items-center gap-2 font-serif text-2xl font-semibold">
+                      {next ? next.label : 'Back to the start'}
                       <span
-                        className="font-mono text-[11px] tracking-[0.25em] uppercase"
-                        style={{ color: `${palette.sand}8c` }}
+                        className="transition-transform group-hover:translate-x-1"
+                        style={{ color: next ? next.accent : s.accent }}
+                        aria-hidden="true"
                       >
-                        Next
+                        →
                       </span>
-                      <span className="mt-1 flex items-center gap-2 font-serif text-2xl font-semibold">
-                        {next.label}
-                        <span
-                          className="transition-transform group-hover:translate-x-1"
-                          style={{ color: next.accent }}
-                          aria-hidden="true"
-                        >
-                          →
-                        </span>
-                      </span>
-                    </button>
-                  </div>
-                )}
+                    </span>
+                  </button>
+                </div>
               </div>
             )
           })}

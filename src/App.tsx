@@ -19,7 +19,7 @@ const DesignGallery = () => {
   useEffect(() => {
     const onHashChange = () => {
       setId(readDesignId())
-      window.scrollTo({ top: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, behavior: 'instant' })
     }
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)

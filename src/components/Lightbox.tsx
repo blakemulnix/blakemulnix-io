@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import type { Photo } from '../data/photos.generated'
@@ -13,7 +14,7 @@ interface LightboxProps {
 }
 
 /**
- * The photo itself, faded in over its own blurred placeholder.
+ * The photo itself, cross-faded in over its own blurred placeholder.
  *
  * Keyed by slug at the call site so navigating remounts this and resets the
  * loading state, rather than showing the previous photo under a stale flag.
@@ -22,9 +23,9 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
   const [loaded, setLoaded] = useState(false)
 
   return (
-    // Sizes itself to the image, so the placeholder and spinner can sit exactly
-    // over it without needing to know the fitted dimensions.
-    <div className="relative inline-flex">
+    // Sizes itself to the image, so the placeholder can sit exactly over it
+    // without needing to know the fitted dimensions.
+    <div className="relative inline-flex overflow-hidden rounded-xl shadow-2xl">
       <img
         // A cached image can finish before React attaches onLoad, which would
         // leave it faded out for good, so the ref checks for that case too.
@@ -38,28 +39,21 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
         alt={photo.caption || label}
         width={photo.width}
         height={photo.height}
-        className="max-h-[68vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-opacity duration-500 ease-(--ease-out-soft) sm:max-h-[72vh]"
+        className="max-h-[68vh] w-auto max-w-full object-contain transition-opacity duration-400 ease-(--ease-out-soft) sm:max-h-[72vh]"
         style={{ opacity: loaded ? 1 : 0 }}
       />
 
-      {/* The placeholder fades out rather than unmounting, so there is no gap
-          between it leaving and the photo arriving. */}
+      {/*
+       * Blur-up, and nothing else. The placeholder cross-fades straight into
+       * the photo in one move: a spinner on top of it read as three separate
+       * loading stages rather than one, and the photo's own colours already
+       * say that something is arriving.
+       */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-xl bg-cover bg-center blur-lg transition-opacity duration-500 ease-(--ease-out-soft)"
+        className="pointer-events-none absolute inset-0 bg-cover bg-center blur-md transition-opacity duration-400 ease-(--ease-out-soft)"
         style={{ backgroundImage: `url(${photo.lqip})`, opacity: loaded ? 0 : 1 }}
       />
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-        style={{ opacity: loaded ? 0 : 1 }}
-      >
-        <span
-          className="h-9 w-9 animate-[lightbox-spin_800ms_linear_infinite] rounded-full border-2"
-          style={{ borderColor: `${palette.sand}33`, borderTopColor: palette.sand }}
-        />
-      </div>
     </div>
   )
 }
@@ -76,6 +70,7 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
  */
 export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) => {
   const photo = photos[index]
+  const swipe = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -96,6 +91,27 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
   if (!photo) return null
 
   const label = photo.location || photo.date
+  const go = (delta: number) => onNavigate((index + delta + photos.length) % photos.length)
+
+  /*
+   * Swipe to move between photos. Horizontal intent is required, so a
+   * vertical drag or a tap is not read as navigation, and the threshold is in
+   * pixels rather than a fraction of the screen so it feels the same on any
+   * device. Pointer events rather than touch events, so a trackpad drag works
+   * the same way.
+   */
+  const onPointerDown = (e: React.PointerEvent) => {
+    swipe.current = { x: e.clientX, y: e.clientY }
+  }
+  const onPointerUp = (e: React.PointerEvent) => {
+    const from = swipe.current
+    swipe.current = null
+    if (!from) return
+    const dx = e.clientX - from.x
+    const dy = e.clientY - from.y
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy)) return
+    go(dx < 0 ? 1 : -1)
+  }
 
   return createPortal(
     <div
@@ -137,9 +153,9 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
               aria-label={name}
               onClick={(e) => {
                 e.stopPropagation()
-                onNavigate((index + delta + photos.length) % photos.length)
+                go(delta)
               }}
-              className={`absolute z-10 flex h-11 w-11 items-center justify-center rounded-full pb-1 text-2xl backdrop-blur-md ${position}`}
+              className={`absolute z-10 hidden h-11 w-11 items-center justify-center rounded-full pb-1 text-2xl backdrop-blur-md sm:flex ${position}`}
               style={{ backgroundColor: '#00000059', color: palette.sand }}
             >
               {glyph}
@@ -156,6 +172,11 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
       <figure
         className="relative z-0 flex max-h-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20"
         onClick={(e) => e.stopPropagation()}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        // A drag that leaves the figure should not be left half-tracked.
+        onPointerCancel={() => (swipe.current = null)}
+        style={{ touchAction: 'pan-y' }}
       >
         <Frame key={photo.slug} photo={photo} label={label} />
         <figcaption className="text-center">
@@ -166,9 +187,39 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
             {index + 1} / {photos.length}
           </span>
         </figcaption>
+
+        {/*
+         * Phone controls sit under the photo rather than over it. At this
+         * width an overlaid arrow covers a real part of the image and lands
+         * where a thumb already is, so it both hides the subject and competes
+         * with the swipe.
+         */}
+        {photos.length > 1 && (
+          <div className="flex items-center gap-3 sm:hidden">
+            {(
+              [
+                ['Previous photo', -1, '‹'],
+                ['Next photo', 1, '›'],
+              ] as const
+            ).map(([name, delta, glyph]) => (
+              <button
+                key={name}
+                aria-label={name}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  go(delta)
+                }}
+                className="flex h-11 w-16 items-center justify-center rounded-full pb-1 text-2xl backdrop-blur-md"
+                style={{ backgroundColor: '#ffffff1a', color: palette.sand }}
+              >
+                {glyph}
+              </button>
+            ))}
+          </div>
+        )}
       </figure>
 
-      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}@keyframes lightbox-spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}`}</style>
     </div>,
     document.body,
   )
