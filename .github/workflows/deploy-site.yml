@@ -76,13 +76,14 @@ jobs:
             --exclude '*' --include 'assets/*' \
             --cache-control 'public,max-age=31536000,immutable'
 
-          # Photo derivatives are large and effectively static, but their names
-          # come from the capture date rather than a content hash, so a photo
-          # could in principle be replaced under the same name. A month is long
-          # enough to be worth caching and short enough to bound staleness.
+          # Photo derivatives can be cached indefinitely now that their URLs
+          # carry a content fingerprint: recropping a photo changes the query
+          # string, so a browser asks again rather than holding the old bytes.
+          # A month used to be the cap for exactly that risk, and it bit once,
+          # with cropped photos still showing uncropped on a cached phone.
           aws s3 sync dist/ "s3://$BUCKET/" --delete \
             --exclude '*' --include 'photos/*' \
-            --cache-control 'public,max-age=2592000'
+            --cache-control 'public,max-age=31536000,immutable'
 
           # Everything else (index.html, favicon, robots, sitemap) must be
           # revalidated so a deploy is visible immediately.

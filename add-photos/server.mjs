@@ -47,8 +47,29 @@ const saveLabels = (incoming) => {
     }
   }
 
-  if (changed) writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n')
-  return { changed, total: manifest.photos.length }
+  /*
+   * The array order is the order the wall displays, so it is saved too. Only
+   * when the page is holding exactly the same set of photos: a tab left open
+   * across a rescan would otherwise drop whatever it had not heard about.
+   */
+  const incomingFiles = incoming.map((p) => p.file)
+  const sameSet =
+    incomingFiles.length === manifest.photos.length &&
+    new Set(incomingFiles).size === incomingFiles.length &&
+    incomingFiles.every((file) => edits.has(file) && manifest.photos.some((p) => p.file === file))
+
+  let reordered = false
+  if (sameSet) {
+    const byFile = new Map(manifest.photos.map((p) => [p.file, p]))
+    const next = incomingFiles.map((file) => byFile.get(file))
+    if (next.some((photo, i) => photo !== manifest.photos[i])) {
+      manifest.photos = next
+      reordered = true
+    }
+  }
+
+  if (changed || reordered) writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n')
+  return { changed, reordered, total: manifest.photos.length, orderSaved: sameSet }
 }
 
 const send = (res, status, body, type = 'application/json') => {

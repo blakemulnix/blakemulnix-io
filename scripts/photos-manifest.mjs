@@ -102,7 +102,19 @@ const photos = scanned.map((p) => {
   }
 })
 
-writeFileSync(MANIFEST, JSON.stringify({ photos }, null, 2) + '\n')
+/*
+ * The array order is the order the wall displays, and it is arranged by hand
+ * in the add-photos tool, so it has to survive a rescan. Photos already in the
+ * manifest keep their position and anything new lands at the end, where it is
+ * easy to find and move.
+ */
+const position = new Map((previous.photos ?? []).map((p, i) => [p.file, i]))
+const ordered = [
+  ...photos.filter((p) => position.has(p.file)).sort((a, b) => position.get(a.file) - position.get(b.file)),
+  ...photos.filter((p) => !position.has(p.file)),
+]
+
+writeFileSync(MANIFEST, JSON.stringify({ photos: ordered }, null, 2) + '\n')
 
 const unlabelled = photos.filter((p) => !p.location).length
 console.log(`${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`)

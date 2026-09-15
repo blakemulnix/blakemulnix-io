@@ -157,6 +157,47 @@
         outline: 2px solid var(--moss);
         outline-offset: 1px;
       }
+      .card[draggable='true'] {
+        cursor: grab;
+      }
+      .card.dragging {
+        opacity: 0.35;
+        cursor: grabbing;
+      }
+      .card.over {
+        border-color: var(--moss);
+        box-shadow: 0 0 0 1px var(--moss);
+      }
+      .handle {
+        display: flex;
+        flex: none;
+        align-items: center;
+        padding: 0 0.1rem;
+        color: #ffffff47;
+        font-size: 1rem;
+        line-height: 1;
+        user-select: none;
+      }
+      .nudge {
+        display: flex;
+        flex: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .nudge button {
+        padding: 0.1rem 0.3rem;
+        font-size: 0.7rem;
+        line-height: 1.2;
+        border-radius: 5px;
+      }
+      .pos {
+        font:
+          0.65rem ui-monospace,
+          monospace;
+        color: #ffffff47;
+        font-variant-numeric: tabular-nums;
+      }
       .empty {
         padding: 3rem;
         text-align: center;
@@ -188,8 +229,9 @@
     </header>
 
     <p class="hint">
-      Labels save as you type. <kbd>Enter</kbd> jumps to the next unlabelled photo. Hit <em>Save and rebuild</em> when
-      you are done to regenerate the site's photo data.
+      Labels save as you type. <kbd>Enter</kbd> jumps to the next unlabelled photo. Drag a card, or use the arrows, to
+      set the order the wall displays. Hit <em>Save and rebuild</em> when you are done to regenerate the site's photo
+      data.
     </p>
 
     <main id="grid"></main>
@@ -223,6 +265,15 @@
           const card = document.createElement('div')
           card.className = 'card'
           card.dataset.done = Boolean(photo.location?.trim())
+          card.dataset.file = photo.file
+          // Dragging only makes sense against the full list; with the filter
+          // on, the hidden cards would make a drop position a guess.
+          card.draggable = !onlyEl.checked
+
+          const handle = document.createElement('div')
+          handle.className = 'handle'
+          handle.textContent = onlyEl.checked ? '' : '⠿'
+          handle.title = 'Drag to reorder'
 
           const img = document.createElement('img')
           img.src = `/photos/${photo.slug}-400.webp`
@@ -256,12 +307,85 @@
             ;(next ?? inputs[inputs.indexOf(input) + 1])?.focus()
           })
 
+          const position = document.createElement('span')
+          position.className = 'pos'
+          position.textContent = ` #${photos.indexOf(photo) + 1}`
+          slug.append(position)
+
           meta.append(slug, file, input)
-          card.append(img, meta)
+
+          // The same reordering by keyboard, for anyone not dragging.
+          const nudge = document.createElement('div')
+          nudge.className = 'nudge'
+          for (const [label, delta] of [
+            ['↑', -1],
+            ['↓', 1],
+          ]) {
+            const button = document.createElement('button')
+            button.type = 'button'
+            button.textContent = label
+            button.title = delta < 0 ? 'Move earlier' : 'Move later'
+            button.addEventListener('click', () => move(photo.file, delta))
+            nudge.append(button)
+          }
+
+          card.append(handle, img, meta)
+          if (!onlyEl.checked) card.append(nudge)
           grid.append(card)
         }
         updateCount()
       }
+
+      /** Moves one photo by `delta` places, then persists the new order. */
+      const move = (file, delta) => {
+        const from = photos.findIndex((p) => p.file === file)
+        const to = from + delta
+        if (from < 0 || to < 0 || to >= photos.length) return
+        const [photo] = photos.splice(from, 1)
+        photos.splice(to, 0, photo)
+        render()
+        queueSave()
+      }
+
+      /** Drops `file` just before `beforeFile`, or at the end when dropped past the last card. */
+      const moveBefore = (file, beforeFile) => {
+        if (file === beforeFile) return
+        const from = photos.findIndex((p) => p.file === file)
+        if (from < 0) return
+        const [photo] = photos.splice(from, 1)
+        const at = beforeFile ? photos.findIndex((p) => p.file === beforeFile) : -1
+        photos.splice(at < 0 ? photos.length : at, 0, photo)
+        render()
+        queueSave()
+      }
+
+      let dragging = null
+      grid.addEventListener('dragstart', (e) => {
+        const card = e.target.closest('.card')
+        if (!card) return
+        dragging = card.dataset.file
+        card.classList.add('dragging')
+        e.dataTransfer.effectAllowed = 'move'
+        // Firefox refuses to start a drag with no payload.
+        e.dataTransfer.setData('text/plain', dragging)
+      })
+      grid.addEventListener('dragend', () => {
+        dragging = null
+        for (const card of grid.querySelectorAll('.card')) card.classList.remove('dragging', 'over')
+      })
+      grid.addEventListener('dragover', (e) => {
+        if (!dragging) return
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+        const card = e.target.closest('.card')
+        for (const other of grid.querySelectorAll('.card')) other.classList.toggle('over', other === card)
+      })
+      grid.addEventListener('drop', (e) => {
+        if (!dragging) return
+        e.preventDefault()
+        moveBefore(dragging, e.target.closest('.card')?.dataset.file ?? null)
+        dragging = null
+      })
 
       // Debounced, so a burst of typing is one write rather than one per key.
       let timer
@@ -282,8 +406,11 @@
             body: JSON.stringify({ photos }),
           })
           if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
-          const { changed } = await res.json()
-          setStatus(changed ? `Saved ${changed}` : 'Saved', 'saved')
+          const { changed, reordered } = await res.json()
+          const what = [changed ? `${changed} label${changed > 1 ? 's' : ''}` : null, reordered ? 'order' : null]
+            .filter(Boolean)
+            .join(' + ')
+          setStatus(what ? `Saved ${what}` : 'Saved', 'saved')
         } catch (error) {
           setStatus('Save failed', 'error')
           console.error(error)
