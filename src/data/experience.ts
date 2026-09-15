@@ -30,7 +30,7 @@ export const experience: ExperienceEntry[] = [
     technologies: ['React', 'Node.js', 'TypeScript', 'TypeORM', 'MySQL', 'AWS'],
   },
   {
-    title: 'Software Engineer II',
+    title: 'Software Engineer',
     company: 'Principal Financial Group',
     companyUrl: 'https://www.principal.com/',
     start: 'August 2020',

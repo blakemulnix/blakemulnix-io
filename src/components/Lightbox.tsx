@@ -93,6 +93,10 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
   // The caption clears itself shortly after each photo settles, so the whole
   // frame is visible. Tapping the photo brings it back.
   const [captionShown, setCaptionShown] = useState(true)
+  // Shown once, when someone actually turns their phone.
+  const [thanksMounted, setThanksMounted] = useState(false)
+  const [thanksShown, setThanksShown] = useState(false)
+  const thanked = useRef(false)
 
   // Ask for landscape, and only nudge the reader if the browser said no. The
   // click that opened this is what authorises the request, so it has to happen
@@ -114,6 +118,32 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
     ]
     setHintMounted(true)
     return () => {
+      for (const timer of timers) clearTimeout(timer)
+    }
+  }, [])
+
+  /*
+   * Say thank you when the phone actually turns. Once per viewing, so rocking
+   * the phone back and forth does not set it off repeatedly, and only on a
+   * screen small enough for the ask to have been made in the first place.
+   */
+  useEffect(() => {
+    const landscape = matchMedia('(orientation: landscape)')
+    const timers: ReturnType<typeof setTimeout>[] = []
+
+    const onRotate = () => {
+      if (!landscape.matches || thanked.current) return
+      if (!matchMedia('(max-width: 900px)').matches) return
+      thanked.current = true
+      setThanksMounted(true)
+      timers.push(setTimeout(() => setThanksShown(true), 60))
+      timers.push(setTimeout(() => setThanksShown(false), 2200))
+      timers.push(setTimeout(() => setThanksMounted(false), 2800))
+    }
+
+    landscape.addEventListener('change', onRotate)
+    return () => {
+      landscape.removeEventListener('change', onRotate)
       for (const timer of timers) clearTimeout(timer)
     }
   }, [])
@@ -198,13 +228,56 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
             transform: hintShown ? 'none' : 'translateY(-10px)',
           }}
         >
+          {/*
+           * A phone that turns and holds, rather than a glyph spun through an
+           * arbitrary angle and snapped back. The shape has to be obviously
+           * portrait for the quarter turn to read as anything.
+           */}
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            className="h-3.5 w-3.5 animate-[hint-rotate_2400ms_ease-in-out_infinite]"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinejoin="round"
+          >
+            <rect x="5" y="1.5" width="6" height="13" rx="1.4" />
+            <line x1="6.8" y1="12.6" x2="9.2" y2="12.6" strokeLinecap="round" />
+          </svg>
+          Psst, turn your phone sideways
+        </p>
+      )}
+
+      {/*
+       * Bottom right, opposite the close button, and clear of the centred
+       * caption. Same pill as every other control here: matching radius,
+       * padding, blur and type, so it reads as part of the set rather than a
+       * notification pasted on top.
+       *
+       * Kept short deliberately. "I appreciate you" measured 150px, which
+       * runs into a long caption at 568x320, the narrowest landscape phone
+       * still worth supporting.
+       */}
+      {thanksMounted && (
+        <p
+          className="pointer-events-none absolute right-[max(0.75rem,env(safe-area-inset-right))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 flex items-center gap-1.5 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md"
+          style={{
+            backgroundColor: '#00000073',
+            color: palette.sand,
+            opacity: thanksShown ? 1 : 0,
+            transform: thanksShown ? 'none' : 'translateY(8px) scale(0.92)',
+            transition: 'opacity 260ms var(--ease-out-soft), transform 320ms var(--ease-out-soft)',
+          }}
+        >
           <span
             aria-hidden="true"
-            className="animate-[hint-tip_1800ms_var(--ease-out-soft)_infinite] text-[13px] leading-none"
+            className="animate-[thanks-pop_600ms_var(--ease-out-soft)_both] text-[12px] leading-none"
+            style={{ color: palette.moss }}
           >
-            ⟳
+            ✦
           </span>
-          Psst, turn your phone sideways
+          Thanks!
         </p>
       )}
 
@@ -321,7 +394,13 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         )}
       </figure>
 
-      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}@keyframes hint-tip{0%,55%,100%{transform:rotate(0)}70%{transform:rotate(80deg)}85%{transform:rotate(72deg)}}`}</style>
+      <style>{`
+        @keyframes lightbox-in{from{opacity:0}to{opacity:1}}
+        /* Hold portrait, turn, hold landscape, turn back. The holds are what
+           make it read as an instruction instead of a spin. */
+        @keyframes hint-rotate{0%,18%{transform:rotate(0)}42%,66%{transform:rotate(-90deg)}90%,100%{transform:rotate(0)}}
+        @keyframes thanks-pop{0%{transform:scale(0) rotate(-60deg)}60%{transform:scale(1.35) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+      `}</style>
     </div>,
     document.body,
   )
