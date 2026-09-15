@@ -26,28 +26,97 @@ npm ci
 npm run dev        # http://localhost:5173
 ```
 
-| Script              | Purpose                            |
-| ------------------- | ---------------------------------- |
-| `npm run dev`       | Dev server with hot reload         |
-| `npm run build`     | Typecheck, then build to `dist/`   |
-| `npm run preview`   | Serve the production build locally |
-| `npm run lint`      | oxlint (`lint:fix` to autofix)     |
-| `npm run typecheck` | `tsc -b`, no emit                  |
-| `npm run format`    | Prettier (`format:check` in CI)    |
+| Script              | Purpose                             |
+| ------------------- | ----------------------------------- |
+| `npm run dev`       | Dev server with hot reload          |
+| `npm run build`     | Typecheck, then build to `dist/`    |
+| `npm run preview`   | Serve the production build locally  |
+| `npm run lint`      | oxlint (`lint:fix` to autofix)      |
+| `npm run typecheck` | `tsc -b`, no emit                   |
+| `npm run format`    | Prettier (`format:check` in CI)     |
+| `npm run photos`    | Rebuild the photo wall (see Photos) |
 
 ## Layout
 
 ```
 src/
-  components/    Site.tsx is the page; Segments renders shared prose
-  data/          Experience and social content, kept out of markup
+  components/    The page and its parts; Segments renders shared prose
+  sections/      Experience, How I Work and Outside Work content
+  designs/       Parked layout explorations, reachable in dev only
+  data/          Content, kept out of markup (photos.generated.ts is built)
+  theme.ts       Palette and the three section definitions
   index.css      Tailwind import and design tokens
-public/          Served verbatim: favicon, robots, sitemap
+photos/          manifest.json plus gitignored originals
+public/          Served verbatim: photo derivatives, favicon, robots, sitemap
+explorations/    Standalone review pages (favicons, photo labelling)
 infra/           CDK app (see below)
 ```
 
 To update work history, edit `src/data/experience.ts`, and About copy
 `src/data/about.ts`; neither needs a component change.
+
+## Photos
+
+The Outside Work wall is built from `photos/originals/`, which is **gitignored**
+(26MP files, ~200MB). What ships is the WebP derivatives in `public/photos/`,
+which _are_ committed.
+
+### Adding new photos
+
+```bash
+cp ~/wherever/*.JPG photos/originals/   # 1. drop them in
+npm run photos                          # 2. rebuild
+                                        # 3. label the new ones (see below)
+npm run photos                          # 4. rebuild again to pick up labels
+```
+
+Step 3 needs a human, because only you know where the photo was taken. Either
+edit the empty `location` fields in `photos/manifest.json` directly, or open the
+generated labelling page, which shows each thumbnail beside an input and has a
+button to copy the whole manifest back out:
+
+```bash
+open explorations/photo-labels.html
+```
+
+`npm run photos` tells you how many are still unlabelled. An unlabelled photo
+still renders, falling back to its date.
+
+### What the three scripts do
+
+| Script                  | Does                                                        |
+| ----------------------- | ----------------------------------------------------------- |
+| `photos-manifest.mjs`   | Scans originals, adds new entries to `photos/manifest.json` |
+| `photos-build.mjs`      | Encodes derivatives, writes `src/data/photos.generated.ts`  |
+| `photos-label-page.mjs` | Regenerates the labelling page                              |
+
+`photos/manifest.json` is the source of truth and the only file to hand-edit.
+`src/data/photos.generated.ts` is generated; do not edit it.
+
+### Guarantees worth knowing
+
+- **Idempotent.** Re-running never overwrites a `location` or `caption` you
+  typed. They are matched by original filename, so renaming an original loses
+  its label.
+- **Slugs are permanent.** They come from the capture date
+  (`2026-09-04-01.webp`), and once assigned they never move, even if you later
+  add a photo taken earlier the same day. They are public URLs cached for a
+  month, so they must not be reused for different content.
+- **Incremental.** Existing derivatives are skipped unless the original is
+  newer, so a rerun after labelling costs no re-encoding.
+- **Self-pruning.** Removing an original, or setting `"hidden": true` on its
+  entry, deletes its derivatives on the next run.
+- **Metadata is stripped**, including GPS. Two originals carry coordinates, and
+  publishing where a photo was taken is not something to do by accident. EXIF
+  orientation is applied before stripping, so nothing lands sideways.
+- **Deterministically shuffled.** The wall reads as unordered but is stable
+  across builds, which is what lets it be prerendered.
+
+Three widths (400 / 900 / 1800) are emitted per photo and served via `srcset`,
+plus a 20px inline blur-up placeholder that doubles as the lightbox backdrop.
+Requires ImageMagick (`magick`) on `PATH`. AVIF is deliberately not used: the
+local ImageMagick has no AVIF delegate and silently writes JPEG under an
+`.avif` name.
 
 ## Infrastructure
 
@@ -133,8 +202,15 @@ which both deploy workflows reference.
 | `deploy-site.yml`  | Pushes to `main` outside `infra/`  | Builds, syncs to S3, invalidates the CDN  |
 | `deploy-infra.yml` | Pushes to `main` touching `infra/` | `cdk diff`, then `cdk deploy --all`       |
 
-Hashed bundles under `assets/` are cached for a year and marked immutable;
-everything else is served `must-revalidate` so deploys take effect at once.
+Three cache tiers: hashed bundles under `assets/` for a year and marked
+immutable, photos under `photos/` for 30 days, and everything else
+`must-revalidate` so copy changes take effect at once. Photos are not immutable
+because their names come from the capture date rather than a content hash.
+
+`aws s3 sync` compares size and mtime, not metadata, so changing a
+`--cache-control` header alone will not re-upload an unchanged file. Rewriting
+headers on existing objects needs `s3 cp --recursive --metadata-directive
+REPLACE`.
 
 No AWS credentials are stored in GitHub. Each run exchanges a short-lived OIDC
 token for a session on the deploy role, which can write to this one bucket,

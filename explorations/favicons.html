@@ -5,97 +5,213 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Favicon options</title>
     <style>
-      :root { --pine:#141d17; --moss:#93b06e; --sand:#e7dcc4; --ochre:#d9a05b; --rust:#d4795c; }
-      * { box-sizing: border-box; }
-      body { margin:0; padding:32px 20px 64px; background:#0d100e; color:var(--sand);
-             font:14px/1.6 ui-sans-serif,system-ui,sans-serif; }
-      h1 { font-size:24px; margin:0 0 6px; }
-      p.note { color:#a49b86; max-width:62ch; margin:0 0 28px; }
-      .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); max-width:1200px; }
-      .card { border:1px solid #ffffff1f; border-radius:12px; padding:16px; background:#141917; }
-      .name { font-weight:600; margin-bottom:2px; }
-      .desc { color:#a49b86; font-size:12px; margin-bottom:14px; }
-      .sizes { display:flex; align-items:flex-end; gap:18px; margin-bottom:16px; }
-      .sizes figure { margin:0; text-align:center; }
-      .sizes figcaption { font-size:10px; color:#8d8474; margin-top:6px; font-variant-numeric:tabular-nums; }
+      :root {
+        --pine: #141d17;
+        --moss: #93b06e;
+        --sand: #e7dcc4;
+        --ochre: #d9a05b;
+        --rust: #d4795c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 20px 64px;
+        background: #0d100e;
+        color: var(--sand);
+        font:
+          14px/1.6 ui-sans-serif,
+          system-ui,
+          sans-serif;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 6px;
+      }
+      p.note {
+        color: #a49b86;
+        max-width: 62ch;
+        margin: 0 0 28px;
+      }
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        max-width: 1200px;
+      }
+      .card {
+        border: 1px solid #ffffff1f;
+        border-radius: 12px;
+        padding: 16px;
+        background: #141917;
+      }
+      .name {
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .desc {
+        color: #a49b86;
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+      .sizes {
+        display: flex;
+        align-items: flex-end;
+        gap: 18px;
+        margin-bottom: 16px;
+      }
+      .sizes figure {
+        margin: 0;
+        text-align: center;
+      }
+      .sizes figcaption {
+        font-size: 10px;
+        color: #8d8474;
+        margin-top: 6px;
+        font-variant-numeric: tabular-nums;
+      }
       /* Mock browser tabs, on light and dark chrome, at true favicon scale */
-      .tabs { display:flex; flex-direction:column; gap:8px; }
-      .tab { display:flex; align-items:center; gap:7px; padding:7px 11px; border-radius:8px 8px 0 0;
-             font-size:12px; width:210px; overflow:hidden; white-space:nowrap; }
-      .tab.light { background:#dee1e6; color:#3c4043; }
-      .tab.dark  { background:#35363a; color:#e8eaed; }
-      .tab svg { flex:none; }
-      .verdict { margin-top:14px; font-size:11px; color:#8d8474; border-top:1px solid #ffffff14; padding-top:10px; }
-      .ok { color:var(--moss); } .meh { color:var(--ochre); } .bad { color:var(--rust); }
+      .tabs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .tab {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 11px;
+        border-radius: 8px 8px 0 0;
+        font-size: 12px;
+        width: 210px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .tab.light {
+        background: #dee1e6;
+        color: #3c4043;
+      }
+      .tab.dark {
+        background: #35363a;
+        color: #e8eaed;
+      }
+      .tab svg {
+        flex: none;
+      }
+      .verdict {
+        margin-top: 14px;
+        font-size: 11px;
+        color: #8d8474;
+        border-top: 1px solid #ffffff14;
+        padding-top: 10px;
+      }
+      .ok {
+        color: var(--moss);
+      }
+      .meh {
+        color: var(--ochre);
+      }
+      .bad {
+        color: var(--rust);
+      }
     </style>
   </head>
   <body>
     <h1>Favicon options</h1>
     <p class="note">
-      Each mark is shown at 16, 32 and 64 pixels, then inside mock browser tabs on light and dark chrome.
-      16px is the one that matters: that is the real tab size, and it is where detail dies.
+      Each mark is shown at 16, 32 and 64 pixels, then inside mock browser tabs on light and dark chrome. 16px is the
+      one that matters: that is the real tab size, and it is where detail dies.
     </p>
     <div class="grid" id="grid"></div>
 
     <script>
       // Every mark is a 64x64 viewBox so they scale identically.
-      const P = { pine:'#141d17', moss:'#93b06e', sand:'#e7dcc4', ochre:'#d9a05b' };
-      const plate = `<rect width="64" height="64" rx="14" fill="${P.pine}"/>`;
+      const P = { pine: '#141d17', moss: '#93b06e', sand: '#e7dcc4', ochre: '#d9a05b' }
+      const plate = `<rect width="64" height="64" rx="14" fill="${P.pine}"/>`
 
       const options = [
-        { name:'1. Ridge', desc:'Mountain ridge. Matches the topographic ground.',
-          verdict:['ok','Bold shapes, survives 16px cleanly.'],
-          svg:`${plate}<path d="M10 44 L24 26 L33 38 L41 29 L54 44 Z" fill="${P.moss}"/>` },
+        {
+          name: '1. Ridge',
+          desc: 'Mountain ridge. Matches the topographic ground.',
+          verdict: ['ok', 'Bold shapes, survives 16px cleanly.'],
+          svg: `${plate}<path d="M10 44 L24 26 L33 38 L41 29 L54 44 Z" fill="${P.moss}"/>`,
+        },
 
-        { name:'2. Ridge + sun', desc:'Ridge with an ochre sun. Adds the accent colour.',
-          verdict:['meh','The sun nearly vanishes at 16px.'],
-          svg:`${plate}<circle cx="44" cy="20" r="5" fill="${P.ochre}"/><path d="M10 45 L25 27 L34 39 L42 30 L55 45 Z" fill="${P.moss}"/>` },
+        {
+          name: '2. Ridge + sun',
+          desc: 'Ridge with an ochre sun. Adds the accent colour.',
+          verdict: ['meh', 'The sun nearly vanishes at 16px.'],
+          svg: `${plate}<circle cx="44" cy="20" r="5" fill="${P.ochre}"/><path d="M10 45 L25 27 L34 39 L42 30 L55 45 Z" fill="${P.moss}"/>`,
+        },
 
-        { name:'3. Contour', desc:'Nested contour lines, straight from the site background.',
-          verdict:['meh','Lines blur together at 16px; needs to be the thickest version.'],
-          svg:`${plate}<g fill="none" stroke="${P.moss}" stroke-width="4" stroke-linecap="round">
-               <path d="M14 40 C24 28, 40 28, 50 40"/><path d="M20 50 C28 40, 36 40, 44 50"/></g>` },
+        {
+          name: '3. Contour',
+          desc: 'Nested contour lines, straight from the site background.',
+          verdict: ['meh', 'Lines blur together at 16px; needs to be the thickest version.'],
+          svg: `${plate}<g fill="none" stroke="${P.moss}" stroke-width="4" stroke-linecap="round">
+               <path d="M14 40 C24 28, 40 28, 50 40"/><path d="M20 50 C28 40, 36 40, 44 50"/></g>`,
+        },
 
-        { name:'4. Spine', desc:'The timeline dot-on-a-line motif.',
-          verdict:['ok','Very legible small, but reads generic out of context.'],
-          svg:`${plate}<line x1="32" y1="12" x2="32" y2="52" stroke="${P.moss}" stroke-width="4" stroke-linecap="round"/>
-               <circle cx="32" cy="24" r="8" fill="${P.ochre}"/>` },
+        {
+          name: '4. Spine',
+          desc: 'The timeline dot-on-a-line motif.',
+          verdict: ['ok', 'Very legible small, but reads generic out of context.'],
+          svg: `${plate}<line x1="32" y1="12" x2="32" y2="52" stroke="${P.moss}" stroke-width="4" stroke-linecap="round"/>
+               <circle cx="32" cy="24" r="8" fill="${P.ochre}"/>`,
+        },
 
-        { name:'5. Monogram B', desc:'Single initial, drawn as paths rather than text.',
-          verdict:['ok','Clear at 16px. Conventional but unambiguous.'],
-          svg:`${plate}<path d="M22 16h12c6 0 10 3.4 10 8.6 0 3.4-1.8 5.8-4.4 7 3.4 1 5.6 3.8 5.6 7.8 0 5.6-4.4 8.6-11 8.6H22Zm7 11.6h4.4c2.4 0 3.8-1.2 3.8-3.2s-1.4-3.2-3.8-3.2H29Zm0 13.2h5c2.6 0 4.2-1.4 4.2-3.6s-1.6-3.6-4.2-3.6h-5Z" fill="${P.moss}"/>` },
+        {
+          name: '5. Monogram B',
+          desc: 'Single initial, drawn as paths rather than text.',
+          verdict: ['ok', 'Clear at 16px. Conventional but unambiguous.'],
+          svg: `${plate}<path d="M22 16h12c6 0 10 3.4 10 8.6 0 3.4-1.8 5.8-4.4 7 3.4 1 5.6 3.8 5.6 7.8 0 5.6-4.4 8.6-11 8.6H22Zm7 11.6h4.4c2.4 0 3.8-1.2 3.8-3.2s-1.4-3.2-3.8-3.2H29Zm0 13.2h5c2.6 0 4.2-1.4 4.2-3.6s-1.6-3.6-4.2-3.6h-5Z" fill="${P.moss}"/>`,
+        },
 
-        { name:'6. BM lockup', desc:'Both initials, geometric.',
-          verdict:['bad','Too much for 16px; the letters merge.'],
-          svg:`${plate}<path d="M12 22h9c4.4 0 7.2 2.4 7.2 6.2 0 2.4-1.2 4.2-3.2 5 2.6.8 4.2 2.8 4.2 5.6 0 4-3.2 6.2-8 6.2H12Zm5 9h3.4c1.6 0 2.6-.8 2.6-2.2s-1-2.2-2.6-2.2H17Zm0 9.6h3.8c1.8 0 3-1 3-2.5s-1.2-2.5-3-2.5H17Z" fill="${P.moss}"/>
-               <path d="M34 22h5l4.6 10.4L48 22h5v23h-4.8V31.6l-3.6 8h-1.6l-3.6-8V45H34Z" fill="${P.sand}"/>` },
+        {
+          name: '6. BM lockup',
+          desc: 'Both initials, geometric.',
+          verdict: ['bad', 'Too much for 16px; the letters merge.'],
+          svg: `${plate}<path d="M12 22h9c4.4 0 7.2 2.4 7.2 6.2 0 2.4-1.2 4.2-3.2 5 2.6.8 4.2 2.8 4.2 5.6 0 4-3.2 6.2-8 6.2H12Zm5 9h3.4c1.6 0 2.6-.8 2.6-2.2s-1-2.2-2.6-2.2H17Zm0 9.6h3.8c1.8 0 3-1 3-2.5s-1.2-2.5-3-2.5H17Z" fill="${P.moss}"/>
+               <path d="M34 22h5l4.6 10.4L48 22h5v23h-4.8V31.6l-3.6 8h-1.6l-3.6-8V45H34Z" fill="${P.sand}"/>`,
+        },
 
-        { name:'7. Prompt', desc:'Shell chevron. Nods to the engineering side.',
-          verdict:['ok','Reads well small. Less connected to the earthy direction.'],
-          svg:`${plate}<path d="M20 22 L32 32 L20 42" fill="none" stroke="${P.moss}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-               <line x1="36" y1="43" x2="48" y2="43" stroke="${P.ochre}" stroke-width="5" stroke-linecap="round"/>` },
+        {
+          name: '7. Prompt',
+          desc: 'Shell chevron. Nods to the engineering side.',
+          verdict: ['ok', 'Reads well small. Less connected to the earthy direction.'],
+          svg: `${plate}<path d="M20 22 L32 32 L20 42" fill="none" stroke="${P.moss}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+               <line x1="36" y1="43" x2="48" y2="43" stroke="${P.ochre}" stroke-width="5" stroke-linecap="round"/>`,
+        },
 
-        { name:'8. Ridge, inverted', desc:'Moss plate, ridge knocked out. Heavier presence.',
-          verdict:['ok','Highest contrast of the set; stands out most in a crowded tab bar.'],
-          svg:`<rect width="64" height="64" rx="14" fill="${P.moss}"/><path d="M10 45 L25 26 L34 38 L42 29 L55 45 Z" fill="${P.pine}"/>` },
-      ];
+        {
+          name: '8. Ridge, inverted',
+          desc: 'Moss plate, ridge knocked out. Heavier presence.',
+          verdict: ['ok', 'Highest contrast of the set; stands out most in a crowded tab bar.'],
+          svg: `<rect width="64" height="64" rx="14" fill="${P.moss}"/><path d="M10 45 L25 26 L34 38 L42 29 L55 45 Z" fill="${P.pine}"/>`,
+        },
+      ]
 
       const svg = (inner, size) =>
-        `<svg width="${size}" height="${size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+        `<svg width="${size}" height="${size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`
 
-      document.getElementById('grid').innerHTML = options.map(o => `
+      document.getElementById('grid').innerHTML = options
+        .map(
+          (o) => `
         <div class="card">
           <div class="name">${o.name}</div>
           <div class="desc">${o.desc}</div>
           <div class="sizes">
-            ${[16,32,64].map(s => `<figure>${svg(o.svg,s)}<figcaption>${s}px</figcaption></figure>`).join('')}
+            ${[16, 32, 64].map((s) => `<figure>${svg(o.svg, s)}<figcaption>${s}px</figcaption></figure>`).join('')}
           </div>
           <div class="tabs">
-            <div class="tab light">${svg(o.svg,16)}<span>Blake Mulnix, Software Consult…</span></div>
-            <div class="tab dark">${svg(o.svg,16)}<span>Blake Mulnix, Software Consult…</span></div>
+            <div class="tab light">${svg(o.svg, 16)}<span>Blake Mulnix, Software Consult…</span></div>
+            <div class="tab dark">${svg(o.svg, 16)}<span>Blake Mulnix, Software Consult…</span></div>
           </div>
           <div class="verdict"><span class="${o.verdict[0]}">●</span> ${o.verdict[1]}</div>
-        </div>`).join('');
+        </div>`,
+        )
+        .join('')
     </script>
   </body>
 </html>

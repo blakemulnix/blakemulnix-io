@@ -34,14 +34,25 @@ const scanned = readdirSync(ORIGINALS)
   // Chronological, so slug numbering follows the order they were taken.
   .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`) || a.file.localeCompare(b.file))
 
-const seqByDate = new Map()
+// Slugs are public URLs, cached for a month, so once assigned they must never
+// move. A photo dropped in later but taken earlier the same day would otherwise
+// take `-01` and renumber everything already published under that date.
+const taken = new Set(scanned.map((p) => prior.get(p.file)?.slug).filter(Boolean))
+const nextSlug = (date) => {
+  for (let n = 1; ; n++) {
+    const slug = `${date}-${String(n).padStart(2, '0')}`
+    if (!taken.has(slug)) {
+      taken.add(slug)
+      return slug
+    }
+  }
+}
+
 const photos = scanned.map((p) => {
-  const n = (seqByDate.get(p.date) ?? 0) + 1
-  seqByDate.set(p.date, n)
   const kept = prior.get(p.file) ?? {}
   return {
     file: p.file,
-    slug: `${p.date}-${String(n).padStart(2, '0')}`,
+    slug: kept.slug ?? nextSlug(p.date),
     date: p.date,
     width: p.width,
     height: p.height,
