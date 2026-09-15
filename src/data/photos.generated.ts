@@ -39,12 +39,12 @@ export const photos: Photo[] = [
   },
   {
     "slug": "2022-10-13-01",
-    "width": 4000,
+    "width": 3254,
     "height": 1800,
     "date": "2022-10-13",
     "location": "Garden of the Gods, Colorado",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoUAAkAPt1apkyopSOiMAgBEBuJYgCdMoKAAAse2LdhcwdVbAAA+6TismbBSCVwyiSAmebq3lM7l+DFF90quqA7m4ace8+UZ7oV/FmSn73qpFwFab0XpCblzISXkK5waqS6tSnkR6P/V5QgRLG7A1rGLcl15GugkJuJDR2wAAA="
+    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoUAAsAPt1apkyopSOiMAgBEBuJagCdICXgrxC8H4/xAOMFW14AAN5Xxp9wr0GklJaKJD/BYMLF5B4Lx4UWOk83nmTz+RyMIrn+BFINgo71mVxazJjB9pVmeYCDpxxzR/txSMSbHassC+rxsly0MOy3LublGhwi2EBZHqW2Qbl20YAA"
   },
   {
     "slug": "2025-08-30-01",
@@ -327,12 +327,12 @@ export const photos: Photo[] = [
   },
   {
     "slug": "2022-09-18-01",
-    "width": 4000,
+    "width": 2709,
     "height": 1800,
     "date": "2022-09-18",
     "location": "Grand Teton National Park, Wyoming",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwBACdASoUAAkAPt1cp00opSOiMAgBEBuJYwCdMoGv/gPC6IdWStGZ2AAA/rP3kpFJAiXjChXScfD2c8hx2nDaUJDFnTCcuJZCrcrsaWHx65XYZpBH704BsAjznAAA"
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAACwAwCdASoUAA0APt1ep00opSOiMAgBEBuJQBOmUABd5lWXLCqgYAD+Va6L1P1BeQJ8hXarWtCYLjTyx497e1ZOJ35b6W9+jgNaC+E/g2RJaghuk5QkMlzJjkUCQAAA"
   },
   {
     "slug": "2026-06-05-01",

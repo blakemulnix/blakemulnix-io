@@ -25,6 +25,14 @@ const QUALITY = 82
 const LQIP_WIDTH = 20
 
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'))
+
+// Same reasoning as the manifest script: without the originals this would
+// generate an empty wall and prune every committed derivative.
+if (!existsSync(ORIGINALS) || manifest.photos.length === 0) {
+  console.log(`no originals in ${ORIGINALS}, leaving ${GENERATED} and ${OUT_DIR} untouched`)
+  process.exit(0)
+}
+
 mkdirSync(OUT_DIR, { recursive: true })
 
 const convert = (src, out, width, quality) =>

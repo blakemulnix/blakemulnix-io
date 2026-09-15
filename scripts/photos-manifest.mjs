@@ -43,9 +43,21 @@ const reusable = (file) => {
   return { file, width: kept.width, height: kept.height, date: kept.date, time: '00:00:00' }
 }
 
+/*
+ * The originals are gitignored, so any checkout without them, CI included,
+ * would otherwise scan an empty directory and write an empty manifest. This
+ * runs from a build hook now, so that has to be impossible rather than
+ * unlikely.
+ */
+const available = existsSync(ORIGINALS) ? readdirSync(ORIGINALS).filter((f) => /\.(jpe?g)$/i.test(f)) : []
+
+if (available.length === 0) {
+  console.log(`no originals in ${ORIGINALS}, leaving ${MANIFEST} untouched`)
+  process.exit(0)
+}
+
 let read = 0
-const scanned = readdirSync(ORIGINALS)
-  .filter((f) => /\.(jpe?g)$/i.test(f))
+const scanned = available
   .map((file) => {
     const cached = reusable(file)
     if (cached) return cached

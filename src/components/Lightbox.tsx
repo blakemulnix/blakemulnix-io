@@ -83,38 +83,6 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
  * block for fixed positioning, which silently anchors this to that element
  * instead of the viewport and can drop the photo below the fold.
  */
-/**
- * Tries to give a phone the whole screen, sideways.
- *
- * Locking the orientation needs fullscreen first, and only some browsers allow
- * either: Android Chrome does, iOS Safari supports neither for an arbitrary
- * element. So it is attempted and, when it does not take, the caller falls back
- * to asking the reader to turn the phone themselves.
- *
- * Runs for coarse pointers on small screens only. Throwing a desktop into
- * fullscreen because someone clicked a photo would be obnoxious.
- */
-const goImmersive = async () => {
-  const phone = matchMedia('(pointer: coarse)').matches && matchMedia('(max-width: 900px)').matches
-  if (!phone) return false
-  try {
-    if (!document.fullscreenElement) await document.documentElement.requestFullscreen()
-    await screen.orientation?.lock?.('landscape')
-    return true
-  } catch {
-    return false
-  }
-}
-
-const leaveImmersive = () => {
-  try {
-    screen.orientation?.unlock?.()
-  } catch {
-    // Not supported here, which is fine: nothing was locked.
-  }
-  if (document.fullscreenElement) void document.exitFullscreen().catch(() => {})
-}
-
 export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) => {
   const photo = photos[index]
   const swipe = useRef<{ x: number; y: number } | null>(null)
@@ -129,22 +97,24 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
   // Ask for landscape, and only nudge the reader if the browser said no. The
   // click that opened this is what authorises the request, so it has to happen
   // now rather than on a later interaction.
+  /*
+   * Nudge, rather than rotate for them.
+   *
+   * Locking the orientation requires fullscreen first, and fullscreen puts a
+   * banner over the page announcing itself, which is a worse interruption than
+   * the thing it was solving. So the reader is asked instead.
+   */
   useEffect(() => {
-    let live = true
-    const timers: ReturnType<typeof setTimeout>[] = []
-    void goImmersive().then((locked) => {
-      if (!live || locked) return
-      if (!matchMedia('(orientation: portrait) and (max-width: 640px)').matches) return
-      setHintMounted(true)
+    if (!matchMedia('(orientation: portrait) and (max-width: 640px)').matches) return
+    const timers = [
       // A beat later, so the entrance transition has a state to move from.
-      timers.push(setTimeout(() => setHintShown(true), 60))
-      timers.push(setTimeout(() => setHintShown(false), 4500))
-      timers.push(setTimeout(() => setHintMounted(false), 5200))
-    })
+      setTimeout(() => setHintShown(true), 60),
+      setTimeout(() => setHintShown(false), 4500),
+      setTimeout(() => setHintMounted(false), 5200),
+    ]
+    setHintMounted(true)
     return () => {
-      live = false
       for (const timer of timers) clearTimeout(timer)
-      leaveImmersive()
     }
   }, [])
 
@@ -220,7 +190,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        */}
       {hintMounted && (
         <p
-          className="absolute top-3 left-3 z-10 flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md transition-[opacity,transform] duration-500 ease-(--ease-out-soft) sm:hidden landscape:hidden"
+          className="absolute top-[max(0.75rem,env(safe-area-inset-top))] left-[max(0.75rem,env(safe-area-inset-left))] z-10 flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md transition-[opacity,transform] duration-500 ease-(--ease-out-soft) sm:hidden landscape:hidden"
           style={{
             backgroundColor: '#00000073',
             color: palette.sand,
@@ -241,7 +211,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
       <button
         onClick={onClose}
         aria-label="Close"
-        className="absolute top-3 right-3 z-10 rounded-full px-3 py-2 text-sm backdrop-blur-md"
+        className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 rounded-full px-3 py-2 text-sm backdrop-blur-md"
         style={{ backgroundColor: '#00000059', color: palette.sand }}
       >
         Close
@@ -251,8 +221,18 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         <>
           {(
             [
-              ['Previous', -1, 'left-1 sm:left-4', '‹'],
-              ['Next', 1, 'right-1 sm:right-4', '›'],
+              [
+                'Previous',
+                -1,
+                'left-[max(0.25rem,env(safe-area-inset-left))] sm:left-[max(1rem,env(safe-area-inset-left))]',
+                '‹',
+              ],
+              [
+                'Next',
+                1,
+                'right-[max(0.25rem,env(safe-area-inset-right))] sm:right-[max(1rem,env(safe-area-inset-right))]',
+                '›',
+              ],
             ] as const
           ).map(([name, delta, position, glyph]) => (
             <button
