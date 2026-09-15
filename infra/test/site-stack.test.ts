@@ -92,6 +92,38 @@ describe('SiteStack', () => {
   })
 })
 
+describe('SiteStack without domains attached', () => {
+  // First phase of a cross-account migration: CloudFront rejects an alias that
+  // another distribution still holds, so the new one is stood up bare.
+  const app = new cdk.App()
+  const dns = new DnsStack(app, 'D2', { env, domainName: 'example.com' })
+  const template = Template.fromStack(
+    new SiteStack(app, 'BareSite', {
+      env,
+      domainName: 'example.com',
+      hostedZone: dns.hostedZone,
+      attachDomains: false,
+    }),
+  )
+
+  it('claims no aliases and requests no certificate', () => {
+    template.resourceCountIs('AWS::CertificateManager::Certificate', 0)
+    const distributions = template.findResources('AWS::CloudFront::Distribution')
+    for (const d of Object.values(distributions)) {
+      expect(d.Properties.DistributionConfig.Aliases).toBeUndefined()
+    }
+  })
+
+  it('publishes no DNS records until it serves the domain', () => {
+    template.resourceCountIs('AWS::Route53::RecordSet', 0)
+  })
+
+  it('still creates the bucket and distribution', () => {
+    template.resourceCountIs('AWS::S3::Bucket', 1)
+    template.resourceCountIs('AWS::CloudFront::Distribution', 1)
+  })
+})
+
 describe('GithubOidcStack', () => {
   const template = Template.fromStack(
     new GithubOidcStack(new cdk.App(), 'TestOidc', {

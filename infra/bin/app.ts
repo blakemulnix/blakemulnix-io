@@ -17,7 +17,22 @@ const app = new cdk.App()
 const domainName = app.node.tryGetContext('domainName') as string
 const githubRepo = app.node.tryGetContext('githubRepo') as string
 const deployBranch = (app.node.tryGetContext('deployBranch') as string | undefined) ?? 'main'
-const createOidcProvider = app.node.tryGetContext('createOidcProvider') !== false
+/**
+ * Context set on the command line arrives as a string, so `-c flag=false`
+ * yields "false" rather than the boolean. Comparing against `false` alone
+ * silently ignores the flag.
+ */
+const contextFlag = (key: string, fallback: boolean): boolean => {
+  const raw = app.node.tryGetContext(key)
+  if (raw === undefined || raw === null) return fallback
+  if (typeof raw === 'boolean') return raw
+  return String(raw).toLowerCase() !== 'false'
+}
+
+const createOidcProvider = contextFlag('createOidcProvider', true)
+// Set false for the first deploy of a migration, while the previous
+// distribution still holds the domain aliases. See SiteStackProps.
+const attachDomains = contextFlag('attachDomains', true)
 // Subdomains served from other project accounts, e.g.
 //   [{ "subdomain": "mycoolthing", "nameServers": ["ns-1.awsdns-00.co.uk", ...] }]
 const delegations = (app.node.tryGetContext('delegations') as SubdomainDelegation[] | undefined) ?? []
@@ -47,4 +62,5 @@ new SiteStack(app, 'Site', {
   domainName,
   hostedZone: dns.hostedZone,
   deployRole: oidc.deployRole,
+  attachDomains,
 })

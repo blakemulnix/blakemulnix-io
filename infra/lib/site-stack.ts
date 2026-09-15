@@ -5,7 +5,7 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import type * as iam from 'aws-cdk-lib/aws-iam'
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam'
 import type * as route53 from 'aws-cdk-lib/aws-route53'
-import { ARecord, AaaaRecord, RecordTarget } from 'aws-cdk-lib/aws-route53'
+import { AaaaRecord, ARecord, RecordTarget } from 'aws-cdk-lib/aws-route53'
 import * as targets from 'aws-cdk-lib/aws-route53-targets'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import type { Construct } from 'constructs'
@@ -23,6 +23,18 @@ export interface SiteStackProps extends cdk.StackProps {
    * this bucket and invalidate this distribution. Nothing wider.
    */
   deployRole?: iam.IRole
+  /**
+   * Whether this distribution claims the custom domain names.
+   *
+   * CloudFront requires an alternate domain name to be unique across every AWS
+   * account, so a distribution cannot take an alias that another distribution
+   * still holds. Migrating between accounts therefore needs two phases: deploy
+   * with `false` to stand the site up on its CloudFront domain and verify it,
+   * release the alias from the old distribution, then deploy with `true`.
+   *
+   * Defaults to true, which is the steady state.
+   */
+  attachDomains?: boolean
 }
 
 /**
@@ -37,7 +49,7 @@ export class SiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: SiteStackProps) {
     super(scope, id, props)
 
-    const { domainName, hostedZone, deployRole } = props
+    const { domainName, hostedZone, deployRole, attachDomains = true } = props
     const wwwDomain = `www.${domainName}`
 
     const bucket = new s3.Bucket(this, 'SiteBucket', {
@@ -52,11 +64,13 @@ export class SiteStack extends cdk.Stack {
 
     // CloudFront requires its certificate in us-east-1, which is where this
     // stack is deployed.
-    const certificate = new acm.Certificate(this, 'SiteCertificate', {
-      domainName,
-      subjectAlternativeNames: [wwwDomain],
-      validation: acm.CertificateValidation.fromDns(hostedZone),
-    })
+    const certificate = attachDomains
+      ? new acm.Certificate(this, 'SiteCertificate', {
+          domainName,
+          subjectAlternativeNames: [wwwDomain],
+          validation: acm.CertificateValidation.fromDns(hostedZone),
+        })
+      : undefined
 
     const securityHeaders = new cloudfront.ResponseHeadersPolicy(this, 'SecurityHeaders', {
       comment: 'Baseline security headers for the static site',
@@ -92,8 +106,7 @@ export class SiteStack extends cdk.Stack {
 
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       comment: `Static site for ${domainName}`,
-      domainNames: [domainName, wwwDomain],
-      certificate,
+      ...(certificate ? { domainNames: [domainName, wwwDomain], certificate } : {}),
       defaultRootObject: 'index.html',
       httpVersion: cloudfront.HttpVersion.HTTP2_AND_3,
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
@@ -115,14 +128,17 @@ export class SiteStack extends cdk.Stack {
       ],
     })
 
-    const target = RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
+    // DNS only once this distribution actually serves the domain.
+    if (attachDomains) {
+      const target = RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
 
-    for (const [name, recordName] of [
-      ['Apex', undefined],
-      ['Www', wwwDomain],
-    ] as const) {
-      new ARecord(this, `${name}ARecord`, { zone: hostedZone, recordName, target })
-      new AaaaRecord(this, `${name}AaaaRecord`, { zone: hostedZone, recordName, target })
+      for (const [name, recordName] of [
+        ['Apex', undefined],
+        ['Www', wwwDomain],
+      ] as const) {
+        new ARecord(this, `${name}ARecord`, { zone: hostedZone, recordName, target })
+        new AaaaRecord(this, `${name}AaaaRecord`, { zone: hostedZone, recordName, target })
+      }
     }
 
     if (deployRole) {
@@ -159,6 +175,12 @@ export class SiteStack extends cdk.Stack {
       description: 'CloudFront distribution to invalidate after a content sync',
       exportName: `${this.stackName}-DistributionId`,
     })
-    new cdk.CfnOutput(this, 'SiteUrl', { value: `https://${domainName}` })
+    new cdk.CfnOutput(this, 'DistributionDomainName', {
+      value: distribution.distributionDomainName,
+      description: 'CloudFront domain, for verifying the site before DNS cutover',
+    })
+    new cdk.CfnOutput(this, 'SiteUrl', {
+      value: attachDomains ? `https://${domainName}` : `https://${distribution.distributionDomainName}`,
+    })
   }
 }
