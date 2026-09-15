@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import type { Photo } from '../data/photos.generated'
 import { palette } from '../theme'
@@ -12,9 +13,66 @@ interface LightboxProps {
 }
 
 /**
+ * The photo itself, faded in over its own blurred placeholder.
+ *
+ * Keyed by slug at the call site so navigating remounts this and resets the
+ * loading state, rather than showing the previous photo under a stale flag.
+ */
+const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
+  const [loaded, setLoaded] = useState(false)
+
+  return (
+    // Sizes itself to the image, so the placeholder and spinner can sit exactly
+    // over it without needing to know the fitted dimensions.
+    <div className="relative inline-flex">
+      <img
+        // A cached image can finish before React attaches onLoad, which would
+        // leave it faded out for good, so the ref checks for that case too.
+        ref={(node) => {
+          if (node?.complete) setLoaded(true)
+        }}
+        onLoad={() => setLoaded(true)}
+        src={photoSrc(photo, 1800)}
+        srcSet={photoSrcSet(photo)}
+        sizes="(min-width: 1024px) 80vw, 100vw"
+        alt={photo.caption || label}
+        width={photo.width}
+        height={photo.height}
+        className="max-h-[68vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-opacity duration-500 ease-(--ease-out-soft) sm:max-h-[72vh]"
+        style={{ opacity: loaded ? 1 : 0 }}
+      />
+
+      {/* The placeholder fades out rather than unmounting, so there is no gap
+          between it leaving and the photo arriving. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-xl bg-cover bg-center blur-lg transition-opacity duration-500 ease-(--ease-out-soft)"
+        style={{ backgroundImage: `url(${photo.lqip})`, opacity: loaded ? 0 : 1 }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+        style={{ opacity: loaded ? 0 : 1 }}
+      >
+        <span
+          className="h-9 w-9 animate-[lightbox-spin_800ms_linear_infinite] rounded-full border-2"
+          style={{ borderColor: `${palette.sand}33`, borderTopColor: palette.sand }}
+        />
+      </div>
+    </div>
+  )
+}
+
+/**
  * Full-screen viewer. The backdrop is the photo's own blur-up placeholder,
  * scaled up and heavily blurred, so the surround picks up the colour of
  * whatever you are looking at without a single extra byte over the network.
+ *
+ * Rendered through a portal on `document.body`. It has to escape the page: an
+ * ancestor with a transform, filter or backdrop-filter becomes the containing
+ * block for fixed positioning, which silently anchors this to that element
+ * instead of the viewport and can drop the photo below the fold.
  */
 export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) => {
   const photo = photos[index]
@@ -39,7 +97,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
 
   const label = photo.location || photo.date
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex animate-[lightbox-in_260ms_var(--ease-out-soft)_both] items-center justify-center"
       role="dialog"
@@ -53,7 +111,9 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         className="absolute inset-0 scale-125 bg-cover bg-center blur-3xl"
         style={{ backgroundImage: `url(${photo.lqip})`, opacity: 0.55 }}
       />
-      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: '#0f1a20d9' }} />
+      {/* Blurs the wall behind as well as tinting it, so the photo is the
+          only thing in focus. */}
+      <div aria-hidden="true" className="absolute inset-0 backdrop-blur-xl" style={{ backgroundColor: '#0f1a20d4' }} />
 
       <button
         onClick={onClose}
@@ -68,8 +128,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         <>
           {(
             [
-              ['Previous', -1, 'left-2 sm:left-4', '‹'],
-              ['Next', 1, 'right-2 sm:right-4', '›'],
+              ['Previous', -1, 'left-1 sm:left-4', '‹'],
+              ['Next', 1, 'right-1 sm:right-4', '›'],
             ] as const
           ).map(([name, delta, position, glyph]) => (
             <button
@@ -88,20 +148,16 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         </>
       )}
 
+      {/*
+       * Generous margins on every side rather than a full-bleed image: the
+       * photo reads as a framed object against the blurred ground, and the
+       * controls in the corners stay clear of it.
+       */}
       <figure
-        className="relative z-0 flex max-h-full w-full flex-col items-center gap-3 px-3 py-14 sm:px-16"
+        className="relative z-0 flex max-h-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          key={photo.slug}
-          src={photoSrc(photo, 1800)}
-          srcSet={photoSrcSet(photo)}
-          sizes="100vw"
-          alt={photo.caption || label}
-          width={photo.width}
-          height={photo.height}
-          className="max-h-[80vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
-        />
+        <Frame key={photo.slug} photo={photo} label={label} />
         <figcaption className="text-center">
           <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: palette.stoneText }}>
             {label}
@@ -112,7 +168,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         </figcaption>
       </figure>
 
-      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}`}</style>
-    </div>
+      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}@keyframes lightbox-spin{to{transform:rotate(360deg)}}`}</style>
+    </div>,
+    document.body,
   )
 }

@@ -155,7 +155,16 @@ export const Rail = () => {
                 key={s.id}
                 hidden={!isOpen}
                 aria-hidden={!isOpen}
-                className="animate-[rail-in_460ms_var(--ease-out-soft)_both]"
+                /*
+                 * `backwards`, not `both`. With a forwards fill the final
+                 * keyframe sticks, and `transform: none` computes to an
+                 * identity matrix rather than `none`, which makes this element
+                 * the containing block for any fixed-position descendant
+                 * forever. The final keyframe matches the element's base style
+                 * anyway, so dropping the forwards fill changes nothing
+                 * visually.
+                 */
+                className="animate-[rail-in_460ms_var(--ease-out-soft)_backwards]"
               >
                 <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">{s.label}</h2>
                 <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}a6` }}>
