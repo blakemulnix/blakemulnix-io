@@ -35,7 +35,10 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
        */}
       <div
         className="relative overflow-hidden rounded-xl shadow-2xl"
-        style={{ aspectRatio: ratio, width: `min(100cqw, calc(72svh * ${photo.width} / ${photo.height}))` }}
+        style={{
+          aspectRatio: ratio,
+          width: `min(100cqw, calc(var(--photo-h) * ${photo.width} / ${photo.height}))`,
+        }}
       >
         <img
           // A cached image can finish before React attaches onLoad, which would
@@ -50,7 +53,7 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
           alt={photo.caption || label}
           width={photo.width}
           height={photo.height}
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-400 ease-(--ease-out-soft)"
+          className="absolute inset-0 h-full w-full object-contain transition-opacity duration-400 ease-(--ease-out-soft)"
           style={{ opacity: loaded ? 1 : 0 }}
         />
 
@@ -80,9 +83,77 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
  * block for fixed positioning, which silently anchors this to that element
  * instead of the viewport and can drop the photo below the fold.
  */
+/**
+ * Tries to give a phone the whole screen, sideways.
+ *
+ * Locking the orientation needs fullscreen first, and only some browsers allow
+ * either: Android Chrome does, iOS Safari supports neither for an arbitrary
+ * element. So it is attempted and, when it does not take, the caller falls back
+ * to asking the reader to turn the phone themselves.
+ *
+ * Runs for coarse pointers on small screens only. Throwing a desktop into
+ * fullscreen because someone clicked a photo would be obnoxious.
+ */
+const goImmersive = async () => {
+  const phone = matchMedia('(pointer: coarse)').matches && matchMedia('(max-width: 900px)').matches
+  if (!phone) return false
+  try {
+    if (!document.fullscreenElement) await document.documentElement.requestFullscreen()
+    await screen.orientation?.lock?.('landscape')
+    return true
+  } catch {
+    return false
+  }
+}
+
+const leaveImmersive = () => {
+  try {
+    screen.orientation?.unlock?.()
+  } catch {
+    // Not supported here, which is fine: nothing was locked.
+  }
+  if (document.fullscreenElement) void document.exitFullscreen().catch(() => {})
+}
+
 export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) => {
   const photo = photos[index]
   const swipe = useRef<{ x: number; y: number } | null>(null)
+  // Two flags, so the hint can animate both ways: it has to stay mounted
+  // through its own exit.
+  const [hintMounted, setHintMounted] = useState(false)
+  const [hintShown, setHintShown] = useState(false)
+  // The caption clears itself shortly after each photo settles, so the whole
+  // frame is visible. Tapping the photo brings it back.
+  const [captionShown, setCaptionShown] = useState(true)
+
+  // Ask for landscape, and only nudge the reader if the browser said no. The
+  // click that opened this is what authorises the request, so it has to happen
+  // now rather than on a later interaction.
+  useEffect(() => {
+    let live = true
+    const timers: ReturnType<typeof setTimeout>[] = []
+    void goImmersive().then((locked) => {
+      if (!live || locked) return
+      if (!matchMedia('(orientation: portrait) and (max-width: 640px)').matches) return
+      setHintMounted(true)
+      // A beat later, so the entrance transition has a state to move from.
+      timers.push(setTimeout(() => setHintShown(true), 60))
+      timers.push(setTimeout(() => setHintShown(false), 4500))
+      timers.push(setTimeout(() => setHintMounted(false), 5200))
+    })
+    return () => {
+      live = false
+      for (const timer of timers) clearTimeout(timer)
+      leaveImmersive()
+    }
+  }, [])
+
+  // Re-armed per photo, so navigating shows the new location and then clears.
+  useEffect(() => {
+    setCaptionShown(true)
+    const timer = setTimeout(() => setCaptionShown(false), 2800)
+    return () => clearTimeout(timer)
+  }, [index])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -143,6 +214,30 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
           only thing in focus. */}
       <div aria-hidden="true" className="absolute inset-0 backdrop-blur-xl" style={{ backgroundColor: '#0f1a20d4' }} />
 
+      {/*
+       * Only in portrait on a phone, and `landscape:hidden` means turning the
+       * phone dismisses it with no JavaScript involved.
+       */}
+      {hintMounted && (
+        <p
+          className="absolute top-3 left-3 z-10 flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md transition-[opacity,transform] duration-500 ease-(--ease-out-soft) sm:hidden landscape:hidden"
+          style={{
+            backgroundColor: '#00000073',
+            color: palette.sand,
+            opacity: hintShown ? 1 : 0,
+            transform: hintShown ? 'none' : 'translateY(-10px)',
+          }}
+        >
+          <span
+            aria-hidden="true"
+            className="animate-[hint-tip_1800ms_var(--ease-out-soft)_infinite] text-[13px] leading-none"
+          >
+            ⟳
+          </span>
+          Psst, turn your phone sideways
+        </p>
+      )}
+
       <button
         onClick={onClose}
         aria-label="Close"
@@ -182,8 +277,17 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        * controls in the corners stay clear of it.
        */}
       <figure
-        className="@container relative z-0 flex max-h-full w-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20"
-        onClick={(e) => e.stopPropagation()}
+        /*
+         * `--photo-h` is the height the photo may take. A landscape phone has
+         * almost no height to spare, so there the padding and gap shrink and
+         * the photo takes nearly all of it. Bounded to small screens, since a
+         * desktop is landscape too and wants the breathing room.
+         */
+        className="@container relative z-0 flex max-h-full w-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 [--photo-h:72svh] sm:px-14 sm:py-20 lg:px-20 landscape:max-lg:gap-2 landscape:max-lg:px-3 landscape:max-lg:py-2 landscape:max-lg:[--photo-h:calc(100svh-1.5rem)]"
+        onClick={(e) => {
+          e.stopPropagation()
+          setCaptionShown((shown) => !shown)
+        }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         // A drag that leaves the figure should not be left half-tracked.
@@ -191,12 +295,18 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         style={{ touchAction: 'pan-y' }}
       >
         <Frame key={photo.slug} photo={photo} label={label} />
-        <figcaption className="text-center">
+        {/*
+         * In landscape on a phone the caption lifts out of the flow and sits
+         * over the bottom of the photo. Height is the binding constraint
+         * there, and every row below the photo is width the photo does not
+         * get: this buys back about a fifth of it.
+         */}
+        <figcaption
+          className="text-center transition-opacity duration-700 ease-(--ease-out-soft) landscape:max-lg:absolute landscape:max-lg:bottom-4 landscape:max-lg:left-1/2 landscape:max-lg:-translate-x-1/2 landscape:max-lg:rounded-full landscape:max-lg:[background-color:#00000073] landscape:max-lg:px-3 landscape:max-lg:py-1 landscape:max-lg:backdrop-blur-md"
+          style={{ opacity: captionShown ? 1 : 0 }}
+        >
           <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: palette.stoneText }}>
             {label}
-          </span>
-          <span className="ml-3 font-mono text-[11px]" style={{ color: `${palette.sand}73` }}>
-            {index + 1} / {photos.length}
           </span>
         </figcaption>
 
@@ -231,7 +341,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         )}
       </figure>
 
-      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}`}</style>
+      <style>{`@keyframes lightbox-in{from{opacity:0}to{opacity:1}}@keyframes hint-tip{0%,55%,100%{transform:rotate(0)}70%{transform:rotate(80deg)}85%{transform:rotate(72deg)}}`}</style>
     </div>,
     document.body,
   )
