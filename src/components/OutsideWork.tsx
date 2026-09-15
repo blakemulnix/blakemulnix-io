@@ -1,4 +1,4 @@
-import { outsideIntro } from '../data/outside'
+import { outsideAside, outsideLede } from '../data/outside'
 import { palette } from '../theme'
 import { PhotoWall } from './PhotoWall'
 
@@ -9,11 +9,12 @@ export const OutsideWork = () => (
     </h2>
 
     <div className="mt-4 max-w-2xl space-y-4 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
-      {outsideIntro.map((p, i) => (
-        <p key={i} className={i === 0 ? 'font-serif text-xl not-italic sm:text-2xl' : undefined}>
-          {p}
-        </p>
-      ))}
+      <div className="space-y-1 font-serif text-xl not-italic sm:text-2xl">
+        {outsideLede.map((line, i) => (
+          <p key={i}>{line}</p>
+        ))}
+      </div>
+      <p>{outsideAside}</p>
     </div>
 
     <div className="mt-10">
