@@ -7,11 +7,12 @@
  * re-running only picks up newly dropped files and refreshes derived facts.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 const ORIGINALS = 'photos/originals'
 const MANIFEST = 'photos/manifest.json'
+const DERIVATIVES = 'public/photos'
 
 const identify = (file) =>
   execFileSync('magick', ['identify', '-format', '%w\t%h\t%[EXIF:DateTimeOriginal]', file], {
@@ -21,9 +22,35 @@ const identify = (file) =>
 const previous = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : { photos: [] }
 const prior = new Map((previous.photos ?? []).map((p) => [p.file, p]))
 
+/**
+ * Reuse the dimensions and capture date already in the manifest.
+ *
+ * `magick identify` on a 26MP file is not free, and re-reading every original
+ * on each run made the labelling tool take a minute to start. None of these
+ * facts can change unless the file itself does, so they are reused whenever the
+ * built derivative is newer than the original, which is the same freshness
+ * check the encoder uses. Replace a file in place and it gets read again.
+ *
+ * The capture time is not stored, only used to order new photos within a day,
+ * and photos already in the manifest keep the slug they were given.
+ */
+const reusable = (file) => {
+  const kept = prior.get(file)
+  if (!kept?.slug || !kept.width || !kept.height || !kept.date) return null
+  const src = path.join(ORIGINALS, file)
+  const built = path.join(DERIVATIVES, `${kept.slug}-400.webp`)
+  if (!existsSync(built) || statSync(built).mtimeMs < statSync(src).mtimeMs) return null
+  return { file, width: kept.width, height: kept.height, date: kept.date, time: '00:00:00' }
+}
+
+let read = 0
 const scanned = readdirSync(ORIGINALS)
   .filter((f) => /\.(jpe?g)$/i.test(f))
   .map((file) => {
+    const cached = reusable(file)
+    if (cached) return cached
+
+    read++
     const [w, h, exifDate] = identify(path.join(ORIGINALS, file))
     // EXIF dates use colons throughout: "2026:08:11 18:37:02"
     const stamp = (exifDate ?? '').trim()
@@ -66,5 +93,5 @@ const photos = scanned.map((p) => {
 writeFileSync(MANIFEST, JSON.stringify({ photos }, null, 2) + '\n')
 
 const unlabelled = photos.filter((p) => !p.location).length
-console.log(`${photos.length} photos -> ${MANIFEST}`)
+console.log(`${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`)
 console.log(unlabelled ? `${unlabelled} still need a location` : 'all photos have a location')

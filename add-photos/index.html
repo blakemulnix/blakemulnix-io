@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add photos</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        --ink: #101512;
+        --pine: #141d17;
+        --sand: #e7dcc4;
+        --muted: #c9bfa6;
+        --moss: #93b06e;
+        --ochre: #d9a05b;
+        --rust: #d4795c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0 0 6rem;
+        background: var(--ink);
+        color: var(--sand);
+        font:
+          15px/1.5 ui-sans-serif,
+          system-ui,
+          sans-serif;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem clamp(1rem, 4vw, 2.5rem);
+        background: color-mix(in srgb, var(--pine) 88%, transparent);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #ffffff14;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      .count {
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .count b {
+        color: var(--ochre);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .status {
+        font-size: 0.8rem;
+        font-variant-numeric: tabular-nums;
+        color: var(--muted);
+        min-width: 7rem;
+        text-align: right;
+      }
+      .status[data-state='saved'] {
+        color: var(--moss);
+      }
+      .status[data-state='error'] {
+        color: var(--rust);
+      }
+      button {
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        border: 1px solid #ffffff2b;
+        background: #ffffff12;
+        color: var(--sand);
+        cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        background: #ffffff1f;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      label.filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      main {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        padding: clamp(1rem, 4vw, 2.5rem);
+      }
+      .card {
+        display: flex;
+        gap: 0.9rem;
+        padding: 0.75rem;
+        border: 1px solid #ffffff14;
+        border-radius: 12px;
+        background: #ffffff08;
+      }
+      .card[data-done='false'] {
+        border-color: color-mix(in srgb, var(--ochre) 45%, transparent);
+      }
+      .card img {
+        width: 108px;
+        height: 108px;
+        flex: none;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #ffffff0f;
+      }
+      .meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        min-width: 0;
+        flex: 1;
+      }
+      .slug {
+        font:
+          600 0.8rem/1.2 ui-monospace,
+          monospace;
+        color: var(--moss);
+      }
+      .file {
+        font:
+          0.7rem/1.3 ui-monospace,
+          monospace;
+        color: #ffffff5c;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      input {
+        margin-top: auto;
+        width: 100%;
+        padding: 0.5rem 0.6rem;
+        font: inherit;
+        font-size: 0.85rem;
+        color: var(--sand);
+        background: #00000038;
+        border: 1px solid #ffffff1f;
+        border-radius: 7px;
+      }
+      input:focus {
+        outline: 2px solid var(--moss);
+        outline-offset: 1px;
+      }
+      .empty {
+        padding: 3rem;
+        text-align: center;
+        color: var(--muted);
+      }
+      kbd {
+        font:
+          0.75rem ui-monospace,
+          monospace;
+        padding: 0.1rem 0.35rem;
+        border: 1px solid #ffffff2b;
+        border-radius: 4px;
+      }
+      .hint {
+        padding: 0 clamp(1rem, 4vw, 2.5rem);
+        color: #ffffff5c;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Add photos</h1>
+      <span class="count" id="count"></span>
+      <label class="filter"><input type="checkbox" id="only" style="width: auto; margin: 0" /> Only unlabelled</label>
+      <span class="spacer"></span>
+      <span class="status" id="status"></span>
+      <button id="save">Save and rebuild</button>
+    </header>
+
+    <p class="hint">
+      Labels save as you type. <kbd>Enter</kbd> jumps to the next unlabelled photo. Hit <em>Save and rebuild</em> when
+      you are done to regenerate the site's photo data.
+    </p>
+
+    <main id="grid"></main>
+
+    <script>
+      const grid = document.getElementById('grid')
+      const status = document.getElementById('status')
+      const countEl = document.getElementById('count')
+      const onlyEl = document.getElementById('only')
+      const saveBtn = document.getElementById('save')
+
+      let photos = []
+
+      const setStatus = (text, state = '') => {
+        status.textContent = text
+        status.dataset.state = state
+      }
+
+      const updateCount = () => {
+        const left = photos.filter((p) => !p.location?.trim()).length
+        countEl.innerHTML = left
+          ? `<b>${left}</b> of ${photos.length} need a location`
+          : `all ${photos.length} labelled`
+      }
+
+      const render = () => {
+        const shown = onlyEl.checked ? photos.filter((p) => !p.location?.trim()) : photos
+        grid.innerHTML = shown.length ? '' : '<p class="empty">Nothing to label. Every photo has a location.</p>'
+
+        for (const photo of shown) {
+          const card = document.createElement('div')
+          card.className = 'card'
+          card.dataset.done = Boolean(photo.location?.trim())
+
+          const img = document.createElement('img')
+          img.src = `/photos/${photo.slug}-400.webp`
+          img.loading = 'lazy'
+          img.alt = photo.slug
+
+          const meta = document.createElement('div')
+          meta.className = 'meta'
+          const slug = document.createElement('div')
+          slug.className = 'slug'
+          slug.textContent = photo.slug
+          const file = document.createElement('div')
+          file.className = 'file'
+          file.textContent = `${photo.file} · ${photo.width}×${photo.height}`
+
+          const input = document.createElement('input')
+          input.value = photo.location ?? ''
+          input.placeholder = 'Location, e.g. Maroon Bells, Colorado'
+          input.dataset.file = photo.file
+          input.addEventListener('input', () => {
+            photo.location = input.value
+            card.dataset.done = Boolean(input.value.trim())
+            updateCount()
+            queueSave()
+          })
+          input.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter') return
+            e.preventDefault()
+            const inputs = [...grid.querySelectorAll('input')]
+            const next = inputs.slice(inputs.indexOf(input) + 1).find((i) => !i.value.trim())
+            ;(next ?? inputs[inputs.indexOf(input) + 1])?.focus()
+          })
+
+          meta.append(slug, file, input)
+          card.append(img, meta)
+          grid.append(card)
+        }
+        updateCount()
+      }
+
+      // Debounced, so a burst of typing is one write rather than one per key.
+      let timer
+      let inFlight = false
+      const queueSave = () => {
+        setStatus('Saving…')
+        clearTimeout(timer)
+        timer = setTimeout(save, 500)
+      }
+
+      const save = async () => {
+        if (inFlight) return queueSave()
+        inFlight = true
+        try {
+          const res = await fetch('/api/photos', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ photos }),
+          })
+          if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
+          const { changed } = await res.json()
+          setStatus(changed ? `Saved ${changed}` : 'Saved', 'saved')
+        } catch (error) {
+          setStatus('Save failed', 'error')
+          console.error(error)
+        } finally {
+          inFlight = false
+        }
+      }
+
+      saveBtn.addEventListener('click', async () => {
+        clearTimeout(timer)
+        saveBtn.disabled = true
+        setStatus('Saving…')
+        await save()
+        setStatus('Rebuilding…')
+        try {
+          const res = await fetch('/api/rebuild', { method: 'POST' })
+          if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
+          setStatus('Rebuilt', 'saved')
+        } catch (error) {
+          setStatus('Rebuild failed', 'error')
+          console.error(error)
+        } finally {
+          saveBtn.disabled = false
+        }
+      })
+
+      onlyEl.addEventListener('change', render)
+
+      // Warn on the narrow window between a keystroke and its save landing.
+      addEventListener('beforeunload', (e) => {
+        if (timer && status.dataset.state !== 'saved') e.preventDefault()
+      })
+
+      const load = async () => {
+        const res = await fetch('/api/photos')
+        photos = (await res.json()).photos
+        render()
+        setStatus('')
+      }
+      load()
+    </script>
+  </body>
+</html>

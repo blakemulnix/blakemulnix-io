@@ -48,7 +48,8 @@ src/
   index.css      Tailwind import and design tokens
 photos/          manifest.json plus gitignored originals
 public/          Served verbatim: photo derivatives, favicon, robots, sitemap
-explorations/    Standalone review pages (favicons, photo labelling)
+add-photos/      The photo import and labelling tool
+explorations/    Standalone review pages (favicon options)
 infra/           CDK app (see below)
 ```
 
@@ -64,34 +65,36 @@ which _are_ committed.
 ### Adding new photos
 
 ```bash
-cp ~/wherever/*.JPG photos/originals/   # 1. drop them in
-npm run photos                          # 2. rebuild
-                                        # 3. label the new ones (see below)
-npm run photos                          # 4. rebuild again to pick up labels
+cp ~/wherever/*.JPG photos/originals/
+npm run add-photos
 ```
 
-Step 3 needs a human, because only you know where the photo was taken. Either
-edit the empty `location` fields in `photos/manifest.json` directly, or open the
-generated labelling page, which shows each thumbnail beside an input and has a
-button to copy the whole manifest back out:
+That is the whole flow. It scans the originals, builds the derivatives, and
+serves a page at `http://localhost:4321` listing every photo with its
+thumbnail and a location field. **Labels save to `photos/manifest.json` as you
+type**, `Enter` jumps to the next unlabelled photo, and _Save and rebuild_
+regenerates the site's photo data when you are done. Then commit.
 
-```bash
-open explorations/photo-labels.html
-```
+The tool lives in [`add-photos/`](add-photos/). It runs a small local server
+rather than being a page you open directly, because a page loaded over
+`file://` cannot write to disk, and a labelling page that asks you to copy JSON
+back out by hand is how labels get lost.
 
-`npm run photos` tells you how many are still unlabelled. An unlabelled photo
-still renders, falling back to its date.
+Only `location` is taken from the page. Slugs, dates and dimensions are derived
+from the original file, so a stale tab cannot overwrite them.
 
-### What the three scripts do
+An unlabelled photo still renders, falling back to its date.
 
-| Script                  | Does                                                        |
-| ----------------------- | ----------------------------------------------------------- |
-| `photos-manifest.mjs`   | Scans originals, adds new entries to `photos/manifest.json` |
-| `photos-build.mjs`      | Encodes derivatives, writes `src/data/photos.generated.ts`  |
-| `photos-label-page.mjs` | Regenerates the labelling page                              |
+### The two scripts behind it
 
-`photos/manifest.json` is the source of truth and the only file to hand-edit.
-`src/data/photos.generated.ts` is generated; do not edit it.
+| Script                | Does                                                        |
+| --------------------- | ----------------------------------------------------------- |
+| `photos-manifest.mjs` | Scans originals, adds new entries to `photos/manifest.json` |
+| `photos-build.mjs`    | Encodes derivatives, writes `src/data/photos.generated.ts`  |
+
+`npm run photos` runs both, which is all `add-photos` does on startup and on
+_Save and rebuild_. `photos/manifest.json` is the source of truth;
+`src/data/photos.generated.ts` and `public/photos/` are generated from it.
 
 ### Guarantees worth knowing
 

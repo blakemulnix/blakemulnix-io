@@ -61,9 +61,33 @@ const shuffle = (items, seed) => {
   return out
 }
 
+/**
+ * Reuse the blur-up placeholders from the previous run.
+ *
+ * Each one is another ImageMagick pass over a 26MP original, and recomputing
+ * all of them dominated the runtime even when no encoding was needed: 44 of 44
+ * seconds on a rerun. A placeholder can only change if its original does, which
+ * is the same condition the derivatives are rebuilt on.
+ */
+const priorLqip = () => {
+  if (!existsSync(GENERATED)) return new Map()
+  const text = readFileSync(GENERATED, 'utf8')
+  // Search past the `=`, since the `Photo[]` annotation has a bracket of its own.
+  const declaration = text.indexOf('export const photos')
+  const start = text.indexOf('[', text.indexOf('=', declaration))
+  try {
+    const parsed = JSON.parse(text.slice(start, text.lastIndexOf(']') + 1))
+    return new Map(parsed.map((p) => [p.slug, p.lqip]))
+  } catch {
+    return new Map()
+  }
+}
+const cachedLqip = priorLqip()
+
 const entries = []
 let built = 0
 let skipped = 0
+let reused = 0
 
 for (const photo of manifest.photos) {
   if (photo.hidden) continue
@@ -74,6 +98,7 @@ for (const photo of manifest.photos) {
   }
   const srcTime = statSync(src).mtimeMs
 
+  let encoded = 0
   for (const width of WIDTHS) {
     const out = path.join(OUT_DIR, `${photo.slug}-${width}.webp`)
     if (existsSync(out) && statSync(out).mtimeMs >= srcTime) {
@@ -82,7 +107,11 @@ for (const photo of manifest.photos) {
     }
     convert(src, out, width, QUALITY)
     built++
+    encoded++
   }
+
+  const cached = encoded === 0 ? cachedLqip.get(photo.slug) : undefined
+  if (cached) reused++
 
   entries.push({
     slug: photo.slug,
@@ -91,7 +120,7 @@ for (const photo of manifest.photos) {
     date: photo.date,
     location: photo.location ?? '',
     caption: photo.caption ?? '',
-    lqip: lqip(src),
+    lqip: cached ?? lqip(src),
   })
 }
 
@@ -131,4 +160,5 @@ export const photos: Photo[] = ${JSON.stringify(ordered, null, 2)}
 `
 writeFileSync(GENERATED, body)
 console.log(`encoded ${built} derivatives (${skipped} up to date, ${pruned} pruned) for ${entries.length} photos`)
+console.log(`placeholders: ${reused} reused, ${entries.length - reused} generated`)
 console.log(`wrote ${GENERATED}`)
