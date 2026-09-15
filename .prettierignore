@@ -1,0 +1,8 @@
+# Build artifacts
+dist
+infra/cdk.out
+
+# Generated: written by scripts/, and shaped by the generator rather than
+# Prettier so that `npm run photos` alone leaves a clean tree.
+src/data/photos.generated.ts
+explorations/photo-labels.html
