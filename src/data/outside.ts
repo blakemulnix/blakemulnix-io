@@ -1,5 +1,5 @@
-// Placeholder copy; photos come from photos/manifest.json via PhotoWall.
+// Photos come from photos/manifest.json via PhotoWall.
 export const outsideIntro = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravel roads, long weekends, and a tent that has seen better days. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.',
+  'I charge up my mental batteries by depleting my glycogen stores. Type 2 fun, they call it. Sometimes I bring my camera along.',
+  'Word to the wise: be careful bringing up bike tires around me. I have opinions.',
 ]

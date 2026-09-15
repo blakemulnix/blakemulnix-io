@@ -16,7 +16,7 @@ export const experience: ExperienceEntry[] = [
     companyUrl: 'https://www.sourceallies.com/',
     start: 'September 2023',
     summary:
-      'Partner with client teams to design and ship enterprise applications on the cloud, spanning application code, infrastructure, and delivery pipelines.',
+      'Partner with client teams to design and ship enterprise applications on the cloud, spanning application code, infrastructure, and delivery pipelines. Much of the work is coaching teams toward test driven development, smaller iterations, and tooling that makes delivery predictable.',
     technologies: ['TypeScript', 'Node.js', 'React', 'C#', 'AWS', 'Azure', 'Bicep', 'GraphQL'],
   },
   {
@@ -26,8 +26,8 @@ export const experience: ExperienceEntry[] = [
     start: 'June 2022',
     end: 'January 2023',
     summary:
-      'Improved payment processing software for law firms and legal tech companies. Built a Cypress suite for end-to-end coverage and led integration testing through an overhaul of the payment flow.',
-    technologies: ['React', 'Node.js', 'TypeScript', 'TypeORM', 'Cypress', 'MySQL', 'AWS'],
+      'Improved payment processing software for law firms and legal tech companies. Built out end-to-end test coverage and led integration testing through an overhaul of the payment flow.',
+    technologies: ['React', 'Node.js', 'TypeScript', 'TypeORM', 'MySQL', 'AWS'],
   },
   {
     title: 'Software Engineer II',
@@ -56,7 +56,7 @@ export const experience: ExperienceEntry[] = [
     start: 'May 2018',
     end: 'August 2019',
     summary:
-      'Worked across three projects: a LiDAR-based application for railroad clearance analysis, a technical lead role on an in-house compensation management tool, and the move of a proprietary desktop railroad data validation tool to the web.',
+      'Worked across three projects: a LiDAR-based application for railroad clearance analysis, a technical lead role on an in-house compensation management tool, and the migration of a proprietary desktop railroad data validation tool to the web.',
     technologies: ['Python', 'Tornado', 'Angular', 'SQLAlchemy', 'Bootstrap', 'Docker', 'C#', 'WPF'],
   },
   {

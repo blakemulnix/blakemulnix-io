@@ -73,16 +73,32 @@ export const Rail = () => {
             {profile.role}
           </p>
 
+          {/*
+           * Collapsing a block of text whose height is not known needs either a
+           * measured pixel value or a grid row, and the grid row wins: `1fr`
+           * resolves to whatever the copy actually needs, so adding a paragraph
+           * or rewrapping at a narrower width can never clip it.
+           */}
           <div
-            className="overflow-hidden transition-all duration-500"
-            style={{ maxHeight: isHome ? 480 : 0, opacity: isHome ? 1 : 0 }}
+            className="grid transition-all duration-500"
+            style={{ gridTemplateRows: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
           >
-            <div className="mt-6 max-w-xl space-y-3 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
-              {aboutParagraphs.slice(0, 2).map((p, i) => (
-                <p key={i}>
-                  <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
-                </p>
-              ))}
+            {/*
+             * Both of these are load-bearing. `min-h-0` on the clipped box,
+             * because an `fr` track's automatic minimum is min-content, so
+             * `0fr` would never reach zero without it. And the spacing goes on
+             * a child inside that box: padding on the box itself outlives the
+             * collapse, since min-height only frees the content area and the
+             * padding stays behind as a gap.
+             */}
+            <div className="min-h-0 overflow-hidden">
+              <div className="max-w-xl space-y-3 pt-6 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+                {aboutParagraphs.map((p, i) => (
+                  <p key={i}>
+                    <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
 

@@ -53,7 +53,6 @@ export const Site = () => (
         </p>
 
         <div className="mt-8 max-w-2xl space-y-4 text-[15px] leading-relaxed sm:text-base">
-          <p className="font-serif text-2xl">{profile.greeting}.</p>
           {aboutParagraphs.map((p, i) => (
             <p key={i} style={{ color: palette.muted }}>
               <Segments
