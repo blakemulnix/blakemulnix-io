@@ -4,7 +4,7 @@ import '@fontsource-variable/fraunces/standard.css'
 import './index.css'
 
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 
 import { App } from './App.tsx'
 
@@ -14,8 +14,16 @@ if (!rootElement) {
   throw new Error('Unable to mount the application: #root was not found.')
 }
 
-createRoot(rootElement).render(
+const tree = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 )
+
+// The build prerenders markup into #root, so adopt it rather than discarding
+// it. Falls back to a fresh render when that markup is absent.
+if (rootElement.hasChildNodes()) {
+  hydrateRoot(rootElement, tree)
+} else {
+  createRoot(rootElement).render(tree)
+}

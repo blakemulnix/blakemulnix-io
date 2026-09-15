@@ -4,9 +4,16 @@ import { DesignPicker } from './components/DesignPicker'
 import { profile } from './data/about'
 import { designs } from './designs'
 
+/** The design that ships. The switcher below is a local review tool only. */
+const PRODUCTION_DESIGN = 'scroll'
+
 const readDesignId = () => window.location.hash.replace(/^#\/?/, '')
 
-export const App = () => {
+/**
+ * Hash-routed gallery for comparing designs. Development only, so the review
+ * chrome never reaches production and prerendered markup stays deterministic.
+ */
+const DesignGallery = () => {
   const [id, setId] = useState(readDesignId)
 
   useEffect(() => {
@@ -18,8 +25,7 @@ export const App = () => {
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
-  const fallback = designs[0]
-  const current = designs.find((d) => d.id === id) ?? fallback
+  const current = designs.find((d) => d.id === id) ?? designs[0]
   if (!current) throw new Error('No designs are registered.')
 
   useEffect(() => {
@@ -27,7 +33,6 @@ export const App = () => {
   }, [current.name])
 
   const Design = current.Component
-
   return (
     <>
       <Design key={current.id} />
@@ -35,3 +40,9 @@ export const App = () => {
     </>
   )
 }
+
+const chosen = designs.find((d) => d.id === PRODUCTION_DESIGN)
+if (!chosen) throw new Error(`Unknown production design: ${PRODUCTION_DESIGN}`)
+const ProductionDesign = chosen.Component
+
+export const App = () => (import.meta.env.DEV ? <DesignGallery /> : <ProductionDesign />)
