@@ -5,7 +5,7 @@ import { profile } from './data/about'
 import { designs } from './designs'
 
 /** The design that ships. The switcher below is a local review tool only. */
-const PRODUCTION_DESIGN = 'scroll'
+const PRODUCTION_DESIGN = 'rail'
 
 const readDesignId = () => window.location.hash.replace(/^#\/?/, '')
 

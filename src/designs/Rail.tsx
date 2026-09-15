@@ -15,11 +15,7 @@ import { useSectionView } from './useSectionView'
  */
 export const Rail = () => {
   const { view, section, background, open, home } = useSectionView()
-  const Content = section ? sectionContent[section.id] : null
   const isHome = view === 'home'
-
-  const currentIndex = sections.findIndex((s) => s.id === view)
-  const next = currentIndex >= 0 ? sections[(currentIndex + 1) % sections.length] : undefined
 
   return (
     <div
@@ -140,43 +136,61 @@ export const Rail = () => {
           </nav>
         </div>
 
-        {/* Content */}
+        {/*
+         * Every section is rendered and the closed ones are hidden, rather
+         * than mounted on open. Crawlers do not click, so gating content
+         * behind a button would leave the whole site indexed as just the
+         * landing blurb. Going from `hidden` to visible also restarts the
+         * entrance animation on its own, since animations do not run on
+         * display:none elements.
+         */}
         <main>
-          {section && Content && (
-            <div key={view} className="animate-[rail-in_460ms_var(--ease-out-soft)_both]">
-              <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">{section.label}</h2>
-              <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}a6` }}>
-                {section.tagline}
-              </p>
-              <div className="mt-8 lg:mt-10">
-                <Content accent={section.accent} />
-              </div>
+          {sections.map((s, i) => {
+            const Content = sectionContent[s.id]
+            const isOpen = view === s.id
+            const next = sections[(i + 1) % sections.length]
 
-              {/* Somewhere to go from the bottom of long content. */}
-              {next && (
-                <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
-                  <button onClick={() => open(next.id)} className="group text-left">
-                    <span
-                      className="font-mono text-[11px] tracking-[0.25em] uppercase"
-                      style={{ color: `${palette.sand}8c` }}
-                    >
-                      Next
-                    </span>
-                    <span className="mt-1 flex items-center gap-2 font-serif text-2xl font-semibold">
-                      {next.label}
-                      <span
-                        className="transition-transform group-hover:translate-x-1"
-                        style={{ color: next.accent }}
-                        aria-hidden="true"
-                      >
-                        →
-                      </span>
-                    </span>
-                  </button>
+            return (
+              <div
+                key={s.id}
+                hidden={!isOpen}
+                aria-hidden={!isOpen}
+                className="animate-[rail-in_460ms_var(--ease-out-soft)_both]"
+              >
+                <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">{s.label}</h2>
+                <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}a6` }}>
+                  {s.tagline}
+                </p>
+                <div className="mt-8 lg:mt-10">
+                  <Content accent={s.accent} />
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Somewhere to go from the bottom of long content. */}
+                {next && (
+                  <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
+                    <button onClick={() => open(next.id)} className="group text-left">
+                      <span
+                        className="font-mono text-[11px] tracking-[0.25em] uppercase"
+                        style={{ color: `${palette.sand}8c` }}
+                      >
+                        Next
+                      </span>
+                      <span className="mt-1 flex items-center gap-2 font-serif text-2xl font-semibold">
+                        {next.label}
+                        <span
+                          className="transition-transform group-hover:translate-x-1"
+                          style={{ color: next.accent }}
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </main>
       </div>
 

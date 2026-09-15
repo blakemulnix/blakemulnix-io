@@ -69,7 +69,14 @@ export const PhotoWall = () => {
                     alt={photo.caption || label}
                     width={photo.width}
                     height={photo.height}
-                    loading={i < 4 ? 'eager' : 'lazy'}
+                    /*
+                     * Always lazy. The wall only appears once a section is
+                     * opened, so nothing here is ever the initial LCP, and
+                     * eager images inside a hidden container are fetched by
+                     * the browser anyway, costing bandwidth for pixels the
+                     * visitor may never look at.
+                     */
+                    loading="lazy"
                     decoding="async"
                     /*
                      * No opacity-0 plus onLoad fade here: in prerendered markup
