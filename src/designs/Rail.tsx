@@ -1,5 +1,6 @@
 import { Segments } from '../components/Segments'
 import { aboutParagraphs, profile } from '../data/about'
+import { socialLinks } from '../data/social'
 import { sectionContent } from '../sections'
 import { palette, sections } from '../theme'
 import { useSectionView } from './useSectionView'
@@ -34,7 +35,7 @@ export const Rail = () => {
               <span className="text-sm">Back</span>
             </button>
             <span
-              className="truncate font-mono text-[11px] tracking-[0.2em] uppercase"
+              className="truncate font-mono text-[0.7rem] tracking-[0.2em] uppercase"
               style={{ color: section.accent }}
             >
               {section.label}
@@ -43,35 +44,101 @@ export const Rail = () => {
         </div>
       )}
 
+      {/*
+       * `50%`, not `1fr`, for the open state of the index column.
+       *
+       * A track list only interpolates when each pair of tracks is the same
+       * type, and `fr` does not interpolate with a length. Against `13rem` the
+       * transition therefore never ran: the columns snapped to their end width
+       * in one frame while the type kept shrinking for another 400ms, which is
+       * the whole of the jolt. A percentage and a rem are both
+       * <length-percentage>, so this pair animates.
+       */}
       <div
-        className="mx-auto grid max-w-7xl gap-8 px-5 py-10 transition-[grid-template-columns] duration-700 ease-(--ease-out-soft) sm:px-8 lg:grid-cols-[var(--nav-col)_1fr] lg:gap-12 lg:py-14"
-        style={{ ['--nav-col' as string]: isHome ? '1fr' : '13rem' }}
+        className="mx-auto grid max-w-7xl gap-8 px-5 py-10 transition-[grid-template-columns] duration-[600ms] ease-(--ease-out-soft) sm:px-8 lg:grid-cols-[var(--nav-col)_1fr] lg:gap-12 lg:py-14"
+        style={{ ['--nav-col' as string]: isHome ? '50%' : '13rem' }}
       >
         {/* Index, becoming a rail. Hidden on phones once a section is open. */}
         <div className={section ? 'hidden lg:block' : ''}>
-          {/* Desktop: a labelled way back, not just a clickable name. */}
-          {!isHome && (
-            <button
-              onClick={home}
-              className="mb-6 hidden items-center gap-2 font-mono text-[11px] tracking-[0.25em] uppercase transition-opacity hover:opacity-70 lg:flex"
-              style={{ color: palette.ochre }}
-            >
-              <span aria-hidden="true">←</span> Overview
-            </button>
-          )}
+          {/*
+           * Desktop: a labelled way back, not just a clickable name.
+           *
+           * Grown into place rather than mounted, for the same reason as
+           * everything else here: appearing outright shoved the name and the
+           * whole column down by 42px on the first frame of an otherwise
+           * smooth move. `inert` because it stays in the tree while collapsed,
+           * and an invisible control should not be focusable.
+           */}
+          <div
+            className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
+            style={{ gridTemplateRows: isHome ? '0fr' : '1fr', opacity: isHome ? 0 : 1 }}
+            inert={isHome}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <button
+                onClick={home}
+                className="hidden items-center gap-2 pb-6 font-mono text-[0.7rem] tracking-[0.25em] uppercase transition-opacity hover:opacity-70 lg:flex"
+                style={{ color: palette.ochre }}
+              >
+                <span aria-hidden="true">←</span> Overview
+              </button>
+            </div>
+          </div>
 
           <h1
-            className="font-serif font-semibold tracking-tight transition-all duration-500"
+            className="font-serif font-semibold tracking-tight transition-all duration-[600ms] ease-(--ease-out-soft)"
             style={{ fontSize: isHome ? 'clamp(2.5rem,7vw,4.5rem)' : '1.5rem', lineHeight: 1.02 }}
           >
             {profile.name}
           </h1>
-          <p
-            className="mt-2 font-serif italic transition-all duration-500"
-            style={{ color: palette.moss, fontSize: isHome ? '1.35rem' : '0.95rem' }}
-          >
-            {profile.role}
-          </p>
+
+          {/*
+           * The profiles share the role's row rather than taking one of their
+           * own, so they cost no vertical space: an extra row here pushed the
+           * first section link under the fold on a 720px screen. Pinned to the
+           * column's right edge, they also line up with the arrows on the
+           * section rows below, which keeps the column on one rhythm.
+           */}
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+            <p
+              className="font-serif italic transition-all duration-[600ms] ease-(--ease-out-soft)"
+              style={{ color: palette.moss, fontSize: isHome ? '1.35rem' : '0.95rem' }}
+            >
+              {profile.role}
+            </p>
+
+            {/*
+             * Collapsed along the inline axis rather than unmounted. Dropping
+             * them out of the tree was a step change in the middle of a smooth
+             * one, and leaving them mounted at `opacity: 0` would hold 140px
+             * of a 13rem rail.
+             */}
+            <div
+              className="grid shrink-0 transition-all duration-[600ms] ease-(--ease-out-soft)"
+              style={{ gridTemplateColumns: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+            >
+              <ul className="flex min-w-0 shrink-0 items-center gap-2 overflow-hidden sm:gap-2.5">
+                {socialLinks.map(({ label, url, Icon }) => (
+                  <li key={label}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={label}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-300 hover:border-(--hover) hover:text-(--hover) sm:h-10 sm:w-10"
+                      style={{
+                        borderColor: `${palette.sand}2e`,
+                        color: `${palette.sand}bf`,
+                        ['--hover' as string]: palette.ochre,
+                      }}
+                    >
+                      <Icon className="h-[17px] w-[17px] sm:h-[18px] sm:w-[18px]" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
           {/*
            * Collapsing a block of text whose height is not known needs either a
@@ -80,7 +147,7 @@ export const Rail = () => {
            * or rewrapping at a narrower width can never clip it.
            */}
           <div
-            className="grid transition-all duration-500"
+            className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
             style={{ gridTemplateRows: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
           >
             {/*
@@ -92,7 +159,13 @@ export const Rail = () => {
              * padding stays behind as a gap.
              */}
             <div className="min-h-0 overflow-hidden">
-              <div className="max-w-xl space-y-3 pt-6 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+              <p
+                className="max-w-md pt-3 font-serif text-lg text-balance sm:text-xl"
+                style={{ color: `${palette.sand}d9` }}
+              >
+                {profile.tagline}
+              </p>
+              <div className="max-w-xl space-y-3 pt-6 text-base leading-relaxed" style={{ color: palette.muted }}>
                 {aboutParagraphs.map((p, i) => (
                   <p key={i}>
                     <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
@@ -113,15 +186,20 @@ export const Rail = () => {
                   className="group border-t text-left last:border-b"
                   style={{ borderColor: `${palette.sand}1a` }}
                 >
-                  {/* Generous vertical padding keeps the touch target comfortable. */}
-                  <span className={`flex items-center justify-between gap-3 ${isHome ? 'py-5' : 'py-3'}`}>
+                  {/* Generous vertical padding keeps the touch target comfortable.
+                      The padding is transitioned too: swapping the class alone
+                      stepped the row height while its label was still shrinking. */}
+                  <span
+                    className="flex items-center justify-between gap-3 transition-[padding] duration-[600ms] ease-(--ease-out-soft)"
+                    style={{ paddingBlock: isHome ? '1.25rem' : '0.75rem' }}
+                  >
                     <span className="flex items-baseline gap-3">
-                      <span className="font-mono text-[11px] tabular-nums" style={{ color: s.accent }}>
+                      <span className="font-mono text-[0.7rem] tabular-nums" style={{ color: s.accent }}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span>
                         <span
-                          className="block font-serif font-semibold transition-all duration-500"
+                          className="block font-serif font-semibold transition-all duration-[600ms] ease-(--ease-out-soft)"
                           style={{
                             fontSize: isHome ? 'clamp(1.5rem,5vw,2.5rem)' : '1rem',
                             color: isOpen ? s.accent : palette.sand,
@@ -129,22 +207,30 @@ export const Rail = () => {
                         >
                           {s.label}
                         </span>
-                        {isHome && (
-                          <span className="mt-0.5 block text-sm" style={{ color: `${palette.sand}8c` }}>
-                            {s.tagline}
+                        <span
+                          className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
+                          style={{ gridTemplateRows: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+                        >
+                          <span className="block min-h-0 overflow-hidden">
+                            <span className="mt-0.5 block text-sm" style={{ color: `${palette.sand}8c` }}>
+                              {s.tagline}
+                            </span>
                           </span>
-                        )}
+                        </span>
                       </span>
                     </span>
-                    {isHome && (
+                    <span
+                      className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
+                      style={{ gridTemplateColumns: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+                      aria-hidden="true"
+                    >
                       <span
-                        className="font-mono text-lg transition-transform group-hover:translate-x-1"
+                        className="block min-w-0 overflow-hidden font-mono text-lg transition-transform group-hover:translate-x-1"
                         style={{ color: s.accent }}
-                        aria-hidden="true"
                       >
                         →
                       </span>
-                    )}
+                    </span>
                   </span>
                 </button>
               )
@@ -183,7 +269,7 @@ export const Rail = () => {
                  * anyway, so dropping the forwards fill changes nothing
                  * visually.
                  */
-                className="animate-[rail-in_460ms_var(--ease-out-soft)_backwards]"
+                className="animate-[rail-in_460ms_var(--ease-out-soft)_160ms_backwards]"
               >
                 <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">{s.label}</h2>
                 <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}a6` }}>
@@ -197,7 +283,7 @@ export const Rail = () => {
                 <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
                   <button onClick={() => (next ? open(next.id) : home())} className="group text-left">
                     <span
-                      className="font-mono text-[11px] tracking-[0.25em] uppercase"
+                      className="font-mono text-[0.7rem] tracking-[0.25em] uppercase"
                       style={{ color: `${palette.sand}8c` }}
                     >
                       {next ? 'Next' : 'That is everything'}
