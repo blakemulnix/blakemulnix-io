@@ -10,8 +10,14 @@ export type Segment = string | { text: string; href: string }
 export const profile = {
   name: 'Blake Mulnix',
   role: 'Software Consultant',
-  tagline: 'I build reliable, scalable software on the cloud.',
-  location: 'Des Moines, Iowa',
+  /** Under the role on the landing view. */
+  tagline: 'I build software and the teams that build it.',
+  /**
+   * The line on the social card. It has room the page does not, and it arrives
+   * with no context around it, so it can afford to be the joke.
+   */
+  cardTagline: 'I help teams ship faster by getting them to slow down for ten minutes.',
+  location: 'Iowa',
 } as const
 
 export const aboutParagraphs: Segment[][] = [
@@ -21,6 +27,6 @@ export const aboutParagraphs: Segment[][] = [
   [
     "I'm a consultant at ",
     { text: 'Source Allies', href: 'https://www.sourceallies.com' },
-    ", where I build software with a crew that's unreasonably good at it. We do plenty of coaching in addition to coding, helping teams and organizations pick up the practices that make delivery predictable.",
+    ", where I work with a crew that's unreasonably good at delivering software. We do as much coaching as coding, helping teams and organizations pick up new skills and see for themselves why the practices we live by are worth keeping.",
   ],
 ]

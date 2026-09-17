@@ -14,7 +14,8 @@
     "format:check": "prettier --check .",
     "photos": "node scripts/photos-manifest.mjs && node scripts/photos-build.mjs",
     "add-photos": "node add-photos/server.mjs",
-    "prebuild": "npm run photos"
+    "prebuild": "npm run photos",
+    "og": "node scripts/og-card.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

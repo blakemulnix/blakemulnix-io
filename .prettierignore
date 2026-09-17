@@ -6,3 +6,5 @@ infra/cdk.out
 # Prettier so that `npm run photos` alone leaves a clean tree.
 src/data/photos.generated.ts
 explorations/photo-labels.html
+
+scripts/og-card/.card.filled.html

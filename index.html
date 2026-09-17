@@ -20,7 +20,7 @@
     <title>Blake Mulnix, Software Consultant</title>
     <meta
       name="description"
-      content="Blake Mulnix is a software consultant helping teams build reliable, scalable software. Expertise in cloud architecture, infrastructure as code, GraphQL, front-end development, and deployment pipelines."
+      content="I'm a software consultant based in Iowa. I build cloud and data systems, and coach teams on test driven development and sustainable delivery."
     />
     <meta name="author" content="Blake Mulnix" />
     <meta name="theme-color" content="#141d17" />
@@ -31,9 +31,74 @@
     <meta property="og:title" content="Blake Mulnix, Software Consultant" />
     <meta
       property="og:description"
-      content="Blake Mulnix is a software consultant helping teams build reliable, scalable software. Expertise in cloud architecture, infrastructure as code, GraphQL, front-end development, and deployment pipelines."
+      content="I'm a software consultant based in Iowa. I build cloud and data systems, and coach teams on test driven development and sustainable delivery."
     />
+    <!-- Absolute URL, since a scraper has no page to resolve a relative one
+         against. Bump the version when public/og.jpg is regenerated: the
+         scrapers cache by URL, several of them for weeks. -->
+    <meta property="og:image" content="https://blakemulnix.io/og.jpg?v=2" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Blake Mulnix, Software Consultant, over a photograph of a misty ridge in the Great Smoky Mountains"
+    />
+    <meta property="og:site_name" content="Blake Mulnix" />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Blake Mulnix, Software Consultant" />
+    <meta
+      name="twitter:description"
+      content="I'm a software consultant based in Iowa. I build cloud and data systems, and coach teams on test driven development and sustainable delivery."
+    />
+    <meta name="twitter:image" content="https://blakemulnix.io/og.jpg?v=2" />
+    <meta
+      name="twitter:image:alt"
+      content="Blake Mulnix, Software Consultant, over a photograph of a misty ridge in the Great Smoky Mountains"
+    />
+
+    <!--
+      Structured data, so a search engine can treat the site as the
+      authoritative page for the person rather than guessing from the markup.
+      `sameAs` is what ties this page to the same identity as the GitHub and
+      LinkedIn profiles.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Blake Mulnix",
+        "givenName": "Blake",
+        "familyName": "Mulnix",
+        "url": "https://blakemulnix.io/",
+        "image": "https://blakemulnix.io/og.jpg?v=2",
+        "jobTitle": "Software Consultant",
+        "description": "I'm a software consultant based in Iowa. I build cloud and data systems, and coach teams on test driven development and sustainable delivery.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Iowa",
+          "addressCountry": "US"
+        },
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Source Allies",
+          "url": "https://www.sourceallies.com/"
+        },
+        "knowsAbout": [
+          "Software consulting",
+          "Cloud architecture",
+          "Test driven development",
+          "Extreme programming",
+          "Continuous delivery",
+          "Data engineering",
+          "GraphQL",
+          "Infrastructure as code",
+          "Amazon Web Services",
+          "Microsoft Azure"
+        ],
+        "sameAs": ["https://github.com/blakemulnix", "https://www.linkedin.com/in/blakemulnix/"]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

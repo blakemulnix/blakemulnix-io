@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Fraunces';
+        src: url('../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2')
+          format('woff2');
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: 'Inter';
+        src: url('../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: 'Mono';
+        src: url('../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
+          format('woff2');
+        font-weight: 100 800;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+    <style>
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        background: #141d17;
+        overflow: hidden;
+      }
+      .card img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      /* Anchored under the type as a corner vignette rather than a diagonal
+     sweep. A linear scrim puts a straight edge across the frame, which reads
+     as a seam wherever it fails to agree with the subject behind it. A radial
+     one has no edge to disagree with anything. */
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          120% 130% at 8% 88%,
+          #0b1310fa 0%,
+          #0b1310de 34%,
+          #0b13108f 58%,
+          #0b13101f 82%,
+          #0b13100d 100%
+        );
+      }
+      .inner {
+        position: absolute;
+        inset: 0;
+        padding: 76px 84px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .mark {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .mark svg {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+      }
+      .mark span {
+        font-family: 'Mono';
+        font-size: 17px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: #d9a05b;
+      }
+      h1 {
+        font-family: 'Fraunces';
+        font-weight: 600;
+        font-size: 96px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #e7dcc4;
+      }
+      .role {
+        font-family: 'Fraunces';
+        font-style: italic;
+        font-weight: 400;
+        font-size: 40px;
+        color: #93b06e;
+        margin-top: 18px;
+      }
+      /* Wide enough for a one line tagline, and balanced rather than ragged if
+     a longer one has to wrap. */
+      .tag {
+        font-family: 'Inter';
+        font-size: 25px;
+        line-height: 1.45;
+        color: #c9bfa6;
+        margin-top: 26px;
+        max-width: 880px;
+        text-wrap: balance;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img src="../../public/photos/2026-07-08-01-1800.webp" />
+      <div class="scrim"></div>
+      <div class="inner">
+        <div class="mark">
+          <svg viewBox="0 0 64 64">
+            <rect width="64" height="64" rx="12" fill="#141d17" />
+            <path d="M10 44 L24 26 L33 38 L41 29 L54 44 Z" fill="#93b06e" />
+          </svg>
+          <span>blakemulnix.io</span>
+        </div>
+        <div>
+          <h1>{{name}}</h1>
+          <p class="role">{{role}}</p>
+          <p class="tag">{{tagline}}</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
