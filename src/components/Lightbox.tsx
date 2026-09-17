@@ -32,12 +32,20 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
        * over 100px mid-load. `min()` picks whichever of the width and height
        * limits binds first, so the box is exactly the photo's footprint from
        * the first frame, and the placeholder and rounding line up with it.
+       *
+       * Both limits come from the enclosing size container, which is the box
+       * left over once the caption and controls have taken theirs. Measuring
+       * the leftover space rather than assuming a share of the viewport is
+       * what keeps this box the photo's exact shape: given a height it cannot
+       * have, a flex item shrinks, its aspect ratio loses, and the photo ends
+       * up letterboxed inside a wider rounded frame, which reads as a photo
+       * with square corners.
        */}
       <div
-        className="relative overflow-hidden rounded-xl shadow-2xl"
+        className="relative shrink-0 overflow-hidden rounded-xl shadow-2xl"
         style={{
           aspectRatio: ratio,
-          width: `min(100cqw, calc(var(--photo-h) * ${photo.width} / ${photo.height}))`,
+          width: `min(100cqw, calc(100cqh * ${photo.width} / ${photo.height}))`,
         }}
       >
         <img
@@ -220,7 +228,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        */}
       {hintMounted && (
         <p
-          className="absolute top-[max(0.75rem,env(safe-area-inset-top))] left-[max(0.75rem,env(safe-area-inset-left))] z-10 flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md transition-[opacity,transform] duration-500 ease-(--ease-out-soft) sm:hidden landscape:hidden"
+          className="absolute top-[max(0.75rem,env(safe-area-inset-top))] left-[max(0.75rem,env(safe-area-inset-left))] z-10 flex h-9 items-center gap-2 rounded-full px-3 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md transition-[opacity,transform] duration-500 ease-(--ease-out-soft) sm:hidden landscape:hidden"
           style={{
             backgroundColor: '#00000073',
             color: palette.sand,
@@ -261,7 +269,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        */}
       {thanksMounted && (
         <p
-          className="pointer-events-none absolute right-[max(0.75rem,env(safe-area-inset-right))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 flex items-center gap-1.5 rounded-full px-3 py-2 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md"
+          className="pointer-events-none absolute right-[max(0.75rem,env(safe-area-inset-right))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 flex h-9 items-center gap-1.5 rounded-full px-3 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md"
           style={{
             backgroundColor: '#00000073',
             color: palette.sand,
@@ -284,7 +292,7 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
       <button
         onClick={onClose}
         aria-label="Close"
-        className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 rounded-full px-3 py-2 text-sm backdrop-blur-md"
+        className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 flex h-9 items-center rounded-full px-3 text-sm backdrop-blur-md"
         style={{ backgroundColor: '#00000059', color: palette.sand }}
       >
         Close
@@ -331,12 +339,14 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
        */}
       <figure
         /*
-         * `--photo-h` is the height the photo may take. A landscape phone has
-         * almost no height to spare, so there the padding and gap shrink and
-         * the photo takes nearly all of it. Bounded to small screens, since a
-         * desktop is landscape too and wants the breathing room.
+         * Full height, with the margins expressed as padding: the photo then
+         * gets whatever the padding, the gaps, the caption and the controls
+         * leave, whatever those happen to measure. A landscape phone has
+         * almost no height to spare, so there the padding and gaps shrink.
+         * Bounded to small screens, since a desktop is landscape too and wants
+         * the breathing room.
          */
-        className="@container relative z-0 flex max-h-full w-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 [--photo-h:72svh] sm:px-14 sm:py-20 lg:px-20 landscape:max-lg:gap-2 landscape:max-lg:px-3 landscape:max-lg:py-2 landscape:max-lg:[--photo-h:calc(100svh-1.5rem)]"
+        className="relative z-0 flex h-full w-full max-w-[min(1400px,96vw)] flex-col items-center gap-4 px-2 py-16 sm:px-14 sm:py-20 lg:px-20 landscape:max-lg:gap-2 landscape:max-lg:px-3 landscape:max-lg:py-2"
         onClick={(e) => {
           e.stopPropagation()
           setCaptionShown((shown) => !shown)
@@ -347,18 +357,25 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
         onPointerCancel={() => (swipe.current = null)}
         style={{ touchAction: 'pan-y' }}
       >
-        <Frame key={photo.slug} photo={photo} label={label} />
         {/*
-         * In landscape on a phone the caption lifts out of the flow and sits
-         * over the bottom of the photo. Height is the binding constraint
-         * there, and every row below the photo is width the photo does not
-         * get: this buys back about a fifth of it.
+         * Size container, so the photo can be sized in `cqh` against the
+         * height that is genuinely free. `container-type: size` needs a
+         * definite height, which `flex-1` on a full-height column supplies.
+         */}
+        <div className="[container-type:size] flex min-h-0 w-full flex-1 items-center justify-center">
+          <Frame key={photo.slug} photo={photo} label={label} />
+        </div>
+        {/*
+         * Under the photo, never over it, at every size. A landscape phone has
+         * the least height to spare, so this is where an overlay was most
+         * tempting, but the row costs only a couple of percent of the photo's
+         * height and keeps the frame unobstructed.
          */}
         <figcaption
-          className="text-center transition-opacity duration-700 ease-(--ease-out-soft) landscape:max-lg:absolute landscape:max-lg:bottom-4 landscape:max-lg:left-1/2 landscape:max-lg:-translate-x-1/2 landscape:max-lg:rounded-full landscape:max-lg:[background-color:#00000073] landscape:max-lg:px-3 landscape:max-lg:py-1 landscape:max-lg:backdrop-blur-md"
+          className="text-center transition-opacity duration-700 ease-(--ease-out-soft)"
           style={{ opacity: captionShown ? 1 : 0 }}
         >
-          <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: palette.stoneText }}>
+          <span className="font-mono text-[0.7rem] tracking-[0.2em] uppercase" style={{ color: palette.stoneText }}>
             {label}
           </span>
         </figcaption>
