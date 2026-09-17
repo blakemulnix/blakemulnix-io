@@ -71,7 +71,7 @@ export const PhotoWall = () => {
                 </span>
               </button>
               <figcaption
-                className="mt-1.5 font-mono text-[10px] tracking-widest uppercase"
+                className="mt-1.5 font-mono text-[0.65rem] tracking-widest uppercase"
                 style={{ color: palette.stone }}
               >
                 {label}

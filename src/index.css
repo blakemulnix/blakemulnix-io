@@ -16,6 +16,28 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /*
+     * Overall scale lives here. Type, spacing and measure are all in rem, so
+     * the root is the single knob: a fixed 16px base reads small on a large
+     * monitor at a normal viewing distance, and bumping it enlarges the
+     * layout proportionally rather than just the letters.
+     *
+     * Percentages rather than pixels, so a reader who has changed their
+     * browser's default font size still gets it.
+     */
+    font-size: 100%;
+  }
+
+  @media (min-width: 1280px) {
+    html {
+      font-size: 106.25%; /* 17px */
+    }
+  }
+
+  @media (min-width: 1680px) {
+    html {
+      font-size: 112.5%; /* 18px */
+    }
   }
 
   body {

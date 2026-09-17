@@ -16,7 +16,7 @@ export const ValuesContent = ({ accent }: { accent: string }) => (
           <p className="mt-2 max-w-2xl font-serif text-lg italic sm:text-xl" style={{ color: palette.sand }}>
             {p.lede}
           </p>
-          <div className="mt-3 max-w-2xl space-y-3 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+          <div className="mt-3 max-w-2xl space-y-3 text-base leading-relaxed" style={{ color: palette.muted }}>
             {p.body.map((para, j) => (
               <p key={j}>{para}</p>
             ))}
