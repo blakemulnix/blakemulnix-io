@@ -22,14 +22,14 @@ export const PHOTO_WIDTHS = [400, 900, 1800] as const
 /** In the order set in photos/manifest.json. */
 export const photos: Photo[] = [
   {
-    "slug": "2025-04-29-01",
-    "width": 4898,
-    "height": 3265,
-    "date": "2025-04-29",
-    "location": "My Parents’ Place",
+    "slug": "2026-09-04-01",
+    "width": 6240,
+    "height": 4160,
+    "date": "2026-09-04",
+    "location": "Canyonlands National Park, Utah",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZAC7AYyAyQuydkJSxPf5EOAA/ufiVyzyupMAHTzLEDfSZZgYQjG40bO5O7NzUKbg/vywRFj2XvcU+3Jvdo4t86jzBHhVW6/PpmWERIDvDNpsuwbiLDMigzy5S+oCBM5xhvqS4/UFZ4qoLjSBbWMzWwF/T/zsKMQ4HvD6dqYcAAAA",
-    "v": "cbb2488e6e"
+    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwBACdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdMoMjbDu5FSL6P3ERQMAAy0cwUQQhED/HSEufPGmwi7UIuMaa4k4ezboHCqOy+t63IGh8CUthEc3JJEugg7mPGFi7wlkK4S9FOFAPv627TN+P2BsxweY5SH5gAAA=",
+    "v": "3a6022e0ba"
   },
   {
     "slug": "2026-08-22-01",
@@ -42,14 +42,14 @@ export const photos: Photo[] = [
     "v": "d3adee0537"
   },
   {
-    "slug": "2025-02-26-04",
-    "width": 6146,
-    "height": 4098,
-    "date": "2025-02-26",
-    "location": "Padre Island National Seashore, Texas",
+    "slug": "2026-05-30-03",
+    "width": 3648,
+    "height": 2736,
+    "date": "2026-05-30",
+    "location": "Black Hills, South Dakota",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoUAA0APt1cpkyopSOiMAgBEBuJZQCw7CG7rCMCbeNOHT13oAD+kXH0UZn5soTcIe4E4xdaR3fywte1NT4G9b+/u456YKDlmE78JkgtDVxBhR+TImyXVqgAAAA=",
-    "v": "3318b39c37"
+    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoUAA8APt1apkyopSOiMAgBEBuJQBOmUGMACSwPB+6mjIMrIAAA/sYD5/1Yy0oJxCRYm2kbzJfL5exeDXpGl7Y7ZeWTuvToyxW5KfJynCnvTGXuIl6zlZsak5xyxM1E3JC0cyzreqw+LhV/zWoAt4SvvSA+TgtASOhUbf19UAA=",
+    "v": "cb6de009a2"
   },
   {
     "slug": "2026-05-30-01",
@@ -62,34 +62,54 @@ export const photos: Photo[] = [
     "v": "dff3604950"
   },
   {
-    "slug": "2026-09-04-01",
-    "width": 6240,
-    "height": 4160,
-    "date": "2026-09-04",
+    "slug": "2026-09-06-01",
+    "width": 6237,
+    "height": 4158,
+    "date": "2026-09-06",
     "location": "Canyonlands National Park, Utah",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwBACdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdMoMjbDu5FSL6P3ERQMAAy0cwUQQhED/HSEufPGmwi7UIuMaa4k4ezboHCqOy+t63IGh8CUthEc3JJEugg7mPGFi7wlkK4S9FOFAPv627TN+P2BsxweY5SH5gAAA=",
-    "v": "3a6022e0ba"
+    "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBWABCxcZKMedKFqlkAA/sdl2O7Z9tdLrt2wDDXcMqUrNnwCtEJcmWsV3PU9P005oRVucetK3k6+Yn2EUg80vNpBaAFtf7DR+trMXBfldbK9VkWLbtUQvTmWCHIu/hjQR1TQAAA=",
+    "v": "6f39b2902b"
   },
   {
-    "slug": "2022-10-13-01",
-    "width": 3254,
-    "height": 1800,
-    "date": "2022-10-13",
-    "location": "Garden of the Gods, Colorado",
+    "slug": "2025-02-26-04",
+    "width": 6146,
+    "height": 4098,
+    "date": "2025-02-26",
+    "location": "Padre Island National Seashore, Texas",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoUAAsAPt1apkyopSOiMAgBEBuJagCdICXgrxC8H4/xAOMFW14AAN5Xxp9wr0GklJaKJD/BYMLF5B4Lx4UWOk83nmTz+RyMIrn+BFINgo71mVxazJjB9pVmeYCDpxxzR/txSMSbHassC+rxsly0MOy3LublGhwi2EBZHqW2Qbl20YAA",
-    "v": "6789319b0d"
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoUAA0APt1cpkyopSOiMAgBEBuJZQCw7CG7rCMCbeNOHT13oAD+kXH0UZn5soTcIe4E4xdaR3fywte1NT4G9b+/u456YKDlmE78JkgtDVxBhR+TImyXVqgAAAA=",
+    "v": "3318b39c37"
   },
   {
-    "slug": "2025-08-30-01",
+    "slug": "2026-05-23-01",
+    "width": 4898,
+    "height": 3265,
+    "date": "2026-05-23",
+    "location": "Mount Rushmore, South Dakota",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoUAA0APt1apkyopSOiMAgBEBuJYgCdEf/i15mVZlRzwp1Ro1owAN2TTSTuWOc0hmFLSW8xUudojL531j9KqiAMTkwi3M42sI4sJEQCVA2J6xHKn6UhaU4RgJXRmNQQcHoESfeE5wwJ42i8yJ/tek1j0I6Bv6oeL75ToMnoc1SwWPZO4eR8ITAA",
+    "v": "9ca6aa7e47"
+  },
+  {
+    "slug": "2025-04-29-01",
+    "width": 4898,
+    "height": 3265,
+    "date": "2025-04-29",
+    "location": "My Parents’ Place",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZAC7AYyAyQuydkJSxPf5EOAA/ufiVyzyupMAHTzLEDfSZZgYQjG40bO5O7NzUKbg/vywRFj2XvcU+3Jvdo4t86jzBHhVW6/PpmWERIDvDNpsuwbiLDMigzy5S+oCBM5xhvqS4/UFZ4qoLjSBbWMzWwF/T/zsKMQ4HvD6dqYcAAAA",
+    "v": "cbb2488e6e"
+  },
+  {
+    "slug": "2026-06-19-01",
     "width": 6240,
-    "height": 4160,
-    "date": "2025-08-30",
-    "location": "Paradise, Michigan",
+    "height": 3512,
+    "date": "2026-06-19",
+    "location": "Wapsipinicon River, Iowa",
     "caption": "",
-    "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJZQDCgCLJ5AcStsBsaR9AAPR2U2ga5UWGPi5Oo5AcrdJg/z3HrKBUU3owmc++4IBNIG3Kdzd+KLvetxB95TPQhE2Y2B5qGg7cOgjaxz+5FV+fmdt69cY3BlehVmkl0i1YWo33Z6HwAA==",
-    "v": "f0aa63cdfe"
+    "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoUAAsAPt1apkyopSOiMAgBEBuJQBbZMXwcCll/ej2NvJv9sAD+5vIEGlN5VffijH8Jb953suDrvHShwX8oHn4sY2IkMVmWEvimOJkux1mupEI5YsDriFFGYZaenyT1eIJbIza8fYmMe/k6c9KJuFx8RNV+SwyTtsAAAA==",
+    "v": "2430c3475b"
   },
   {
     "slug": "2026-09-05-01",
@@ -102,6 +122,96 @@ export const photos: Photo[] = [
     "v": "50733c7ca3"
   },
   {
+    "slug": "2026-07-08-02",
+    "width": 4898,
+    "height": 3265,
+    "date": "2026-07-08",
+    "location": "Great Smoky Mountains National Park",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADwAwCdASoUAA0APt1apkyopSOiMAgBEBuJYgCdIKnBynVypj1BNX4AAP7TXNv5+juuKXp+XxYNiQxyDVvDwmq1YA5nd/XaH6Ott84v2AApVYK9G6RHgalTfMG9iZWNcJOeFOXvZz35VOX/6Ewe2qzce3GQukMy52f6vihnk6Vlb7nqLFnqAAAA",
+    "v": "efab15ce40"
+  },
+  {
+    "slug": "2022-10-13-01",
+    "width": 3254,
+    "height": 1800,
+    "date": "2022-10-13",
+    "location": "Garden of the Gods, Colorado",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoUAAsAPt1apkyopSOiMAgBEBuJagCdICXgrxC8H4/xAOMFW14AAN5Xxp9wr0GklJaKJD/BYMLF5B4Lx4UWOk83nmTz+RyMIrn+BFINgo71mVxazJjB9pVmeYCDpxxzR/txSMSbHassC+rxsly0MOy3LublGhwi2EBZHqW2Qbl20YAA",
+    "v": "6789319b0d"
+  },
+  {
+    "slug": "2026-09-12-01",
+    "width": 3072,
+    "height": 4080,
+    "date": "2026-09-12",
+    "location": "Salt Lake City, Utah",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAwBQCdASoUABsAPt1YqE8opKOiMBgIARAbiUATplAANSI5BqUaHzB0iyBvs/Lap/ow0AD+297lD5tUgobi1rtTwaErqudwHR8ZQVMz7kNWOfhqLs/Q83/fcceoO8Cbj/Mm6MyxcgzpPTZOUnx9atlVL3vBKPBv774VdTalmJkGqFFn2i76Wxf6usFkl902AAA=",
+    "v": "7aa1cdade3"
+  },
+  {
+    "slug": "2026-05-14-01",
+    "width": 4898,
+    "height": 3265,
+    "date": "2026-05-14",
+    "location": "Black Hills National Forest, South Dakota",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoUAA0APt1apkyopSOiMAgBEBuJZACdIIjDFGbnI6upbYAmwAD8+wqq7dVoV3wwu6ldm10G5yuKiuWa4S06YnpBEsQl9oUanyLQpF2rtl22Syhnad8B43Z7c3nTP5PQ/f81AJKyDIRnpEqhzzqEH5Mi+0e/CBYpFbtf9UelUFNW+oirpThpHq/7p9AAAA==",
+    "v": "0d95c2201c"
+  },
+  {
+    "slug": "2021-10-15-01",
+    "width": 4000,
+    "height": 3000,
+    "date": "2021-10-15",
+    "location": "Secret Fishing Spot, Iowa",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACwBACdASoUAA8APt1apkyopSOiMAgBEBuJYwCdMoMnJ0kVdCTUxgOBU37NnPqUAP4ChOG7EW/Cg1ja4TZnadOEKYaKDZB5p8rM1fXetWe0diq2+SeXG9129cSja68z8Ylu10N6SMKtx7qeIKCZrFgx5GM/JpTLamDfoaKfnXN+99oCXBCoQwecsW4q5uwaH4AAAA==",
+    "v": "f339afc285"
+  },
+  {
+    "slug": "2022-10-10-01",
+    "width": 3200,
+    "height": 1800,
+    "date": "2022-10-10",
+    "location": "Carbondale, Colorado",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACQBACdASoUAAsAPt1apkyopSOiMAgBEBuJZgCdMoMYJn/AehXi0SUNPYSks3AA/iZv58R3Hrf26l0TtjSKAZClpAa6omMTe6GMkD16pZNfeufTOq/drKUd6h5xrL2F79efb2sWOScCzYtdkgC7q+6IgZi1QX975RfbolPw8J63pf1LeLg/yPiOQA4iNcoAAAA=",
+    "v": "0a8eb18e8e"
+  },
+  {
+    "slug": "2025-11-11-01",
+    "width": 4080,
+    "height": 3072,
+    "date": "2025-11-11",
+    "location": "A Cemetery, Iowa",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQBACdASoUAA8APt1cpkyopSOiMAgBEBuJbAAAYcxO8l1lUfGLb1H4gAD+8tk5codNMqIx3CzCvGbEHKD444thNSBlYL37tFF136ikirx0YZf+1grCa/sMBUDUoNLmsS8pcU5Fnqw7fInJIQeK/5f5JrAKl/puV1xRwAAA",
+    "v": "f87b3e7c8a"
+  },
+  {
+    "slug": "2025-08-30-01",
+    "width": 6240,
+    "height": 4160,
+    "date": "2025-08-30",
+    "location": "Paradise, Michigan",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJZQDCgCLJ5AcStsBsaR9AAPR2U2ga5UWGPi5Oo5AcrdJg/z3HrKBUU3owmc++4IBNIG3Kdzd+KLvetxB95TPQhE2Y2B5qGg7cOgjaxz+5FV+fmdt69cY3BlehVmkl0i1YWo33Z6HwAA==",
+    "v": "f0aa63cdfe"
+  },
+  {
+    "slug": "2026-06-13-01",
+    "width": 6144,
+    "height": 5784,
+    "date": "2026-06-13",
+    "location": "Black Hills, South Dakota",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAQBQCdASoUABMAPt1gpk4opaMiKA1REBuJYwC/7BF2+/23fVMG4r3eSEJqaDDMDDGAAP7LVGl8v5nwigvtQAAO6Edj7VWh6tRKpcyjbqjq1ChiJjwY0vL2ntgXmtqPS+tYoVrnJTbYUlXsKQkOUgOeinAFbCR955tHQIhB4AAAAAAA",
+    "v": "c5d0ea03d6"
+  },
+  {
     "slug": "2025-02-26-03",
     "width": 4993,
     "height": 3329,
@@ -112,6 +222,16 @@ export const photos: Photo[] = [
     "v": "9096e54291"
   },
   {
+    "slug": "2026-06-05-01",
+    "width": 4898,
+    "height": 3265,
+    "date": "2026-06-05",
+    "location": "Bighorn National Forest, Wyoming",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADQAwCdASoUAA0APt1apkyopSOiMAgBEBuJQAALfDSg6SJaGtNS+gAA/ucoBjscSGuXJsDAf4xzeP1F2zLbFfayDzlunOJZuqr+hCUBn8ZgGasVf5pwmtIQFKgMgClQGKNT7XgAAAA=",
+    "v": "2966a25de9"
+  },
+  {
     "slug": "2025-02-26-01",
     "width": 4898,
     "height": 3265,
@@ -120,6 +240,16 @@ export const photos: Photo[] = [
     "caption": "",
     "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABQBACdASoUAA0APt1apkyopSOiMAgBEBuJQBadMX6asEusnxeMwzygrMAAAP7p+PJbPjgbrWEXZ4W8QusaNoE0xnjwnUn5V8Yo+2+BrQUMrjgjAG50c0RSWp2G3H1XtLo7E4YKP9HF2t4qPMAI0h3frYf45vj6x+B39u5gEXz2McdOA+s26H5pqa/EGxh6ih/4kmDR85QfSmU58Pos3nTYAAA=",
     "v": "6847ab285e"
+  },
+  {
+    "slug": "2025-03-07-02",
+    "width": 6240,
+    "height": 4160,
+    "date": "2025-03-07",
+    "location": "Norwood, Colorado",
+    "caption": "",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwAwCdASoUAA0APt1cp0yopSOiMAgBEBuJQBWEBshgTe120P9BgAD8fckZOXMitVRntPipLK6M7fmIUV6UvM1HFrUh6GNWssarVqd8QoVBUZbLxphnNyEq01Lm3tpRkfATCsuv4D47bPqdWepCIAAA",
+    "v": "e8876ef89f"
   },
   {
     "slug": "2025-03-02-01",
@@ -162,26 +292,6 @@ export const photos: Photo[] = [
     "v": "3c167d091e"
   },
   {
-    "slug": "2026-07-08-02",
-    "width": 4898,
-    "height": 3265,
-    "date": "2026-07-08",
-    "location": "Great Smoky Mountains National Park",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADwAwCdASoUAA0APt1apkyopSOiMAgBEBuJYgCdIKnBynVypj1BNX4AAP7TXNv5+juuKXp+XxYNiQxyDVvDwmq1YA5nd/XaH6Ott84v2AApVYK9G6RHgalTfMG9iZWNcJOeFOXvZz35VOX/6Ewe2qzce3GQukMy52f6vihnk6Vlb7nqLFnqAAAA",
-    "v": "efab15ce40"
-  },
-  {
-    "slug": "2026-09-12-01",
-    "width": 3072,
-    "height": 4080,
-    "date": "2026-09-12",
-    "location": "Salt Lake City, Utah",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAwBQCdASoUABsAPt1YqE8opKOiMBgIARAbiUATplAANSI5BqUaHzB0iyBvs/Lap/ow0AD+297lD5tUgobi1rtTwaErqudwHR8ZQVMz7kNWOfhqLs/Q83/fcceoO8Cbj/Mm6MyxcgzpPTZOUnx9atlVL3vBKPBv774VdTalmJkGqFFn2i76Wxf6usFkl902AAA=",
-    "v": "7aa1cdade3"
-  },
-  {
     "slug": "2026-07-25-01",
     "width": 3098,
     "height": 2736,
@@ -212,36 +322,6 @@ export const photos: Photo[] = [
     "v": "fac21fddd0"
   },
   {
-    "slug": "2026-06-19-01",
-    "width": 6240,
-    "height": 3512,
-    "date": "2026-06-19",
-    "location": "Wapsipinicon River, Iowa",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoUAAsAPt1apkyopSOiMAgBEBuJQBbZMXwcCll/ej2NvJv9sAD+5vIEGlN5VffijH8Jb953suDrvHShwX8oHn4sY2IkMVmWEvimOJkux1mupEI5YsDriFFGYZaenyT1eIJbIza8fYmMe/k6c9KJuFx8RNV+SwyTtsAAAA==",
-    "v": "2430c3475b"
-  },
-  {
-    "slug": "2021-10-15-01",
-    "width": 4000,
-    "height": 3000,
-    "date": "2021-10-15",
-    "location": "Secret Fishing Spot, Iowa",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACwBACdASoUAA8APt1apkyopSOiMAgBEBuJYwCdMoMnJ0kVdCTUxgOBU37NnPqUAP4ChOG7EW/Cg1ja4TZnadOEKYaKDZB5p8rM1fXetWe0diq2+SeXG9129cSja68z8Ylu10N6SMKtx7qeIKCZrFgx5GM/JpTLamDfoaKfnXN+99oCXBCoQwecsW4q5uwaH4AAAA==",
-    "v": "f339afc285"
-  },
-  {
-    "slug": "2022-10-10-01",
-    "width": 3200,
-    "height": 1800,
-    "date": "2022-10-10",
-    "location": "Carbondale, Colorado",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACQBACdASoUAAsAPt1apkyopSOiMAgBEBuJZgCdMoMYJn/AehXi0SUNPYSks3AA/iZv58R3Hrf26l0TtjSKAZClpAa6omMTe6GMkD16pZNfeufTOq/drKUd6h5xrL2F79efb2sWOScCzYtdkgC7q+6IgZi1QX975RfbolPw8J63pf1LeLg/yPiOQA4iNcoAAAA=",
-    "v": "0a8eb18e8e"
-  },
-  {
     "slug": "2026-09-05-03",
     "width": 6240,
     "height": 4160,
@@ -252,16 +332,6 @@ export const photos: Photo[] = [
     "v": "c0f820619c"
   },
   {
-    "slug": "2026-05-23-01",
-    "width": 4898,
-    "height": 3265,
-    "date": "2026-05-23",
-    "location": "Mount Rushmore, South Dakota",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoUAA0APt1apkyopSOiMAgBEBuJYgCdEf/i15mVZlRzwp1Ro1owAN2TTSTuWOc0hmFLSW8xUudojL531j9KqiAMTkwi3M42sI4sJEQCVA2J6xHKn6UhaU4RgJXRmNQQcHoESfeE5wwJ42i8yJ/tek1j0I6Bv6oeL75ToMnoc1SwWPZO4eR8ITAA",
-    "v": "9ca6aa7e47"
-  },
-  {
     "slug": "2026-06-05-02",
     "width": 4898,
     "height": 3265,
@@ -270,16 +340,6 @@ export const photos: Photo[] = [
     "caption": "",
     "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZQDCgCKbFTg8aE57aGfvjuAA/rYfxC9j22rttX8uG/WapOFuli1RhdHn0U0eZ36SRdc7Hay2/ayCzN7arbSlxfSlgOVUctR9IPw6fdAV1Dp85jrI0xJM77MBoBoBEOraTaGdAAA=",
     "v": "b87f5a1ea5"
-  },
-  {
-    "slug": "2025-11-11-01",
-    "width": 4080,
-    "height": 3072,
-    "date": "2025-11-11",
-    "location": "A Cemetery, Iowa",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQBACdASoUAA8APt1cpkyopSOiMAgBEBuJbAAAYcxO8l1lUfGLb1H4gAD+8tk5codNMqIx3CzCvGbEHKD444thNSBlYL37tFF136ikirx0YZf+1grCa/sMBUDUoNLmsS8pcU5Fnqw7fInJIQeK/5f5JrAKl/puV1xRwAAA",
-    "v": "f87b3e7c8a"
   },
   {
     "slug": "2026-05-23-02",
@@ -382,26 +442,6 @@ export const photos: Photo[] = [
     "v": "15810acf7f"
   },
   {
-    "slug": "2026-06-05-01",
-    "width": 4898,
-    "height": 3265,
-    "date": "2026-06-05",
-    "location": "Bighorn National Forest, Wyoming",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADQAwCdASoUAA0APt1apkyopSOiMAgBEBuJQAALfDSg6SJaGtNS+gAA/ucoBjscSGuXJsDAf4xzeP1F2zLbFfayDzlunOJZuqr+hCUBn8ZgGasVf5pwmtIQFKgMgClQGKNT7XgAAAA=",
-    "v": "2966a25de9"
-  },
-  {
-    "slug": "2026-09-06-01",
-    "width": 6237,
-    "height": 4158,
-    "date": "2026-09-06",
-    "location": "Canyonlands National Park, Utah",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBWABCxcZKMedKFqlkAA/sdl2O7Z9tdLrt2wDDXcMqUrNnwCtEJcmWsV3PU9P005oRVucetK3k6+Yn2EUg80vNpBaAFtf7DR+trMXBfldbK9VkWLbtUQvTmWCHIu/hjQR1TQAAA=",
-    "v": "6f39b2902b"
-  },
-  {
     "slug": "2024-05-21-01",
     "width": 5158,
     "height": 3439,
@@ -440,16 +480,6 @@ export const photos: Photo[] = [
     "caption": "",
     "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZgC1CHACuOVZYF9m4/vD/AAA/f0jV/zE0vcZ9o2ULfSwsBtCC3eggEarIl+sr5fZ4GBxORFdnk3R8sZv1tAOws/7TVlCAVpTVCjjzlbNfIvFIAA=",
     "v": "8f95347c49"
-  },
-  {
-    "slug": "2026-06-13-01",
-    "width": 6144,
-    "height": 5784,
-    "date": "2026-06-13",
-    "location": "Black Hills, South Dakota",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAQBQCdASoUABMAPt1gpk4opaMiKA1REBuJYwC/7BF2+/23fVMG4r3eSEJqaDDMDDGAAP7LVGl8v5nwigvtQAAO6Edj7VWh6tRKpcyjbqjq1ChiJjwY0vL2ntgXmtqPS+tYoVrnJTbYUlXsKQkOUgOeinAFbCR955tHQIhB4AAAAAAA",
-    "v": "c5d0ea03d6"
   },
   {
     "slug": "2026-08-30-01",
@@ -492,16 +522,6 @@ export const photos: Photo[] = [
     "v": "bd9ff81209"
   },
   {
-    "slug": "2025-03-07-02",
-    "width": 6240,
-    "height": 4160,
-    "date": "2025-03-07",
-    "location": "Norwood, Colorado",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwAwCdASoUAA0APt1cp0yopSOiMAgBEBuJQBWEBshgTe120P9BgAD8fckZOXMitVRntPipLK6M7fmIUV6UvM1HFrUh6GNWssarVqd8QoVBUZbLxphnNyEq01Lm3tpRkfATCsuv4D47bPqdWepCIAAA",
-    "v": "e8876ef89f"
-  },
-  {
     "slug": "2025-02-26-02",
     "width": 6024,
     "height": 4017,
@@ -520,16 +540,6 @@ export const photos: Photo[] = [
     "caption": "",
     "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAADwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBdgBFJWDtMcDnjMeacAAM4pni2dBKGsWyMrWFNIUe0mJFMP+z0V/9dxzT8SUTntt8zfUZdJbEewluDN2bERvwE7Urvuuvap2udN6VjBONgu/eQF5qonf/EBmhCL8nkh7zVuLiBN1NByd4A/jdjl2T9jTZsS4trnCCAA",
     "v": "eadd75f682"
-  },
-  {
-    "slug": "2026-05-14-01",
-    "width": 4898,
-    "height": 3265,
-    "date": "2026-05-14",
-    "location": "Black Hills National Forest, South Dakota",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoUAA0APt1apkyopSOiMAgBEBuJZACdIIjDFGbnI6upbYAmwAD8+wqq7dVoV3wwu6ldm10G5yuKiuWa4S06YnpBEsQl9oUanyLQpF2rtl22Syhnad8B43Z7c3nTP5PQ/f81AJKyDIRnpEqhzzqEH5Mi+0e/CBYpFbtf9UelUFNW+oirpThpHq/7p9AAAA==",
-    "v": "0d95c2201c"
   },
   {
     "slug": "2026-07-23-02",
@@ -580,15 +590,5 @@ export const photos: Photo[] = [
     "caption": "",
     "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoUAA0APt1cpkyopSOiMAgBEBuJZQCo9CLMJ7ncMr4WYhzxQAD+6//E1ATUE36FsHJIJudFaMRZ9TCUh6uhiY0sebAfPCHnSyk1C0B/SEM3KTWaDEciCQfNpunA5xAfRYnDbSwqKN2xjyHS2pFUcfFL/RLDbtcyUuF0AA==",
     "v": "b2e25fbdd0"
-  },
-  {
-    "slug": "2026-05-30-03",
-    "width": 3648,
-    "height": 2736,
-    "date": "2026-05-30",
-    "location": "Black Hills, South Dakota",
-    "caption": "",
-    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoUAA8APt1apkyopSOiMAgBEBuJQBOmUGMACSwPB+6mjIMrIAAA/sYD5/1Yy0oJxCRYm2kbzJfL5exeDXpGl7Y7ZeWTuvToyxW5KfJynCnvTGXuIl6zlZsak5xyxM1E3JC0cyzreqw+LhV/zWoAt4SvvSA+TgtASOhUbf19UAA=",
-    "v": "cb6de009a2"
   }
 ]

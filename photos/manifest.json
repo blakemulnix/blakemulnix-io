@@ -1,12 +1,12 @@
 {
   "photos": [
     {
-      "file": "DSCF4472.JPG",
-      "slug": "2025-04-29-01",
-      "date": "2025-04-29",
-      "width": 4898,
-      "height": 3265,
-      "location": "My Parents’ Place"
+      "file": "DSCF2971.JPG",
+      "slug": "2026-09-04-01",
+      "date": "2026-09-04",
+      "width": 6240,
+      "height": 4160,
+      "location": "Canyonlands National Park, Utah"
     },
     {
       "file": "DSCF1637.JPG",
@@ -17,12 +17,12 @@
       "location": "Provo Canyon, Utah"
     },
     {
-      "file": "DSCF4358.JPG",
-      "slug": "2025-02-26-04",
-      "date": "2025-02-26",
-      "width": 6146,
-      "height": 4098,
-      "location": "Padre Island National Seashore, Texas"
+      "file": "PXL_20260530_143325557.MP.jpg",
+      "slug": "2026-05-30-03",
+      "date": "2026-05-30",
+      "width": 3648,
+      "height": 2736,
+      "location": "Black Hills, South Dakota"
     },
     {
       "file": "DSCF7526.JPG",
@@ -33,28 +33,44 @@
       "location": "Custer State Park, South Dakota"
     },
     {
-      "file": "DSCF2971.JPG",
-      "slug": "2026-09-04-01",
-      "date": "2026-09-04",
-      "width": 6240,
-      "height": 4160,
+      "file": "DSCF3663.JPG",
+      "slug": "2026-09-06-01",
+      "date": "2026-09-06",
+      "width": 6237,
+      "height": 4158,
       "location": "Canyonlands National Park, Utah"
     },
     {
-      "file": "20221013_145346.jpg",
-      "slug": "2022-10-13-01",
-      "date": "2022-10-13",
-      "width": 3254,
-      "height": 1800,
-      "location": "Garden of the Gods, Colorado"
+      "file": "DSCF4358.JPG",
+      "slug": "2025-02-26-04",
+      "date": "2025-02-26",
+      "width": 6146,
+      "height": 4098,
+      "location": "Padre Island National Seashore, Texas"
     },
     {
-      "file": "DSCF6311.JPG",
-      "slug": "2025-08-30-01",
-      "date": "2025-08-30",
+      "file": "DSCF7097.JPG",
+      "slug": "2026-05-23-01",
+      "date": "2026-05-23",
+      "width": 4898,
+      "height": 3265,
+      "location": "Mount Rushmore, South Dakota"
+    },
+    {
+      "file": "DSCF4472.JPG",
+      "slug": "2025-04-29-01",
+      "date": "2025-04-29",
+      "width": 4898,
+      "height": 3265,
+      "location": "My Parents’ Place"
+    },
+    {
+      "file": "DSCF8520.JPG",
+      "slug": "2026-06-19-01",
+      "date": "2026-06-19",
       "width": 6240,
-      "height": 4160,
-      "location": "Paradise, Michigan"
+      "height": 3512,
+      "location": "Wapsipinicon River, Iowa"
     },
     {
       "file": "DSCF3219.JPG",
@@ -65,6 +81,78 @@
       "location": "Canyonlands National Park, Utah"
     },
     {
+      "file": "DSCF8985.JPG",
+      "slug": "2026-07-08-02",
+      "date": "2026-07-08",
+      "width": 4898,
+      "height": 3265,
+      "location": "Great Smoky Mountains National Park"
+    },
+    {
+      "file": "20221013_145346.jpg",
+      "slug": "2022-10-13-01",
+      "date": "2022-10-13",
+      "width": 3254,
+      "height": 1800,
+      "location": "Garden of the Gods, Colorado"
+    },
+    {
+      "file": "PXL_20260913_033544319.MP.jpg",
+      "slug": "2026-09-12-01",
+      "date": "2026-09-12",
+      "width": 3072,
+      "height": 4080,
+      "location": "Salt Lake City, Utah"
+    },
+    {
+      "file": "DSCF6895.JPG",
+      "slug": "2026-05-14-01",
+      "date": "2026-05-14",
+      "width": 4898,
+      "height": 3265,
+      "location": "Black Hills National Forest, South Dakota"
+    },
+    {
+      "file": "20211015_162026.jpg",
+      "slug": "2021-10-15-01",
+      "date": "2021-10-15",
+      "width": 4000,
+      "height": 3000,
+      "location": "Secret Fishing Spot, Iowa"
+    },
+    {
+      "file": "20221010_171940.jpg",
+      "slug": "2022-10-10-01",
+      "date": "2022-10-10",
+      "width": 3200,
+      "height": 1800,
+      "location": "Carbondale, Colorado"
+    },
+    {
+      "file": "PXL_20251112_030925357.jpg",
+      "slug": "2025-11-11-01",
+      "date": "2025-11-11",
+      "width": 4080,
+      "height": 3072,
+      "location": "A Cemetery, Iowa"
+    },
+    {
+      "file": "DSCF6311.JPG",
+      "slug": "2025-08-30-01",
+      "date": "2025-08-30",
+      "width": 6240,
+      "height": 4160,
+      "location": "Paradise, Michigan"
+    },
+    {
+      "file": "PXL_20260613_180850672~2.jpg",
+      "slug": "2026-06-13-01",
+      "date": "2026-06-13",
+      "width": 6144,
+      "height": 5784,
+      "location": "Black Hills, South Dakota"
+    },
+    {
       "file": "DSCF4341.JPG",
       "slug": "2025-02-26-03",
       "date": "2025-02-26",
@@ -73,12 +161,28 @@
       "location": "Port Aransas, Texas"
     },
     {
+      "file": "DSCF7788.JPG",
+      "slug": "2026-06-05-01",
+      "date": "2026-06-05",
+      "width": 4898,
+      "height": 3265,
+      "location": "Bighorn National Forest, Wyoming"
+    },
+    {
       "file": "DSCF4267.JPG",
       "slug": "2025-02-26-01",
       "date": "2025-02-26",
       "width": 4898,
       "height": 3265,
       "location": "Aransas Pass, Texas"
+    },
+    {
+      "file": "DSCF4445.JPG",
+      "slug": "2025-03-07-02",
+      "date": "2025-03-07",
+      "width": 6240,
+      "height": 4160,
+      "location": "Norwood, Colorado"
     },
     {
       "file": "DSCF4420~3.JPG",
@@ -113,22 +217,6 @@
       "location": "Rural Iowa"
     },
     {
-      "file": "DSCF8985.JPG",
-      "slug": "2026-07-08-02",
-      "date": "2026-07-08",
-      "width": 4898,
-      "height": 3265,
-      "location": "Great Smoky Mountains National Park"
-    },
-    {
-      "file": "PXL_20260913_033544319.MP.jpg",
-      "slug": "2026-09-12-01",
-      "date": "2026-09-12",
-      "width": 3072,
-      "height": 4080,
-      "location": "Salt Lake City, Utah"
-    },
-    {
       "file": "PXL_20260725_135827879.jpg",
       "slug": "2026-07-25-01",
       "date": "2026-07-25",
@@ -153,30 +241,6 @@
       "location": "My Parents’ Place"
     },
     {
-      "file": "DSCF8520.JPG",
-      "slug": "2026-06-19-01",
-      "date": "2026-06-19",
-      "width": 6240,
-      "height": 3512,
-      "location": "Wapsipinicon River, Iowa"
-    },
-    {
-      "file": "20211015_162026.jpg",
-      "slug": "2021-10-15-01",
-      "date": "2021-10-15",
-      "width": 4000,
-      "height": 3000,
-      "location": "Secret Fishing Spot, Iowa"
-    },
-    {
-      "file": "20221010_171940.jpg",
-      "slug": "2022-10-10-01",
-      "date": "2022-10-10",
-      "width": 3200,
-      "height": 1800,
-      "location": "Carbondale, Colorado"
-    },
-    {
       "file": "DSCF3290.JPG",
       "slug": "2026-09-05-03",
       "date": "2026-09-05",
@@ -185,28 +249,12 @@
       "location": "Canyonlands National Park, Utah"
     },
     {
-      "file": "DSCF7097.JPG",
-      "slug": "2026-05-23-01",
-      "date": "2026-05-23",
-      "width": 4898,
-      "height": 3265,
-      "location": "Mount Rushmore, South Dakota"
-    },
-    {
       "file": "DSCF7932.JPG",
       "slug": "2026-06-05-02",
       "date": "2026-06-05",
       "width": 4898,
       "height": 3265,
       "location": "Bighorn National Forest, Wyoming"
-    },
-    {
-      "file": "PXL_20251112_030925357.jpg",
-      "slug": "2025-11-11-01",
-      "date": "2025-11-11",
-      "width": 4080,
-      "height": 3072,
-      "location": "A Cemetery, Iowa"
     },
     {
       "file": "DSCF7210.JPG",
@@ -289,22 +337,6 @@
       "location": "My Parents’ Place"
     },
     {
-      "file": "DSCF7788.JPG",
-      "slug": "2026-06-05-01",
-      "date": "2026-06-05",
-      "width": 4898,
-      "height": 3265,
-      "location": "Bighorn National Forest, Wyoming"
-    },
-    {
-      "file": "DSCF3663.JPG",
-      "slug": "2026-09-06-01",
-      "date": "2026-09-06",
-      "width": 6237,
-      "height": 4158,
-      "location": "Canyonlands National Park, Utah"
-    },
-    {
       "file": "DSCF1352.jpg",
       "slug": "2024-05-21-01",
       "date": "2024-05-21",
@@ -335,14 +367,6 @@
       "width": 6240,
       "height": 4160,
       "location": "Rural Iowa"
-    },
-    {
-      "file": "PXL_20260613_180850672~2.jpg",
-      "slug": "2026-06-13-01",
-      "date": "2026-06-13",
-      "width": 6144,
-      "height": 5784,
-      "location": "Black Hills, South Dakota"
     },
     {
       "file": "PXL_20260831_014135206~2.jpg",
@@ -377,14 +401,6 @@
       "location": "Canyonlands National Park, Utah"
     },
     {
-      "file": "DSCF4445.JPG",
-      "slug": "2025-03-07-02",
-      "date": "2025-03-07",
-      "width": 6240,
-      "height": 4160,
-      "location": "Norwood, Colorado"
-    },
-    {
       "file": "DSCF4290.JPG",
       "slug": "2025-02-26-02",
       "date": "2025-02-26",
@@ -399,14 +415,6 @@
       "width": 6240,
       "height": 4160,
       "location": "Provo Canyon, Utah"
-    },
-    {
-      "file": "DSCF6895.JPG",
-      "slug": "2026-05-14-01",
-      "date": "2026-05-14",
-      "width": 4898,
-      "height": 3265,
-      "location": "Black Hills National Forest, South Dakota"
     },
     {
       "file": "DSCF9221.jpg",
@@ -447,14 +455,6 @@
       "width": 6240,
       "height": 4160,
       "location": "Tahquamenon Falls State Park, Michigan"
-    },
-    {
-      "file": "PXL_20260530_143325557.MP.jpg",
-      "slug": "2026-05-30-03",
-      "date": "2026-05-30",
-      "width": 3648,
-      "height": 2736,
-      "location": "Black Hills, South Dakota"
     }
   ]
 }
