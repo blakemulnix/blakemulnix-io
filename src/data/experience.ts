@@ -44,7 +44,7 @@ export const experience: ExperienceEntry[] = [
     companyUrl: 'https://www.sourceallies.com/',
     start: 'September 2023',
     summary:
-      'Partner with client teams to design and ship enterprise applications on the cloud, spanning application code, infrastructure, and delivery pipelines. Much of the work is coaching teams toward test driven development, smaller iterations, and tooling that makes delivery predictable. Every engagement is different, so I spend the first stretch of one learning how a team already works before suggesting anything they should change.',
+      'Partner with client teams to design and ship enterprise applications on the cloud, spanning application code, infrastructure, and delivery pipelines. Much of the work is coaching teams toward test driven development, smaller iterations, and tooling that makes delivery predictable.',
     technologies: ['TypeScript', 'Node.js', 'React', 'C#', 'AWS', 'Azure', 'Bicep', 'GraphQL'],
     clients: [
       {
@@ -52,7 +52,7 @@ export const experience: ExperienceEntry[] = [
         start: 'December 2025',
         summary: [
           'Capturing metrics on how their technology is actually used in the field, then surfacing them to product teams and dealers so they can step in with a customer or make a call on where the roadmap goes next. Pipelines aggregate the raw utilization data, and a federated graph serves it out to the teams and tools downstream.',
-          "When I showed up, testing meant a run in our Databricks runtime against huge production datasets, requiring hours of waiting to verify a single change. I pushed for local test driven development and established the data factory pattern that enabled it, so pipeline logic could be split into modular units and unit tested against small, readable inputs in seconds. My team ran with it. I made the same case for inner source packaging, then designed the packages that let pipelines share code instead of copy pasting it between repos. Both have since spread to other data product teams. I also led our team's chartering sessions, and I run our monthly retros.",
+          'When I showed up, testing meant a run in our Databricks runtime against huge production datasets, requiring hours of waiting to verify a single change. I pushed for local test driven development and established the data factory pattern that enabled it, so pipeline logic could be split into modular units and unit tested against small, readable inputs in seconds. My team ran with it. I made the same case for inner source packaging, to move away from copy pasting between repos. Both have since spread to other data product teams.',
           'All of this shows up in how fast we can deliver a new dataset, and how often it arrives without surprises. What holds us up now sits upstream of us, in product requirements and source data rather than in our own code or execution.',
         ],
         technologies: [
@@ -73,7 +73,7 @@ export const experience: ExperienceEntry[] = [
         start: 'September 2024',
         end: 'December 2025',
         summary: [
-          'Worked in a data product ecosystem dealing in geospatial field data ("field" as in the kind with dirt). Our services held the source of truth for field boundaries and acted as the hub between their platform and the other ag tech companies it exchanges data with. Most of my time went into the architecture around that, event driven pipelines with a GraphQL API in front.',
+          'Worked in a data product ecosystem dealing in geospatial field data ("field" as in the kind with dirt). Our services held the source of truth for field boundaries and acted as the hub between their platform and the other ag tech companies it exchanges data with. Most of my time went into the architecture around that, event driven data products with a GraphQL API in front.',
           'Also paired closely with the team building the customer facing map interface, where a grower sees their own fields alongside yields and application rates.',
         ],
         technologies: ['AWS', 'GraphQL', 'Kafka', 'SQS', 'PostgreSQL', 'GeoJSON', 'CloudFormation', 'React'],

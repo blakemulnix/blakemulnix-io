@@ -35,6 +35,8 @@ npm run dev        # http://localhost:5173
 | `npm run typecheck` | `tsc -b`, no emit                   |
 | `npm run format`    | Prettier (`format:check` in CI)     |
 | `npm run photos`    | Rebuild the photo wall (see Photos) |
+| `npm run resume`    | Render the one page CV PDF          |
+| `npm run og`        | Render the social preview card      |
 
 ## Layout
 
@@ -49,12 +51,55 @@ src/
 photos/          manifest.json plus gitignored originals
 public/          Served verbatim: photo derivatives, favicon, robots, sitemap
 add-photos/      The photo import and labelling tool
+scripts/         Photo pipeline, resume and social card renderers
 explorations/    Standalone review pages (favicon options)
 infra/           CDK app (see below)
 ```
 
 To update work history, edit `src/data/experience.ts`, and About copy
 `src/data/about.ts`; neither needs a component change.
+
+## CV
+
+```sh
+npm run resume       # resume/out/blake-mulnix-cv.pdf
+```
+
+Two files: [`resume/content.yaml`](resume/content.yaml) is the words,
+[`resume/cv.typ`](resume/cv.typ) is the layout. The content is deliberately not
+the site's prose, because the site has room to explain and a CV has one page
+and a reader who is skimming.
+
+Typeset by [Typst](https://typst.app/) through its Python wheel, so a real
+typesetting engine handles line breaking and vertical rhythm, and there is no
+TeX distribution to install. The layout echoes the site: the same three faces,
+the same palette, the same accent rule down the left of each entry, and the
+technology pills moved into a column beside each role rather than stranded in a
+list at the bottom of the page. The page is paper rather than pine, since sand
+on a dark ground is unkind to a printer and to anyone reading in a light PDF
+viewer.
+
+The fonts come from `node_modules`, converted from woff2 to TTF on demand, so
+the CV is set in the same files the browser serves rather than a second copy
+that can drift.
+
+First run creates a virtualenv under `scripts/resume/` and converts the fonts.
+After that a render takes well under a second. One page is the brief, so the
+script asks `pdfinfo` how many came out and fails on two rather than shipping
+quietly.
+
+## Social preview card
+
+```sh
+npm run og           # public/og.jpg, the link preview card
+```
+
+Built from the site's own photography, fonts and palette by
+[`scripts/og-card/card.html`](scripts/og-card/card.html), printed by headless
+Chrome. The name, role and tagline are read out of `src/data/about.ts`, so the
+card cannot drift from the site. Bump the `?v=` on `og:image` in `index.html`
+after regenerating: Facebook, LinkedIn and Slack all cache previews by URL,
+several of them for weeks.
 
 ## Photos
 

@@ -1,0 +1,95 @@
+# The CV's content. Deliberately not the site's prose: the site has room to
+# explain, a CV has one page and a reader who is skimming. Layout lives in
+# cv.typ; this file is only words.
+name: Blake Mulnix
+role: Software Consultant
+tagline: I build software and the teams that build it.
+location: Iowa, Remote
+links:
+  - label: blakemulnix.io
+    url: https://blakemulnix.io/
+  - label: linkedin.com/in/blakemulnix
+    url: https://www.linkedin.com/in/blakemulnix/
+  - label: github.com/blakemulnix
+    url: https://github.com/blakemulnix
+
+summary: >-
+  Twelve years building software, lately cloud and data platforms for large
+  enterprises. I ship production systems and coach the teams around me toward
+  test driven development, short feedback loops, and delivery they can keep up.
+
+experience:
+  - company: Source Allies
+    title: Software Consultant
+    dates: Sept 2023 to present
+    summary: >-
+      Embedded in client teams to design and ship enterprise systems on the cloud,
+      and to coach the people building them.
+    clients:
+      - name: Global agricultural equipment manufacturer
+        dates: Dec 2025 to present
+        summary: >-
+          Analytics on how their machines are used in the field, surfaced to product
+          teams and dealers. Brought test driven development to data engineering,
+          cutting the test loop from hours against production sized data to seconds
+          locally, since adopted by other data product teams.
+        technologies:
+          [Python, Spark, Databricks, GraphQL, Netflix DGS, Apollo Federation, Spring, Kubernetes, AWS, Datadog]
+      - name: Multinational crop nutrition provider
+        dates: Sept 2024 to Dec 2025
+        summary: >-
+          Architected event driven data products over geospatial farm data, holding the
+          source of truth for field boundaries and integrating with outside ag tech
+          platforms.
+        technologies: [AWS, GraphQL, Kafka, SQS, PostgreSQL, GeoJSON, CloudFormation, React]
+      - name: Global automotive OEM components manufacturer
+        dates: June 2024 to Sept 2024
+        summary: >-
+          Two internal applications: product intake from industry need through
+          manufacturing handoff, and a parts catalogue search over fastener dimensions.
+        technologies: [React, GraphQL, PostgreSQL, Azure, Bicep]
+      - name: Plant breeding and nursery company
+        dates: Aug 2023 to June 2024
+        summary: >-
+          Built the source of truth for contract royalty management, integrating third
+          party SaaS and CRM tooling, plus the admin interface over it.
+        technologies: [C#, .NET, HotChocolate, GraphQL, PostgreSQL, Azure, Bicep, React]
+
+  - company: Gravity Legal
+    title: Software Engineer
+    dates: June 2022 to Jan 2023
+    summary: >-
+      Payment processing for law firms and legal tech companies. Built out end to end
+      test coverage and led integration testing through an overhaul of the payment flow.
+    technologies: [React, Node.js, TypeScript, TypeORM, MySQL, AWS]
+
+  - company: Principal Financial Group
+    title: Software Engineer
+    dates: Aug 2020 to June 2022
+    summary: >-
+      Customer facing experiences on the Enterprise Experience Enablement team. Led the
+      integration of a new customer segment following an acquisition, coordinating across
+      many teams.
+    technologies: [JavaEE, WebSphere, DB2, Python, Flask, API Gateway, AWS]
+
+earlier:
+  - role: Software Scientist
+    company: Ames Laboratory, Department of Energy
+    dates: '2020'
+    note: Open source build tooling for computational chemistry
+  - role: Software Engineering Intern
+    company: Herzog Technologies
+    dates: 2018 to 2019
+    note: LiDAR railroad clearance analysis, and technical lead on an internal tool
+  - role: Software Engineering Intern
+    company: Collins Aerospace
+    dates: 2014 to 2018
+    note: Automated test systems for radio hardware
+
+principles:
+  - title: Fast feedback loops
+    lede: I would rather be wrong in an hour than right in a month.
+  - title: Self-organizing teams
+    lede: The people closest to the work know how to be most effective.
+  - title: Sustainable delivery
+    lede: Engineers are the counterweight to the pull toward deliver, deliver, deliver.

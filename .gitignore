@@ -25,3 +25,9 @@ dist-ssr
 
 # Photo originals: large, and derivatives are committed instead
 photos/originals/
+
+# CV: content.yaml and cv.typ are the source. The PDF, the virtualenv and the
+# fonts converted out of node_modules are all generated.
+/resume/out/
+scripts/resume/.venv/
+scripts/resume/fonts/

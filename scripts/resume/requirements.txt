@@ -1,0 +1,7 @@
+# The Typst compiler, shipped as a wheel, so there is no system dependency and
+# no TeX distribution to install.
+typst==0.15.0
+# Converts the site's woff2 fonts to the TTF that Typst reads. brotli is what
+# fonttools needs to decompress woff2.
+fonttools==4.65.0
+Brotli==1.2.0
