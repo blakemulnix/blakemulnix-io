@@ -1,6 +1,6 @@
-import { outsideAside, outsideLede } from '../data/outside'
+import { outsideBody, outsideLede } from '../data/outside'
 import { palette } from '../theme'
-import { PhotoWall } from './PhotoWall'
+import { PhotoCollections } from './PhotoCollections'
 
 export const OutsideWork = () => (
   <section id="outside" className="scroll-mt-8 pt-20">
@@ -14,11 +14,13 @@ export const OutsideWork = () => (
           <p key={i}>{line}</p>
         ))}
       </div>
-      <p>{outsideAside}</p>
+      {outsideBody.map((line, i) => (
+        <p key={i}>{line}</p>
+      ))}
     </div>
 
     <div className="mt-10">
-      <PhotoWall />
+      <PhotoCollections />
     </div>
   </section>
 )

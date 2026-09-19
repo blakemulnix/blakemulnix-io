@@ -1,5 +1,5 @@
-import { PhotoWall } from '../components/PhotoWall'
-import { outsideAside, outsideLede } from '../data/outside'
+import { PhotoCollections } from '../components/PhotoCollections'
+import { outsideBody, outsideLede } from '../data/outside'
 import { palette } from '../theme'
 
 export const OutsideContent = ({ accent }: { accent: string }) => (
@@ -12,11 +12,13 @@ export const OutsideContent = ({ accent }: { accent: string }) => (
           <p key={i}>{line}</p>
         ))}
       </div>
-      <p>{outsideAside}</p>
+      {outsideBody.map((line, i) => (
+        <p key={i}>{line}</p>
+      ))}
     </div>
 
     <div className="mt-10" style={{ ['--photo-accent' as string]: accent }}>
-      <PhotoWall />
+      <PhotoCollections />
     </div>
   </div>
 )
