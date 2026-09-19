@@ -32,7 +32,7 @@ if (!existsSync(python)) {
   run(path.join(venv, 'bin/pip'), ['install', '-q', '-r', path.join(root, 'scripts/resume/requirements.txt')])
 }
 
-run(python, [path.join(root, 'scripts/resume/fonts.py'), root])
+run(python, [path.join(root, 'scripts/resume/assets.py'), root])
 mkdirSync(path.dirname(out), { recursive: true })
 
 run(python, [

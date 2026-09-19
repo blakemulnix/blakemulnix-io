@@ -6,85 +6,105 @@ role: Software Consultant
 tagline: I build software and the teams that build it.
 location: Iowa, Remote
 links:
+  # `primary` is set as a pill in the header, since the site is the one link
+  # that is meant to be followed. `icon` names a file under
+  # scripts/resume/icons, generated from the site's own icon components.
   - label: blakemulnix.io
     url: https://blakemulnix.io/
+    primary: true
+  - label: blakemulnix@gmail.com
+    url: mailto:blakemulnix@gmail.com
+    icon: mail
   - label: linkedin.com/in/blakemulnix
     url: https://www.linkedin.com/in/blakemulnix/
+    icon: linkedin
   - label: github.com/blakemulnix
     url: https://github.com/blakemulnix
+    icon: github
 
+# {years} is filled in at render time from career_start, so the number cannot
+# go stale the way a hardcoded one would.
+career_start: 2014
 summary: >-
-  Twelve years building software, lately cloud and data platforms for large
-  enterprises. I ship production systems and coach the teams around me toward
-  test driven development, short feedback loops, and delivery they can keep up.
+  {years} years in, I ship production systems and coach the teams around me toward the
+  practices that keep proving themselves: test driven development, short feedback loops,
+  giving teams the problem rather than the solution, and making the cost of shortcuts
+  visible to those setting priorities.
 
 experience:
   - company: Source Allies
     title: Software Consultant
-    dates: Sept 2023 to present
+    dates: Sep 2023 to Present
     summary: >-
       Embedded in client teams to design and ship enterprise systems on the cloud,
       and to coach the people building them.
+    # The role's own list is the spine that carries across every client, so it
+    # repeats some of theirs on purpose. It is also the only place TypeScript,
+    # both clouds, and the delivery tooling appear together.
+    technologies: [TypeScript, Node.js, C#, Docker, GitHub Actions]
     clients:
       - name: Global agricultural equipment manufacturer
-        dates: Dec 2025 to present
+        dates: Dec 2025 to Present
         summary: >-
           Analytics on how their machines are used in the field, surfaced to product
           teams and dealers. Brought test driven development to data engineering,
-          cutting the test loop from hours against production sized data to seconds
-          locally, since adopted by other data product teams.
-        technologies:
-          [Python, Spark, Databricks, GraphQL, Netflix DGS, Apollo Federation, Spring, Kubernetes, AWS, Datadog]
+          taking the test loop from hours to seconds, since adopted by other teams.
+        technologies: [Python, Spark, Databricks, Apollo Federation, Spring]
       - name: Multinational crop nutrition provider
-        dates: Sept 2024 to Dec 2025
+        dates: Sep 2024 to Dec 2025
         summary: >-
           Architected event driven data products over geospatial farm data, holding the
           source of truth for field boundaries and integrating with outside ag tech
           platforms.
-        technologies: [AWS, GraphQL, Kafka, SQS, PostgreSQL, GeoJSON, CloudFormation, React]
+        technologies: [AWS, Kafka, GraphQL, PostgreSQL, GeoJSON, React, CDK]
       - name: Global automotive OEM components manufacturer
-        dates: June 2024 to Sept 2024
+        dates: Jun 2024 to Sep 2024
         summary: >-
           Two internal applications: product intake from industry need through
           manufacturing handoff, and a parts catalogue search over fastener dimensions.
-        technologies: [React, GraphQL, PostgreSQL, Azure, Bicep]
+        technologies: [React, TypeScript, GraphQL, PostgreSQL, Azure, Bicep]
       - name: Plant breeding and nursery company
-        dates: Aug 2023 to June 2024
+        dates: Aug 2023 to Jun 2024
         summary: >-
           Built the source of truth for contract royalty management, integrating third
           party SaaS and CRM tooling, plus the admin interface over it.
-        technologies: [C#, .NET, HotChocolate, GraphQL, PostgreSQL, Azure, Bicep, React]
+        technologies: [C#, .NET, GraphQL, Azure, React, PostgreSQL, Bicep]
 
   - company: Gravity Legal
     title: Software Engineer
-    dates: June 2022 to Jan 2023
+    dates: Jun 2022 to Jan 2023
     summary: >-
       Payment processing for law firms and legal tech companies. Built out end to end
       test coverage and led integration testing through an overhaul of the payment flow.
-    technologies: [React, Node.js, TypeScript, TypeORM, MySQL, AWS]
+    technologies: [TypeScript, React, Node.js, MySQL, AWS]
 
   - company: Principal Financial Group
     title: Software Engineer
-    dates: Aug 2020 to June 2022
+    dates: Aug 2020 to Jun 2022
     summary: >-
       Customer facing experiences on the Enterprise Experience Enablement team. Led the
       integration of a new customer segment following an acquisition, coordinating across
       many teams.
-    technologies: [JavaEE, WebSphere, DB2, Python, Flask, API Gateway, AWS]
+    technologies: [JavaEE, Python, Flask, AWS, API Gateway]
 
 earlier:
   - role: Software Scientist
-    company: Ames Laboratory, Department of Energy
+    company: Ames Laboratory
     dates: '2020'
     note: Open source build tooling for computational chemistry
   - role: Software Engineering Intern
     company: Herzog Technologies
     dates: 2018 to 2019
-    note: LiDAR railroad clearance analysis, and technical lead on an internal tool
+    note: LiDAR railroad clearance analysis
   - role: Software Engineering Intern
     company: Collins Aerospace
     dates: 2014 to 2018
     note: Automated test systems for radio hardware
+
+education:
+  school: Iowa State University
+  degree: B.S. Software Engineering
+  dates: '2020'
 
 principles:
   - title: Fast feedback loops
