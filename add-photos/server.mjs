@@ -32,7 +32,7 @@ const readManifest = () => JSON.parse(readFileSync(MANIFEST, 'utf8'))
  * derived from the original file, so a stale tab cannot overwrite a slug or a
  * capture date with whatever it happened to be holding.
  */
-const saveLabels = (incoming) => {
+const saveLabels = (incoming, incomingCollections) => {
   const edits = new Map(incoming.map((p) => [p.file, p]))
   const manifest = readManifest()
   let changed = 0
@@ -44,6 +44,29 @@ const saveLabels = (incoming) => {
     if (location !== (photo.location ?? '')) {
       photo.location = location
       changed++
+    }
+    const collection = String(edit.collection ?? '').trim()
+    if (collection !== (photo.collection ?? '')) {
+      if (collection) photo.collection = collection
+      else delete photo.collection
+      changed++
+    }
+  }
+
+  /*
+   * Collections are only replaced when the page sends them, so a client that
+   * knows nothing about them cannot wipe the list. Ids are the join key with
+   * the photos above, so they are taken as given; only the title and the
+   * order are editable.
+   */
+  let collectionsChanged = false
+  if (Array.isArray(incomingCollections)) {
+    const next = incomingCollections
+      .filter((c) => c && typeof c.id === 'string' && c.id.trim())
+      .map((c) => ({ id: c.id.trim(), title: String(c.title ?? '').trim() || c.id.trim() }))
+    if (JSON.stringify(next) !== JSON.stringify(manifest.collections ?? [])) {
+      manifest.collections = next
+      collectionsChanged = true
     }
   }
 
@@ -68,8 +91,10 @@ const saveLabels = (incoming) => {
     }
   }
 
-  if (changed || reordered) writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n')
-  return { changed, reordered, total: manifest.photos.length, orderSaved: sameSet }
+  if (changed || reordered || collectionsChanged) {
+    writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n')
+  }
+  return { changed, reordered, collectionsChanged, total: manifest.photos.length, orderSaved: sameSet }
 }
 
 const send = (res, status, body, type = 'application/json') => {
@@ -102,9 +127,9 @@ const server = createServer(async (req, res) => {
 
   if (url.pathname === '/api/photos' && req.method === 'PUT') {
     try {
-      const { photos } = JSON.parse(await readBody(req))
+      const { photos, collections } = JSON.parse(await readBody(req))
       if (!Array.isArray(photos)) throw new Error('Expected a photos array')
-      return send(res, 200, JSON.stringify(saveLabels(photos)))
+      return send(res, 200, JSON.stringify(saveLabels(photos, collections)))
     } catch (error) {
       return send(res, 400, JSON.stringify({ error: String(error.message ?? error) }))
     }
@@ -167,7 +192,10 @@ server.listen(PORT, () => {
   const { photos } = readManifest()
   const unlabelled = photos.filter((p) => !p.location).length
 
+  const unfiled = photos.filter((p) => !p.collection).length
+
   console.log(`\n  ${photos.length} photos, ${unlabelled} still needing a location`)
+  if (unfiled) console.log(`  ${unfiled} not in a collection`)
   console.log(`\n  →  ${url}\n`)
   console.log('  Labels save as you type. Ctrl+C when you are done.\n')
 

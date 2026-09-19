@@ -14,6 +14,7 @@
         --moss: #93b06e;
         --ochre: #d9a05b;
         --rust: #d4795c;
+        --stone: #8fb0c0;
       }
       * {
         box-sizing: border-box;
@@ -53,6 +54,10 @@
       }
       .count b {
         color: var(--ochre);
+      }
+      .count i {
+        font-style: normal;
+        color: var(--stone);
       }
       .spacer {
         flex: 1;
@@ -96,12 +101,92 @@
         cursor: pointer;
       }
       main {
+        padding: clamp(1rem, 4vw, 2.5rem);
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      /* ── A collection ─────────────────────────────────────────────────── */
+      .group {
+        border: 1px solid #ffffff14;
+        border-radius: 14px;
+        background: #ffffff06;
+      }
+      .group.unfiled {
+        border-color: color-mix(in srgb, var(--ochre) 40%, transparent);
+        background: color-mix(in srgb, var(--ochre) 6%, transparent);
+      }
+      .group.over {
+        border-color: var(--moss);
+        box-shadow: 0 0 0 1px var(--moss);
+      }
+      .group-head {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid #ffffff12;
+      }
+      .group-head input.title {
+        flex: 1;
+        min-width: 8rem;
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        background: transparent;
+        border-color: transparent;
+      }
+      .group-head input.title:hover {
+        border-color: #ffffff1f;
+      }
+      .group-name {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .group-count {
+        font:
+          0.7rem ui-monospace,
+          monospace;
+        color: #ffffff5c;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .group-tools {
+        display: flex;
+        gap: 0.3rem;
+      }
+      .group-tools button {
+        padding: 0.25rem 0.55rem;
+        font-size: 0.75rem;
+        border-radius: 7px;
+      }
+      .group-tools button.danger:hover {
+        border-color: var(--rust);
+        color: var(--rust);
+      }
+      .cards {
         display: grid;
         gap: 1rem;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        padding: clamp(1rem, 4vw, 2.5rem);
+        /* Wide enough for a location to be readable while typing it: at 320
+           the input clipped mid-word and every card looked half filled. */
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        padding: 1rem;
+        min-height: 5.5rem;
       }
+      .cards:empty::after {
+        content: 'Drag photos here';
+        color: #ffffff3d;
+        font-size: 0.85rem;
+        grid-column: 1 / -1;
+        align-self: center;
+        text-align: center;
+      }
+
+      /* ── A photo ──────────────────────────────────────────────────────── */
       .card {
+        position: relative;
         display: flex;
         gap: 0.9rem;
         padding: 0.75rem;
@@ -119,6 +204,20 @@
         object-fit: cover;
         border-radius: 8px;
         background: #ffffff0f;
+      }
+      .cover-badge {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.1rem 0.35rem;
+        border-radius: 5px;
+        background: color-mix(in srgb, var(--moss) 85%, black);
+        color: #0d1410;
+        font:
+          600 0.6rem ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
       .meta {
         display: flex;
@@ -142,8 +241,8 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      input {
-        margin-top: auto;
+      input,
+      select {
         width: 100%;
         padding: 0.5rem 0.6rem;
         font: inherit;
@@ -153,7 +252,16 @@
         border: 1px solid #ffffff1f;
         border-radius: 7px;
       }
-      input:focus {
+      input.location {
+        margin-top: auto;
+      }
+      select {
+        font-size: 0.78rem;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      input:focus,
+      select:focus {
         outline: 2px solid var(--moss);
         outline-offset: 1px;
       }
@@ -220,103 +328,221 @@
   </head>
   <body>
     <header>
-      <h1>Add photos</h1>
+      <h1>Photos</h1>
       <span class="count" id="count"></span>
       <label class="filter"><input type="checkbox" id="only" style="width: auto; margin: 0" /> Only unlabelled</label>
+      <button id="new-collection">New collection</button>
       <span class="spacer"></span>
       <span class="status" id="status"></span>
       <button id="save">Save and rebuild</button>
     </header>
 
     <p class="hint">
-      Labels save as you type. <kbd>Enter</kbd> jumps to the next unlabelled photo. Drag a card, or use the arrows, to
-      set the order the wall displays. Hit <em>Save and rebuild</em> when you are done to regenerate the site's photo
-      data.
+      Everything saves as you type. Drag a photo between collections to move it, or use its dropdown. The first photo in
+      a collection is its cover. <kbd>Enter</kbd> jumps to the next unlabelled photo. Hit <em>Save and rebuild</em>
+      when you are done to regenerate the site's photo data.
     </p>
 
-    <main id="grid"></main>
+    <main id="groups"></main>
 
     <script>
-      const grid = document.getElementById('grid')
+      const groupsEl = document.getElementById('groups')
       const status = document.getElementById('status')
       const countEl = document.getElementById('count')
       const onlyEl = document.getElementById('only')
       const saveBtn = document.getElementById('save')
+      const newBtn = document.getElementById('new-collection')
 
+      /** The manifest, held as the page's own state and written back whole. */
       let photos = []
+      let collections = []
+
+      /** Photos with no collection, or one that no longer exists. */
+      const UNFILED = ''
 
       const setStatus = (text, state = '') => {
         status.textContent = text
         status.dataset.state = state
       }
 
+      const groupOf = (photo) => (collections.some((c) => c.id === photo.collection) ? photo.collection : UNFILED)
+
+      const inGroup = (id) => photos.filter((photo) => groupOf(photo) === id)
+
       const updateCount = () => {
-        const left = photos.filter((p) => !p.location?.trim()).length
-        countEl.innerHTML = left
-          ? `<b>${left}</b> of ${photos.length} need a location`
-          : `all ${photos.length} labelled`
+        const unlabelled = photos.filter((p) => !p.location?.trim()).length
+        const unfiled = inGroup(UNFILED).length
+        countEl.innerHTML = [
+          unlabelled ? `<b>${unlabelled}</b> need a location` : `all ${photos.length} labelled`,
+          unfiled ? `<i>${unfiled}</i> unfiled` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')
       }
 
-      const render = () => {
-        const shown = onlyEl.checked ? photos.filter((p) => !p.location?.trim()) : photos
-        grid.innerHTML = shown.length ? '' : '<p class="empty">Nothing to label. Every photo has a location.</p>'
+      /**
+       * An id from a title: stable, readable in the manifest, and unique.
+       * Ids are the join key with the photos, so they are assigned once here
+       * and never derived again when the title is edited.
+       */
+      const makeId = (title) => {
+        const base =
+          title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '') || 'collection'
+        let id = base
+        for (let n = 2; collections.some((c) => c.id === id); n++) id = `${base}-${n}`
+        return id
+      }
 
-        for (const photo of shown) {
-          const card = document.createElement('div')
-          card.className = 'card'
-          card.dataset.done = Boolean(photo.location?.trim())
-          card.dataset.file = photo.file
-          // Dragging only makes sense against the full list; with the filter
-          // on, the hidden cards would make a drop position a guess.
-          card.draggable = !onlyEl.checked
+      /**
+       * The manifest's photo order is the order the site shows them, so the
+       * page keeps the array grouped: every collection's photos contiguous,
+       * collections in their own order, unfiled at the end. Reordering a
+       * group is then just a splice within its run.
+       */
+      const regroup = () => {
+        const order = [...collections.map((c) => c.id), UNFILED]
+        photos = order.flatMap((id) => inGroup(id))
+      }
 
-          const handle = document.createElement('div')
-          handle.className = 'handle'
-          handle.textContent = onlyEl.checked ? '' : '⠿'
-          handle.title = 'Drag to reorder'
+      const card = (photo, index, groupId) => {
+        const el = document.createElement('div')
+        el.className = 'card'
+        el.dataset.done = Boolean(photo.location?.trim())
+        el.dataset.file = photo.file
+        el.dataset.group = groupId
+        // Dragging only makes sense against the full list; with the filter on,
+        // the hidden cards would make a drop position a guess.
+        el.draggable = !onlyEl.checked
 
-          const img = document.createElement('img')
-          img.src = `/photos/${photo.slug}-400.webp`
-          img.loading = 'lazy'
-          img.alt = photo.slug
+        const handle = document.createElement('div')
+        handle.className = 'handle'
+        handle.textContent = onlyEl.checked ? '' : '⠿'
+        handle.title = 'Drag to reorder, or to another collection'
 
-          const meta = document.createElement('div')
-          meta.className = 'meta'
-          const slug = document.createElement('div')
-          slug.className = 'slug'
-          slug.textContent = photo.slug
-          const file = document.createElement('div')
-          file.className = 'file'
-          file.textContent = `${photo.file} · ${photo.width}×${photo.height}`
+        const img = document.createElement('img')
+        img.src = `/photos/${photo.slug}-400.webp`
+        img.loading = 'lazy'
+        img.alt = photo.slug
 
-          const input = document.createElement('input')
-          input.value = photo.location ?? ''
-          input.placeholder = 'Location, e.g. Maroon Bells, Colorado'
-          input.dataset.file = photo.file
-          input.addEventListener('input', () => {
-            photo.location = input.value
-            card.dataset.done = Boolean(input.value.trim())
-            updateCount()
+        if (index === 0 && groupId !== UNFILED) {
+          const badge = document.createElement('span')
+          badge.className = 'cover-badge'
+          badge.textContent = 'Cover'
+          el.append(badge)
+        }
+
+        const meta = document.createElement('div')
+        meta.className = 'meta'
+
+        const slug = document.createElement('div')
+        slug.className = 'slug'
+        slug.textContent = photo.slug
+        const position = document.createElement('span')
+        position.className = 'pos'
+        position.textContent = ` #${index + 1}`
+        slug.append(position)
+
+        const file = document.createElement('div')
+        file.className = 'file'
+        file.textContent = `${photo.file} · ${photo.width}×${photo.height}`
+
+        const location = document.createElement('input')
+        location.className = 'location'
+        location.value = photo.location ?? ''
+        location.placeholder = 'Location, e.g. Maroon Bells, Colorado'
+        location.addEventListener('input', () => {
+          photo.location = location.value
+          el.dataset.done = Boolean(location.value.trim())
+          updateCount()
+          queueSave()
+        })
+        location.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return
+          e.preventDefault()
+          const inputs = [...groupsEl.querySelectorAll('input.location')]
+          const next = inputs.slice(inputs.indexOf(location) + 1).find((i) => !i.value.trim())
+          ;(next ?? inputs[inputs.indexOf(location) + 1])?.focus()
+        })
+
+        // The same move as dragging, for anyone not dragging.
+        const picker = document.createElement('select')
+        for (const option of [{ id: UNFILED, title: 'Unfiled' }, ...collections]) {
+          const opt = document.createElement('option')
+          opt.value = option.id
+          opt.textContent = option.title || option.id
+          opt.selected = option.id === groupId
+          picker.append(opt)
+        }
+        picker.addEventListener('change', () => {
+          photo.collection = picker.value
+          regroup()
+          render()
+          queueSave()
+        })
+
+        meta.append(slug, file, picker, location)
+
+        const nudge = document.createElement('div')
+        nudge.className = 'nudge'
+        for (const [label, delta] of [
+          ['↑', -1],
+          ['↓', 1],
+        ]) {
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.textContent = label
+          button.title = delta < 0 ? 'Move earlier' : 'Move later'
+          button.addEventListener('click', () => move(photo.file, delta))
+          nudge.append(button)
+        }
+
+        el.append(handle, img, meta)
+        if (!onlyEl.checked) el.append(nudge)
+        return el
+      }
+
+      const groupSection = (collection, index) => {
+        const id = collection?.id ?? UNFILED
+        const section = document.createElement('section')
+        section.className = `group${id === UNFILED ? ' unfiled' : ''}`
+        section.dataset.group = id
+
+        const head = document.createElement('div')
+        head.className = 'group-head'
+
+        if (collection) {
+          const title = document.createElement('input')
+          title.className = 'title'
+          title.value = collection.title
+          title.placeholder = 'Collection name'
+          title.addEventListener('input', () => {
+            collection.title = title.value
+            // The dropdowns on every card name this collection too.
+            for (const option of groupsEl.querySelectorAll(`option[value="${collection.id}"]`)) {
+              option.textContent = title.value || collection.id
+            }
             queueSave()
           })
-          input.addEventListener('keydown', (e) => {
-            if (e.key !== 'Enter') return
-            e.preventDefault()
-            const inputs = [...grid.querySelectorAll('input')]
-            const next = inputs.slice(inputs.indexOf(input) + 1).find((i) => !i.value.trim())
-            ;(next ?? inputs[inputs.indexOf(input) + 1])?.focus()
-          })
+          head.append(title)
+        } else {
+          const name = document.createElement('span')
+          name.className = 'group-name'
+          name.textContent = 'Unfiled'
+          head.append(name)
+        }
 
-          const position = document.createElement('span')
-          position.className = 'pos'
-          position.textContent = ` #${photos.indexOf(photo) + 1}`
-          slug.append(position)
+        const members = inGroup(id)
+        const count = document.createElement('span')
+        count.className = 'group-count'
+        count.textContent = `${members.length} photo${members.length === 1 ? '' : 's'}`
+        head.append(count)
 
-          meta.append(slug, file, input)
-
-          // The same reordering by keyboard, for anyone not dragging.
-          const nudge = document.createElement('div')
-          nudge.className = 'nudge'
+        if (collection) {
+          const tools = document.createElement('div')
+          tools.className = 'group-tools'
           for (const [label, delta] of [
             ['↑', -1],
             ['↓', 1],
@@ -324,66 +550,190 @@
             const button = document.createElement('button')
             button.type = 'button'
             button.textContent = label
-            button.title = delta < 0 ? 'Move earlier' : 'Move later'
-            button.addEventListener('click', () => move(photo.file, delta))
-            nudge.append(button)
+            button.title = delta < 0 ? 'Move collection up' : 'Move collection down'
+            button.disabled = index + delta < 0 || index + delta >= collections.length
+            button.addEventListener('click', () => moveCollection(collection.id, delta))
+            tools.append(button)
           }
-
-          card.append(handle, img, meta)
-          if (!onlyEl.checked) card.append(nudge)
-          grid.append(card)
+          const remove = document.createElement('button')
+          remove.type = 'button'
+          remove.className = 'danger'
+          remove.textContent = 'Delete'
+          remove.title = 'Delete the collection. Its photos become unfiled.'
+          remove.addEventListener('click', () => deleteCollection(collection.id))
+          tools.append(remove)
+          head.append(tools)
         }
+
+        const cards = document.createElement('div')
+        cards.className = 'cards'
+        const shown = onlyEl.checked ? members.filter((p) => !p.location?.trim()) : members
+        shown.forEach((photo, i) => cards.append(card(photo, members.indexOf(photo), id)))
+
+        section.append(head, cards)
+        return section
+      }
+
+      const render = () => {
+        groupsEl.innerHTML = ''
+        collections.forEach((collection, index) => groupsEl.append(groupSection(collection, index)))
+        // Unfiled sits last so the named collections are what you see first,
+        // but it is always present as a drop target.
+        groupsEl.append(groupSection(null, -1))
         updateCount()
       }
 
-      /** Moves one photo by `delta` places, then persists the new order. */
-      const move = (file, delta) => {
-        const from = photos.findIndex((p) => p.file === file)
+      const moveCollection = (id, delta) => {
+        const from = collections.findIndex((c) => c.id === id)
         const to = from + delta
-        if (from < 0 || to < 0 || to >= photos.length) return
-        const [photo] = photos.splice(from, 1)
-        photos.splice(to, 0, photo)
+        if (from < 0 || to < 0 || to >= collections.length) return
+        const [collection] = collections.splice(from, 1)
+        collections.splice(to, 0, collection)
+        regroup()
         render()
         queueSave()
       }
 
-      /** Drops `file` just before `beforeFile`, or at the end when dropped past the last card. */
-      const moveBefore = (file, beforeFile) => {
-        if (file === beforeFile) return
-        const from = photos.findIndex((p) => p.file === file)
-        if (from < 0) return
-        const [photo] = photos.splice(from, 1)
-        const at = beforeFile ? photos.findIndex((p) => p.file === beforeFile) : -1
-        photos.splice(at < 0 ? photos.length : at, 0, photo)
+      const deleteCollection = (id) => {
+        const members = inGroup(id)
+        const collection = collections.find((c) => c.id === id)
+        if (members.length && !confirm(`Delete "${collection.title}"? Its ${members.length} photos become unfiled.`)) {
+          return
+        }
+        collections = collections.filter((c) => c.id !== id)
+        for (const photo of members) photo.collection = UNFILED
+        regroup()
         render()
         queueSave()
+      }
+
+      newBtn.addEventListener('click', () => {
+        const title = prompt('Name the collection')?.trim()
+        if (!title) return
+        collections.push({ id: makeId(title), title })
+        regroup()
+        render()
+        queueSave()
+        // Straight to the new section, which is at the bottom of the named ones.
+        groupsEl.querySelector(`[data-group="${collections.at(-1).id}"] input.title`)?.focus()
+      })
+
+      /** Moves one photo by `delta` places within its own collection. */
+      const move = (file, delta) => {
+        const photo = photos.find((p) => p.file === file)
+        const members = inGroup(groupOf(photo))
+        const at = members.indexOf(photo)
+        const to = at + delta
+        if (to < 0 || to >= members.length) return
+        const from = photos.indexOf(photo)
+        photos.splice(from, 1)
+        photos.splice(photos.indexOf(members[to]) + (delta > 0 ? 1 : 0), 0, photo)
+        render()
+        queueSave()
+      }
+
+      /**
+       * Drops `file` just before `beforeFile`, or at the end of `groupId` when
+       * dropped on the section rather than on a card.
+       */
+      const moveTo = (file, groupId, beforeFile) => {
+        const photo = photos.find((p) => p.file === file)
+        if (!photo || file === beforeFile) return
+        photo.collection = groupId
+        photos.splice(photos.indexOf(photo), 1)
+        const before = beforeFile ? photos.find((p) => p.file === beforeFile) : null
+        if (before && groupOf(before) === groupId) photos.splice(photos.indexOf(before), 0, photo)
+        else {
+          const members = inGroup(groupId)
+          const last = members.at(-1)
+          photos.splice(last ? photos.indexOf(last) + 1 : photos.length, 0, photo)
+        }
+        regroup()
+        render()
+        queueSave()
+      }
+
+      /*
+       * Edge scrolling while dragging.
+       *
+       * A collection is taller than the window and the browser does not scroll
+       * the page for a drag of its own, so moving a photo from Canyon Country
+       * to Early Rolls meant dropping it somewhere in between and dragging
+       * again. Holding near the top or bottom edge now scrolls, faster the
+       * closer to the edge, on a frame loop rather than per dragover event:
+       * dragover only fires while the pointer moves, so a still pointer held
+       * at the edge would otherwise scroll once and stop.
+       */
+      const EDGE = 110
+      const MAX_SPEED = 24
+      let pointerY = null
+      let scrolling = null
+
+      const edgeScroll = () => {
+        if (pointerY === null) return stopScrolling()
+        const top = pointerY - headerHeight()
+        const bottom = innerHeight - pointerY
+        let speed = 0
+        if (top < EDGE) speed = -MAX_SPEED * Math.min(1, (EDGE - top) / EDGE)
+        else if (bottom < EDGE) speed = MAX_SPEED * Math.min(1, (EDGE - bottom) / EDGE)
+        if (speed) scrollBy(0, speed)
+        scrolling = requestAnimationFrame(edgeScroll)
+      }
+
+      /** The sticky header covers the top of the window, so the zone starts under it. */
+      const headerHeight = () => document.querySelector('header').offsetHeight
+
+      const startScrolling = () => {
+        if (scrolling === null) scrolling = requestAnimationFrame(edgeScroll)
+      }
+      const stopScrolling = () => {
+        if (scrolling !== null) cancelAnimationFrame(scrolling)
+        scrolling = null
+        pointerY = null
       }
 
       let dragging = null
-      grid.addEventListener('dragstart', (e) => {
-        const card = e.target.closest('.card')
-        if (!card) return
-        dragging = card.dataset.file
-        card.classList.add('dragging')
+      groupsEl.addEventListener('dragstart', (e) => {
+        const el = e.target.closest('.card')
+        if (!el) return
+        dragging = el.dataset.file
+        el.classList.add('dragging')
         e.dataTransfer.effectAllowed = 'move'
         // Firefox refuses to start a drag with no payload.
         e.dataTransfer.setData('text/plain', dragging)
+        startScrolling()
       })
-      grid.addEventListener('dragend', () => {
+      groupsEl.addEventListener('dragend', () => {
         dragging = null
-        for (const card of grid.querySelectorAll('.card')) card.classList.remove('dragging', 'over')
+        stopScrolling()
+        for (const el of groupsEl.querySelectorAll('.card, .group')) el.classList.remove('dragging', 'over')
       })
-      grid.addEventListener('dragover', (e) => {
+
+      /*
+       * On the document rather than the grid: the gaps between sections, and
+       * the strip under the header, are not the grid, and letting the pointer
+       * leave the drop target should not stop the page scrolling.
+       */
+      addEventListener('dragover', (e) => {
+        if (!dragging) return
+        e.preventDefault()
+        pointerY = e.clientY
+      })
+      addEventListener('drop', () => stopScrolling())
+      groupsEl.addEventListener('dragover', (e) => {
         if (!dragging) return
         e.preventDefault()
         e.dataTransfer.dropEffect = 'move'
-        const card = e.target.closest('.card')
-        for (const other of grid.querySelectorAll('.card')) other.classList.toggle('over', other === card)
+        const el = e.target.closest('.card')
+        const section = e.target.closest('.group')
+        for (const other of groupsEl.querySelectorAll('.card')) other.classList.toggle('over', other === el)
+        for (const other of groupsEl.querySelectorAll('.group')) other.classList.toggle('over', other === section)
       })
-      grid.addEventListener('drop', (e) => {
+      groupsEl.addEventListener('drop', (e) => {
         if (!dragging) return
         e.preventDefault()
-        moveBefore(dragging, e.target.closest('.card')?.dataset.file ?? null)
+        const section = e.target.closest('.group')
+        if (section) moveTo(dragging, section.dataset.group, e.target.closest('.card')?.dataset.file ?? null)
         dragging = null
       })
 
@@ -403,11 +753,15 @@
           const res = await fetch('/api/photos', {
             method: 'PUT',
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ photos }),
+            body: JSON.stringify({ photos, collections }),
           })
           if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
-          const { changed, reordered } = await res.json()
-          const what = [changed ? `${changed} label${changed > 1 ? 's' : ''}` : null, reordered ? 'order' : null]
+          const { changed, reordered, collectionsChanged } = await res.json()
+          const what = [
+            changed ? `${changed} edit${changed > 1 ? 's' : ''}` : null,
+            reordered ? 'order' : null,
+            collectionsChanged ? 'collections' : null,
+          ]
             .filter(Boolean)
             .join(' + ')
           setStatus(what ? `Saved ${what}` : 'Saved', 'saved')
@@ -445,8 +799,10 @@
       })
 
       const load = async () => {
-        const res = await fetch('/api/photos')
-        photos = (await res.json()).photos
+        const manifest = await (await fetch('/api/photos')).json()
+        photos = manifest.photos
+        collections = manifest.collections ?? []
+        regroup()
         render()
         setStatus('')
       }

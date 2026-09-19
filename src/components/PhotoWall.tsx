@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 
-import { photos } from '../data/photos.generated'
+import type { Photo } from '../data/photos.generated'
+import { photos as allPhotos } from '../data/photos.generated'
 import { palette } from '../theme'
 import { Lightbox } from './Lightbox'
 import { photoSrc, photoSrcSet } from './photoSrc'
@@ -12,13 +13,16 @@ import { photoSrc, photoSrcSet } from './photoSrc'
  * tile without per-item row spans. Each frame reserves its aspect ratio behind
  * a blurred placeholder, so nothing shifts as photos arrive.
  *
+ * Takes the photos to show, so the same wall serves the whole archive and a
+ * single collection.
+ *
  * Every photo is rendered up front rather than appended in batches as you
  * scroll. Multi-column layout rebalances its columns whenever content changes,
  * so appending moved photos that were already on screen into other columns:
  * measured at nine of eighteen jumping column and position mid-scroll. Nothing
  * is fetched early regardless, because each image is lazy.
  */
-export const PhotoWall = () => {
+export const PhotoWall = ({ photos = allPhotos }: { photos?: Photo[] }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const close = useCallback(() => setOpenIndex(null), [])

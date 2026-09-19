@@ -97,6 +97,7 @@ const photos = scanned.map((p) => {
     height: p.height,
     // The fields that need a human. Preserved across runs.
     location: kept.location ?? '',
+    ...(kept.collection ? { collection: kept.collection } : {}),
     ...(kept.caption ? { caption: kept.caption } : {}),
     ...(kept.hidden ? { hidden: kept.hidden } : {}),
   }
@@ -114,9 +115,18 @@ const ordered = [
   ...photos.filter((p) => !position.has(p.file)),
 ]
 
-writeFileSync(MANIFEST, JSON.stringify({ photos: ordered }, null, 2) + '\n')
+/*
+ * Collections are named and ordered by hand in the add-photos tool, and the
+ * photos point at them by id. They are carried straight through: a rescan
+ * knows nothing about them and must not be able to drop one.
+ */
+const collections = previous.collections ?? []
+
+writeFileSync(MANIFEST, JSON.stringify({ collections, photos: ordered }, null, 2) + '\n')
 
 const unlabelled = photos.filter((p) => !p.location).length
+const unfiled = photos.filter((p) => !p.collection).length
+if (unfiled) console.log(`${unfiled} not in a collection yet`)
 console.log(`${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`)
 console.log(
   unlabelled
