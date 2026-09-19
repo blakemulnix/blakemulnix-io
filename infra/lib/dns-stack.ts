@@ -44,15 +44,21 @@ export class DnsStack extends cdk.Stack {
 
     // Hand subdomains to project accounts that run their own zones.
     for (const { subdomain, nameServers } of delegations) {
-      new route53.NsRecord(this, `Delegate${subdomain.replace(/[^A-Za-z0-9]/g, '')}`, {
-        zone: this.hostedZone,
-        recordName: subdomain,
-        values: nameServers,
-        ttl: cdk.Duration.hours(1),
-      })
+      new route53.NsRecord(
+        this,
+        `Delegate${subdomain.replace(/[^A-Za-z0-9]/g, '')}`,
+        {
+          zone: this.hostedZone,
+          recordName: subdomain,
+          values: nameServers,
+          ttl: cdk.Duration.hours(1),
+        },
+      )
     }
 
-    new cdk.CfnOutput(this, 'HostedZoneId', { value: this.hostedZone.hostedZoneId })
+    new cdk.CfnOutput(this, 'HostedZoneId', {
+      value: this.hostedZone.hostedZoneId,
+    })
     new cdk.CfnOutput(this, 'NameServers', {
       // Set these at the registrar to make this zone authoritative.
       value: cdk.Fn.join(', ', this.hostedZone.hostedZoneNameServers ?? []),

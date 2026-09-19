@@ -16,7 +16,9 @@ const bySlug = new Map(photos.map((photo) => [photo.slug, photo]))
  * with them.
  */
 export const collectionPhotos = (collection: PhotoCollection): Photo[] =>
-  collection.slugs.map((slug) => bySlug.get(slug)).filter((photo): photo is Photo => photo !== undefined)
+  collection.slugs
+    .map((slug) => bySlug.get(slug))
+    .filter((photo): photo is Photo => photo !== undefined)
 
 /**
  * A photo in no collection is a photo nobody can reach, which is quiet enough
@@ -24,6 +26,9 @@ export const collectionPhotos = (collection: PhotoCollection): Photo[] =>
  */
 if (import.meta.env.DEV) {
   const filed = new Set(collections.flatMap((collection) => collection.slugs))
-  const unfiled = photos.filter((photo) => !filed.has(photo.slug)).map((photo) => photo.slug)
-  if (unfiled.length > 0) console.warn(`photos not in any collection: ${unfiled.join(', ')}`)
+  const unfiled = photos
+    .filter((photo) => !filed.has(photo.slug))
+    .map((photo) => photo.slug)
+  if (unfiled.length > 0)
+    console.warn(`photos not in any collection: ${unfiled.join(', ')}`)
 }

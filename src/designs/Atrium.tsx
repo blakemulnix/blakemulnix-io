@@ -24,13 +24,22 @@ export const Atrium = () => {
             <h1 className="font-serif text-4xl leading-[0.95] font-semibold tracking-tight sm:text-5xl">
               {profile.name}
             </h1>
-            <p className="mt-2 font-serif text-lg italic" style={{ color: palette.moss }}>
+            <p
+              className="mt-2 font-serif text-lg italic"
+              style={{ color: palette.moss }}
+            >
               {profile.role}
             </p>
-            <div className="mt-6 space-y-3 text-sm leading-relaxed" style={{ color: palette.muted }}>
+            <div
+              className="mt-6 space-y-3 text-sm leading-relaxed"
+              style={{ color: palette.muted }}
+            >
               {aboutParagraphs.slice(0, 2).map((p, i) => (
                 <p key={i}>
-                  <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+                  <Segments
+                    segments={p}
+                    linkClassName="underline decoration-1 underline-offset-4"
+                  />
                 </p>
               ))}
             </div>
@@ -41,7 +50,10 @@ export const Atrium = () => {
               onClick={home}
               aria-current={view === 'home' ? 'true' : undefined}
               className="w-fit font-mono text-[11px] tracking-[0.25em] uppercase transition-opacity hover:opacity-100"
-              style={{ color: palette.ochre, opacity: view === 'home' ? 1 : 0.55 }}
+              style={{
+                color: palette.ochre,
+                opacity: view === 'home' ? 1 : 0.55,
+              }}
             >
               Overview
             </button>
@@ -56,11 +68,16 @@ export const Atrium = () => {
                 >
                   <span
                     className="h-px transition-all duration-300"
-                    style={{ width: isOpen ? 36 : 16, backgroundColor: isOpen ? s.accent : `${palette.sand}59` }}
+                    style={{
+                      width: isOpen ? 36 : 16,
+                      backgroundColor: isOpen ? s.accent : `${palette.sand}59`,
+                    }}
                   />
                   <span
                     className="font-mono text-[11px] tracking-[0.25em] uppercase transition-colors"
-                    style={{ color: isOpen ? palette.sand : `${palette.sand}99` }}
+                    style={{
+                      color: isOpen ? palette.sand : `${palette.sand}99`,
+                    }}
                   >
                     {s.label}
                   </span>
@@ -72,11 +89,19 @@ export const Atrium = () => {
 
         {/* Swapping pane. The key restarts the fade on each change. */}
         <main className="px-6 pb-20 sm:px-8 lg:py-14">
-          <div key={view} className="animate-[atrium-in_520ms_var(--ease-out-soft)_both]">
+          <div
+            key={view}
+            className="animate-[atrium-in_520ms_var(--ease-out-soft)_both]"
+          >
             {section && Content ? (
               <>
-                <h2 className="font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
-                <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
+                <h2 className="font-serif text-4xl font-semibold sm:text-6xl">
+                  {section.label}
+                </h2>
+                <p
+                  className="mt-2 font-serif text-lg italic"
+                  style={{ color: `${palette.sand}99` }}
+                >
                   {section.tagline}
                 </p>
                 <div className="mt-10">

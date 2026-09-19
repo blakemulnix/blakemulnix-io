@@ -1,0 +1,30 @@
+# The landing view's copy. Plain YAML scalars need no quotes even with an
+# apostrophe in them, which is the whole reason this moved out of a .ts file:
+# every contraction used to force a choice between escaping a quote or
+# switching the string to the other quote style.
+career_start_year: 2014
+
+profile:
+  name: Blake Mulnix
+  role: Software Consultant
+  # Under the role on the landing view.
+  tagline: I build software and the teams that build it.
+  # The line on the social card. It has room the page does not, and it
+  # arrives with no context around it, so it can afford to be the joke.
+  card_tagline: I help teams ship faster by getting them to slow down for ten minutes.
+  location: Iowa
+
+# Paragraphs of prose, each a list of segments. A segment is plain text, or a
+# mapping with `text` and `href` for an inline link.
+paragraphs:
+  - - Hey, I'm Blake. I've been into computers since I was a youngster. If all
+      those hours watching early YouTube and playing flight simulators taught
+      me anything, it's that software can genuinely enrich people's lives.
+      Today I build software for a living.
+  - - "I'm a consultant at "
+    - text: Source Allies
+      href: https://www.sourceallies.com
+    - ", where I work with a crew that's unreasonably good at delivering
+      software. We do as much coaching as coding, helping teams and
+      organizations pick up new skills and see for themselves why the
+      practices we live by are worth keeping."

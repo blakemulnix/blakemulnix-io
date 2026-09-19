@@ -20,20 +20,32 @@ export const Curtain = () => {
     >
       {/* Landing */}
       <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16 sm:px-8">
-        <p className="font-mono text-[11px] tracking-[0.35em] uppercase" style={{ color: palette.ochre }}>
+        <p
+          className="font-mono text-[11px] tracking-[0.35em] uppercase"
+          style={{ color: palette.ochre }}
+        >
           {profile.location}
         </p>
         <h1 className="mt-3 font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
           {profile.name}
         </h1>
-        <p className="mt-3 font-serif text-xl italic sm:text-2xl" style={{ color: palette.moss }}>
+        <p
+          className="mt-3 font-serif text-xl italic sm:text-2xl"
+          style={{ color: palette.moss }}
+        >
           {profile.role}
         </p>
 
-        <div className="mt-7 max-w-xl space-y-3 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+        <div
+          className="mt-7 max-w-xl space-y-3 text-[15px] leading-relaxed"
+          style={{ color: palette.muted }}
+        >
           {aboutParagraphs.slice(0, 2).map((p, i) => (
             <p key={i}>
-              <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+              <Segments
+                segments={p}
+                linkClassName="underline decoration-1 underline-offset-4"
+              />
             </p>
           ))}
         </div>
@@ -47,7 +59,9 @@ export const Curtain = () => {
               style={{ borderColor: `${palette.sand}1f` }}
             >
               <span className="flex items-baseline justify-between gap-4">
-                <span className="font-serif text-2xl font-semibold sm:text-3xl">{s.label}</span>
+                <span className="font-serif text-2xl font-semibold sm:text-3xl">
+                  {s.label}
+                </span>
                 <span
                   className="font-mono text-lg transition-transform group-hover:translate-x-1"
                   style={{ color: s.accent }}
@@ -56,7 +70,10 @@ export const Curtain = () => {
                   →
                 </span>
               </span>
-              <span className="mt-1 block text-sm" style={{ color: `${palette.sand}80` }}>
+              <span
+                className="mt-1 block text-sm"
+                style={{ color: `${palette.sand}80` }}
+              >
                 {s.tagline}
               </span>
             </button>
@@ -78,10 +95,16 @@ export const Curtain = () => {
             {/* Pinned so the way out never scrolls away on a phone. */}
             <div
               className="sticky top-0 z-10 border-b backdrop-blur-md"
-              style={{ backgroundColor: `${background}e6`, borderColor: `${palette.sand}1f` }}
+              style={{
+                backgroundColor: `${background}e6`,
+                borderColor: `${palette.sand}1f`,
+              }}
             >
               <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-6 py-3 sm:px-8">
-                <button onClick={home} className="-mx-2 flex items-center gap-2 px-2 py-1.5 font-medium">
+                <button
+                  onClick={home}
+                  className="-mx-2 flex items-center gap-2 px-2 py-1.5 font-medium"
+                >
                   <span aria-hidden="true">←</span>
                   <span className="text-sm">Back</span>
                 </button>
@@ -95,8 +118,13 @@ export const Curtain = () => {
             </div>
 
             <div className="mx-auto max-w-3xl px-6 pt-10 pb-16 sm:px-8">
-              <h2 className="font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
-              <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
+              <h2 className="font-serif text-4xl font-semibold sm:text-6xl">
+                {section.label}
+              </h2>
+              <p
+                className="mt-2 font-serif text-lg italic"
+                style={{ color: `${palette.sand}99` }}
+              >
                 {section.tagline}
               </p>
               <div className="mt-10">

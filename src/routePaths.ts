@@ -12,7 +12,9 @@ import { sectionById, sections } from './theme'
 export const routePaths = (): string[] => [
   '/',
   ...sections.map((section) => toPath({ view: section.id, collection: null })),
-  ...collections.map((collection) => toPath({ view: 'outside', collection: collection.id })),
+  ...collections.map((collection) =>
+    toPath({ view: 'outside', collection: collection.id }),
+  ),
 ]
 
 export interface RouteMeta {
@@ -37,7 +39,9 @@ export const routeMeta = (pathname: string): RouteMeta => {
   }
 
   const section = sectionById(view)
-  const named = collection ? collections.find((c) => c.id === collection) : undefined
+  const named = collection
+    ? collections.find((c) => c.id === collection)
+    : undefined
 
   if (named) {
     return {
@@ -46,5 +50,8 @@ export const routeMeta = (pathname: string): RouteMeta => {
     }
   }
 
-  return { title: `${section.label}, ${profile.name}`, description: `${section.tagline}. ${site}.` }
+  return {
+    title: `${section.label}, ${profile.name}`,
+    description: `${section.tagline}. ${site}.`,
+  }
 }

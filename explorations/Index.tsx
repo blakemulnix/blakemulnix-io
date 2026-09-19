@@ -33,7 +33,8 @@ export const IndexVariant = () => {
     const q = query.trim().toLowerCase()
     return experience.filter((e) => {
       const matchesTech = !tech || e.technologies.includes(tech)
-      const haystack = `${e.title} ${e.company} ${e.summary} ${e.technologies.join(' ')}`.toLowerCase()
+      const haystack =
+        `${e.title} ${e.company} ${e.summary} ${e.technologies.join(' ')}`.toLowerCase()
       return matchesTech && (!q || haystack.includes(q))
     })
   }, [query, tech])
@@ -58,12 +59,18 @@ export const IndexVariant = () => {
           </button>
         </header>
 
-        <section className="border-b border-white/10 py-8 font-sans" aria-label="About">
+        <section
+          className="border-b border-white/10 py-8 font-sans"
+          aria-label="About"
+        >
           <div className="max-w-2xl space-y-4 text-[15px] leading-relaxed">
             <p className="text-white">{profile.greeting} 👋</p>
             {aboutParagraphs.map((p, i) => (
               <p key={i} className="text-neutral-400">
-                <Segments segments={p} linkClassName="text-[#bef264] underline decoration-dotted underline-offset-4" />
+                <Segments
+                  segments={p}
+                  linkClassName="text-[#bef264] underline decoration-dotted underline-offset-4"
+                />
               </p>
             ))}
           </div>
@@ -122,7 +129,8 @@ export const IndexVariant = () => {
               className="group grid gap-1 border-b border-white/[0.07] py-4 transition-colors hover:bg-white/[0.02] sm:grid-cols-[9.5rem_1fr] sm:gap-6"
             >
               <p className="text-[11px] tracking-wide text-neutral-400 tabular-nums">
-                {e.start.replace(/^\w+ /, '')}–{e.end ? e.end.replace(/^\w+ /, '') : 'now'}
+                {e.start.replace(/^\w+ /, '')}–
+                {e.end ? e.end.replace(/^\w+ /, '') : 'now'}
               </p>
               <div>
                 <h3 className="font-sans text-base font-semibold text-white">
@@ -137,8 +145,12 @@ export const IndexVariant = () => {
                     {e.company}
                   </a>
                 </h3>
-                <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-neutral-400">{e.summary}</p>
-                <p className="mt-2 text-[11px] text-neutral-500">{e.technologies.join(' / ')}</p>
+                <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-neutral-400">
+                  {e.summary}
+                </p>
+                <p className="mt-2 text-[11px] text-neutral-500">
+                  {e.technologies.join(' / ')}
+                </p>
               </div>
             </li>
           ))}
@@ -204,7 +216,9 @@ export const IndexVariant = () => {
                     className="flex items-baseline justify-between gap-3 px-4 py-2.5 text-sm hover:bg-white/5"
                   >
                     <span className="text-white">{e.company}</span>
-                    <span className="shrink-0 text-[11px] text-neutral-500">{e.title}</span>
+                    <span className="shrink-0 text-[11px] text-neutral-500">
+                      {e.title}
+                    </span>
                   </a>
                 </li>
               ))}

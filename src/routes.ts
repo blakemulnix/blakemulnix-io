@@ -36,7 +36,10 @@ export const parsePath = (pathname: string): Route => {
   const [slug, second] = pathname.split('/').filter(Boolean)
   const section = slug ? sectionBySlug(slug) : undefined
   if (!section) return HOME
-  const collection = section.id === 'outside' && collections.some((c) => c.id === second) ? second : null
+  const collection =
+    section.id === 'outside' && collections.some((c) => c.id === second)
+      ? second
+      : null
   return { view: section.id, collection }
 }
 
@@ -48,7 +51,8 @@ export const parsePath = (pathname: string): Route => {
  * props for the sake of one. The server sets it before rendering; the browser
  * takes it from the address bar.
  */
-let current: Route = typeof window === 'undefined' ? HOME : parsePath(window.location.pathname)
+let current: Route =
+  typeof window === 'undefined' ? HOME : parsePath(window.location.pathname)
 
 const listeners = new Set<() => void>()
 
@@ -72,12 +76,15 @@ const publish = (next: Route) => {
 /** Navigates, adding a history entry so Back returns to where you were. */
 export const navigate = (next: Route) => {
   const path = toPath(next)
-  if (path !== window.location.pathname) window.history.pushState(null, '', path)
+  if (path !== window.location.pathname)
+    window.history.pushState(null, '', path)
   publish(next)
 }
 
 if (typeof window !== 'undefined') {
   // The browser has already changed the URL by the time this fires, so the
   // address bar is the source of truth rather than anything saved in state.
-  window.addEventListener('popstate', () => publish(parsePath(window.location.pathname)))
+  window.addEventListener('popstate', () =>
+    publish(parsePath(window.location.pathname)),
+  )
 }

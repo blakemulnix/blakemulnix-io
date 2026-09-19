@@ -10,4 +10,5 @@ import { getRoute, subscribeToRoute } from './routes'
  * before rendering, so the markup for /outside/canyon-country is that album,
  * and hydration matches rather than flashing the landing view first.
  */
-export const useRoute = (): Route => useSyncExternalStore(subscribeToRoute, getRoute, getRoute)
+export const useRoute = (): Route =>
+  useSyncExternalStore(subscribeToRoute, getRoute, getRoute)

@@ -41,7 +41,8 @@ export const TimelineVariant = () => {
             {profile.name}
           </h1>
           <p className="mt-3 text-lg text-neutral-400 sm:text-xl">
-            {profile.role} · <span className="text-neutral-500">{profile.location}</span>
+            {profile.role} ·{' '}
+            <span className="text-neutral-500">{profile.location}</span>
           </p>
           <div className="mt-8 max-w-2xl space-y-4 text-[15px] leading-relaxed sm:text-base">
             <p className="text-white">{profile.greeting} 👋</p>
@@ -60,7 +61,9 @@ export const TimelineVariant = () => {
           {/* Sticky readout of the role in view */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <p className="font-mono text-[11px] tracking-[0.3em] text-neutral-600 uppercase">Currently viewing</p>
+              <p className="font-mono text-[11px] tracking-[0.3em] text-neutral-600 uppercase">
+                Currently viewing
+              </p>
               <p
                 className="font-display mt-2 text-5xl font-bold tabular-nums transition-colors"
                 style={{ color: ACCENT }}
@@ -68,7 +71,10 @@ export const TimelineVariant = () => {
                 {active?.start.split(' ')[1] ?? ''}
               </p>
               <p className="mt-1 text-sm text-neutral-400">{active?.company}</p>
-              <div className="mt-6 h-px w-12" style={{ backgroundColor: ACCENT }} />
+              <div
+                className="mt-6 h-px w-12"
+                style={{ backgroundColor: ACCENT }}
+              />
               <p className="mt-3 text-xs text-neutral-600">
                 {activeIndex + 1} / {experience.length}
               </p>
@@ -109,7 +115,9 @@ export const TimelineVariant = () => {
                   <p className="font-mono text-[11px] leading-4 tracking-widest text-neutral-400 uppercase">
                     {e.start} — {e.end ?? 'Present'}
                   </p>
-                  <h3 className="font-display mt-2 text-xl font-semibold text-white sm:text-2xl">{e.title}</h3>
+                  <h3 className="font-display mt-2 text-xl font-semibold text-white sm:text-2xl">
+                    {e.title}
+                  </h3>
                   <a
                     href={e.companyUrl}
                     target="_blank"
@@ -119,7 +127,9 @@ export const TimelineVariant = () => {
                   >
                     {e.company}
                   </a>
-                  <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-400">{e.summary}</p>
+                  <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-400">
+                    {e.summary}
+                  </p>
                   <ul className="mt-4 flex flex-wrap gap-1.5">
                     {e.technologies.map((t) => (
                       <li
@@ -140,7 +150,12 @@ export const TimelineVariant = () => {
           <ul className="flex gap-5">
             {socialLinks.map(({ label, url, Icon }) => (
               <li key={label}>
-                <a href={url} target="_blank" rel="noreferrer" className="text-neutral-500 transition hover:text-white">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-neutral-500 transition hover:text-white"
+                >
                   <span className="sr-only">{label}</span>
                   <Icon className="h-5 w-5" />
                 </a>

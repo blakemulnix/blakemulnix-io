@@ -19,17 +19,26 @@ export const BroadsheetVariant = () => (
           {profile.name}
         </h1>
         <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 border-t border-[#2b2823]/25 pt-3">
-          <p className="font-serif text-lg italic sm:text-2xl">{profile.role}</p>
-          <p className="font-mono text-[11px] tracking-widest text-[#6b6455] uppercase">{profile.tagline}</p>
+          <p className="font-serif text-lg italic sm:text-2xl">
+            {profile.role}
+          </p>
+          <p className="font-mono text-[11px] tracking-widest text-[#6b6455] uppercase">
+            {profile.tagline}
+          </p>
         </div>
       </header>
 
       {/* Lead article, set in columns like print */}
       <section className="py-8 sm:py-12" aria-label="About">
-        <h2 className="mb-4 font-mono text-[11px] tracking-[0.3em] text-[#8a7f68] uppercase">— On the record</h2>
+        <h2 className="mb-4 font-mono text-[11px] tracking-[0.3em] text-[#8a7f68] uppercase">
+          — On the record
+        </h2>
         <div className="gap-8 text-[15px] leading-relaxed sm:columns-2 sm:text-base [&>p]:mb-4">
           <p className="first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-6xl first-letter:leading-[0.8] first-letter:font-semibold first-letter:text-[#4a5d3a]">
-            {profile.greeting}. {aboutParagraphs[0]?.map((s) => (typeof s === 'string' ? s : s.text)).join('')}
+            {profile.greeting}.{' '}
+            {aboutParagraphs[0]
+              ?.map((s) => (typeof s === 'string' ? s : s.text))
+              .join('')}
           </p>
           {aboutParagraphs.slice(1).map((p, i) => (
             <p key={i}>
@@ -43,8 +52,13 @@ export const BroadsheetVariant = () => (
       </section>
 
       {/* Career, as a ruled register with dates in the margin */}
-      <section className="border-t-2 border-[#2b2823] pt-6" aria-label="Experience">
-        <h2 className="mb-6 font-serif text-2xl font-semibold sm:text-3xl">The Record</h2>
+      <section
+        className="border-t-2 border-[#2b2823] pt-6"
+        aria-label="Experience"
+      >
+        <h2 className="mb-6 font-serif text-2xl font-semibold sm:text-3xl">
+          The Record
+        </h2>
         <ol>
           {experience.map((e) => (
             <li
@@ -69,8 +83,12 @@ export const BroadsheetVariant = () => (
                     {e.company}
                   </a>
                 </h3>
-                <p className="mt-2 max-w-prose text-[15px] leading-relaxed text-[#4a463d]">{e.summary}</p>
-                <p className="mt-3 font-mono text-[11px] tracking-wide text-[#6b6455]">{e.technologies.join(' · ')}</p>
+                <p className="mt-2 max-w-prose text-[15px] leading-relaxed text-[#4a463d]">
+                  {e.summary}
+                </p>
+                <p className="mt-3 font-mono text-[11px] tracking-wide text-[#6b6455]">
+                  {e.technologies.join(' · ')}
+                </p>
               </div>
             </li>
           ))}
@@ -82,7 +100,12 @@ export const BroadsheetVariant = () => (
         <ul className="flex gap-5">
           {socialLinks.map(({ label, url, Icon }) => (
             <li key={label}>
-              <a href={url} target="_blank" rel="noreferrer" className="text-[#6b6455] transition hover:text-[#a9563a]">
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#6b6455] transition hover:text-[#a9563a]"
+              >
                 <span className="sr-only">{label}</span>
                 <Icon className="h-5 w-5" />
               </a>

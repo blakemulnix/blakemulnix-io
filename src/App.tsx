@@ -9,7 +9,9 @@ import { Rail } from './designs/Rail'
  * the development branch, so `vite build` drops it along with every parked
  * design. Importing the registry here instead would ship all of them.
  */
-const DesignGallery = import.meta.env.DEV ? lazy(() => import('./DesignGallery')) : null
+const DesignGallery = import.meta.env.DEV
+  ? lazy(() => import('./DesignGallery'))
+  : null
 
 export const App = () =>
   DesignGallery ? (

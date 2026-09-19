@@ -69,7 +69,8 @@ export const sections: Section[] = [
   },
 ]
 
-export const sectionBySlug = (slug: string): Section | undefined => sections.find((s) => s.slug === slug)
+export const sectionBySlug = (slug: string): Section | undefined =>
+  sections.find((s) => s.slug === slug)
 
 export const sectionById = (id: SectionId): Section => {
   const found = sections.find((s) => s.id === id)

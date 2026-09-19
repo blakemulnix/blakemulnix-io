@@ -37,7 +37,12 @@ export class GithubOidcStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: GithubOidcStackProps) {
     super(scope, id, props)
 
-    const { githubRepo, deployBranch, deployEnvironment, createOidcProvider = true } = props
+    const {
+      githubRepo,
+      deployBranch,
+      deployEnvironment,
+      createOidcProvider = true,
+    } = props
 
     const provider = createOidcProvider
       ? new iam.OpenIdConnectProvider(this, 'GithubOidcProvider', {

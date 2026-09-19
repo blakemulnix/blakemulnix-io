@@ -7,7 +7,13 @@
  * re-running only picks up newly dropped files and refreshes derived facts.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
 import path from 'node:path'
 
 const ORIGINALS = 'photos/originals'
@@ -15,11 +21,17 @@ const MANIFEST = 'photos/manifest.json'
 const DERIVATIVES = 'public/photos'
 
 const identify = (file) =>
-  execFileSync('magick', ['identify', '-format', '%w\t%h\t%[EXIF:DateTimeOriginal]', file], {
-    encoding: 'utf8',
-  }).split('\t')
+  execFileSync(
+    'magick',
+    ['identify', '-format', '%w\t%h\t%[EXIF:DateTimeOriginal]', file],
+    {
+      encoding: 'utf8',
+    },
+  ).split('\t')
 
-const previous = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : { photos: [] }
+const previous = existsSync(MANIFEST)
+  ? JSON.parse(readFileSync(MANIFEST, 'utf8'))
+  : { photos: [] }
 const prior = new Map((previous.photos ?? []).map((p) => [p.file, p]))
 
 /**
@@ -39,8 +51,15 @@ const reusable = (file) => {
   if (!kept?.slug || !kept.width || !kept.height || !kept.date) return null
   const src = path.join(ORIGINALS, file)
   const built = path.join(DERIVATIVES, `${kept.slug}-400.webp`)
-  if (!existsSync(built) || statSync(built).mtimeMs < statSync(src).mtimeMs) return null
-  return { file, width: kept.width, height: kept.height, date: kept.date, time: '00:00:00' }
+  if (!existsSync(built) || statSync(built).mtimeMs < statSync(src).mtimeMs)
+    return null
+  return {
+    file,
+    width: kept.width,
+    height: kept.height,
+    date: kept.date,
+    time: '00:00:00',
+  }
 }
 
 /*
@@ -49,7 +68,9 @@ const reusable = (file) => {
  * runs from a build hook now, so that has to be impossible rather than
  * unlikely.
  */
-const available = existsSync(ORIGINALS) ? readdirSync(ORIGINALS).filter((f) => /\.(jpe?g)$/i.test(f)) : []
+const available = existsSync(ORIGINALS)
+  ? readdirSync(ORIGINALS).filter((f) => /\.(jpe?g)$/i.test(f))
+  : []
 
 if (available.length === 0) {
   console.log(`no originals in ${ORIGINALS}, leaving ${MANIFEST} untouched`)
@@ -71,12 +92,18 @@ const scanned = available
     return { file, width: Number(w), height: Number(h), date, time }
   })
   // Chronological, so slug numbering follows the order they were taken.
-  .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`) || a.file.localeCompare(b.file))
+  .sort(
+    (a, b) =>
+      `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`) ||
+      a.file.localeCompare(b.file),
+  )
 
 // Slugs are public URLs, cached for a month, so once assigned they must never
 // move. A photo dropped in later but taken earlier the same day would otherwise
 // take `-01` and renumber everything already published under that date.
-const taken = new Set(scanned.map((p) => prior.get(p.file)?.slug).filter(Boolean))
+const taken = new Set(
+  scanned.map((p) => prior.get(p.file)?.slug).filter(Boolean),
+)
 const nextSlug = (date) => {
   for (let n = 1; ; n++) {
     const slug = `${date}-${String(n).padStart(2, '0')}`
@@ -111,7 +138,9 @@ const photos = scanned.map((p) => {
  */
 const position = new Map((previous.photos ?? []).map((p, i) => [p.file, i]))
 const ordered = [
-  ...photos.filter((p) => position.has(p.file)).sort((a, b) => position.get(a.file) - position.get(b.file)),
+  ...photos
+    .filter((p) => position.has(p.file))
+    .sort((a, b) => position.get(a.file) - position.get(b.file)),
   ...photos.filter((p) => !position.has(p.file)),
 ]
 
@@ -122,12 +151,17 @@ const ordered = [
  */
 const collections = previous.collections ?? []
 
-writeFileSync(MANIFEST, JSON.stringify({ collections, photos: ordered }, null, 2) + '\n')
+writeFileSync(
+  MANIFEST,
+  JSON.stringify({ collections, photos: ordered }, null, 2) + '\n',
+)
 
 const unlabelled = photos.filter((p) => !p.location).length
 const unfiled = photos.filter((p) => !p.collection).length
 if (unfiled) console.log(`${unfiled} not in a collection yet`)
-console.log(`${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`)
+console.log(
+  `${photos.length} photos -> ${MANIFEST} (read ${read}, reused ${photos.length - read})`,
+)
 console.log(
   unlabelled
     ? `${unlabelled} still need a location. Run \`npm run add-photos\` to fill them in.`

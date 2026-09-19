@@ -10,11 +10,12 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint:fix": "oxlint --fix",
+    "content": "node scripts/content-build.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "photos": "node scripts/photos-manifest.mjs && node scripts/photos-build.mjs",
     "add-photos": "node add-photos/server.mjs",
-    "prebuild": "npm run photos",
+    "prebuild": "npm run content && npm run photos",
     "og": "node scripts/og-card.mjs",
     "resume": "node scripts/resume.mjs"
   },
@@ -36,7 +37,8 @@
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "~6.0.2",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "yaml": "^2.9.1"
   },
   "description": "Personal site for blakemulnix.io",
   "license": "MIT",

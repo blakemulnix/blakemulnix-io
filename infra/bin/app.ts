@@ -16,8 +16,11 @@ const app = new cdk.App()
  */
 const domainName = app.node.tryGetContext('domainName') as string
 const githubRepo = app.node.tryGetContext('githubRepo') as string
-const deployBranch = (app.node.tryGetContext('deployBranch') as string | undefined) ?? 'main'
-const deployEnvironment = (app.node.tryGetContext('deployEnvironment') as string | undefined) ?? 'production'
+const deployBranch =
+  (app.node.tryGetContext('deployBranch') as string | undefined) ?? 'main'
+const deployEnvironment =
+  (app.node.tryGetContext('deployEnvironment') as string | undefined) ??
+  'production'
 /**
  * Context set on the command line arrives as a string, so `-c flag=false`
  * yields "false" rather than the boolean. Comparing against `false` alone
@@ -36,10 +39,14 @@ const createOidcProvider = contextFlag('createOidcProvider', true)
 const attachDomains = contextFlag('attachDomains', true)
 // Subdomains served from other project accounts, e.g.
 //   [{ "subdomain": "mycoolthing", "nameServers": ["ns-1.awsdns-00.co.uk", ...] }]
-const delegations = (app.node.tryGetContext('delegations') as SubdomainDelegation[] | undefined) ?? []
+const delegations =
+  (app.node.tryGetContext('delegations') as
+    SubdomainDelegation[] | undefined) ?? []
 
 if (!domainName || !githubRepo) {
-  throw new Error('Missing required context: set domainName and githubRepo in cdk.json')
+  throw new Error(
+    'Missing required context: set domainName and githubRepo in cdk.json',
+  )
 }
 
 // CloudFront certificates must live in us-east-1, so everything is deployed

@@ -13,7 +13,13 @@ export const Segments = ({ segments, linkClassName }: SegmentsProps) => (
       typeof segment === 'string' ? (
         segment
       ) : (
-        <a key={i} href={segment.href} target="_blank" rel="noreferrer" className={linkClassName}>
+        <a
+          key={i}
+          href={segment.href}
+          target="_blank"
+          rel="noreferrer"
+          className={linkClassName}
+        >
           {segment.text}
         </a>
       ),

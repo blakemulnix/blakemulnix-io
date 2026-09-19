@@ -38,7 +38,8 @@ unmodified and work once moved back:
    ```
    then re-add the import to `src/main.tsx` and this token to `src/index.css`:
    ```css
-   --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+   --font-display:
+     'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, sans-serif;
    ```
    Without it those four fall back to Inter, which changes their character
    noticeably but does not break them.

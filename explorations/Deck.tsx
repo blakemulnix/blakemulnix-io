@@ -15,7 +15,12 @@ export const DeckVariant = () => {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
 
-  const panels = ['intro', 'about', ...experience.map((e) => e.company), 'contact']
+  const panels = [
+    'intro',
+    'about',
+    ...experience.map((e) => e.company),
+    'contact',
+  ]
 
   const goTo = (i: number) => {
     const track = trackRef.current
@@ -27,7 +32,8 @@ export const DeckVariant = () => {
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
-    const onScroll = () => setActive(Math.round(track.scrollLeft / track.clientWidth))
+    const onScroll = () =>
+      setActive(Math.round(track.scrollLeft / track.clientWidth))
     track.addEventListener('scroll', onScroll, { passive: true })
     return () => track.removeEventListener('scroll', onScroll)
   }, [])
@@ -41,14 +47,17 @@ export const DeckVariant = () => {
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  const panelClass = 'flex h-full w-screen shrink-0 snap-center flex-col justify-center px-6 sm:px-16 lg:px-28'
+  const panelClass =
+    'flex h-full w-screen shrink-0 snap-center flex-col justify-center px-6 sm:px-16 lg:px-28'
 
   return (
     <div className="relative h-screen overflow-hidden bg-[#0b0c0b] text-neutral-200">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-1/3 left-1/2 h-[80vh] w-[80vw] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
-        style={{ background: `radial-gradient(circle, ${ACCENT}44, transparent 70%)` }}
+        style={{
+          background: `radial-gradient(circle, ${ACCENT}44, transparent 70%)`,
+        }}
       />
 
       <div
@@ -57,7 +66,10 @@ export const DeckVariant = () => {
       >
         {/* Intro */}
         <section className={panelClass} aria-label="Introduction">
-          <p className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: ACCENT }}>
+          <p
+            className="font-mono text-xs tracking-[0.3em] uppercase"
+            style={{ color: ACCENT }}
+          >
             {profile.location}
           </p>
           <h1 className="font-display mt-4 text-5xl leading-[0.95] font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
@@ -73,8 +85,12 @@ export const DeckVariant = () => {
 
         {/* About */}
         <section className={panelClass} aria-label="About">
-          <h2 className="font-mono text-xs tracking-[0.3em] text-neutral-500 uppercase">About</h2>
-          <p className="font-display mt-6 text-2xl text-white sm:text-4xl">{profile.greeting}.</p>
+          <h2 className="font-mono text-xs tracking-[0.3em] text-neutral-500 uppercase">
+            About
+          </h2>
+          <p className="font-display mt-6 text-2xl text-white sm:text-4xl">
+            {profile.greeting}.
+          </p>
           <div className="mt-6 max-w-2xl space-y-4 text-neutral-400">
             {aboutParagraphs.map((p, i) => (
               <p key={i}>
@@ -89,7 +105,11 @@ export const DeckVariant = () => {
 
         {/* One panel per role */}
         {experience.map((e, i) => (
-          <section className={panelClass} key={`${e.company}-${e.start}`} aria-label={`${e.title} at ${e.company}`}>
+          <section
+            className={panelClass}
+            key={`${e.company}-${e.start}`}
+            aria-label={`${e.title} at ${e.company}`}
+          >
             <div className="flex items-baseline gap-4">
               <span className="font-mono text-6xl leading-none font-bold text-white/10 tabular-nums sm:text-8xl">
                 {String(i + 1).padStart(2, '0')}
@@ -98,7 +118,9 @@ export const DeckVariant = () => {
                 {e.start} — {e.end ?? 'Present'}
               </span>
             </div>
-            <h2 className="font-display mt-6 text-3xl font-semibold text-white sm:text-5xl">{e.title}</h2>
+            <h2 className="font-display mt-6 text-3xl font-semibold text-white sm:text-5xl">
+              {e.title}
+            </h2>
             <a
               href={e.companyUrl}
               target="_blank"
@@ -124,7 +146,9 @@ export const DeckVariant = () => {
 
         {/* Contact */}
         <section className={panelClass} aria-label="Contact">
-          <h2 className="font-display text-4xl font-semibold text-white sm:text-6xl">Let&apos;s talk.</h2>
+          <h2 className="font-display text-4xl font-semibold text-white sm:text-6xl">
+            Let&apos;s talk.
+          </h2>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex gap-5">
               {socialLinks.map(({ label, url, Icon }) => (
@@ -163,7 +187,8 @@ export const DeckVariant = () => {
               className="h-1.5 rounded-full transition-all"
               style={{
                 width: i === active ? 22 : 6,
-                backgroundColor: i === active ? ACCENT : 'rgba(255,255,255,0.28)',
+                backgroundColor:
+                  i === active ? ACCENT : 'rgba(255,255,255,0.28)',
               }}
             />
           ))}

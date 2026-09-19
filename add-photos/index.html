@@ -330,7 +330,10 @@
     <header>
       <h1>Photos</h1>
       <span class="count" id="count"></span>
-      <label class="filter"><input type="checkbox" id="only" style="width: auto; margin: 0" /> Only unlabelled</label>
+      <label class="filter"
+        ><input type="checkbox" id="only" style="width: auto; margin: 0" /> Only
+        unlabelled</label
+      >
       <button id="new-collection">New collection</button>
       <span class="spacer"></span>
       <span class="status" id="status"></span>
@@ -338,8 +341,10 @@
     </header>
 
     <p class="hint">
-      Everything saves as you type. Drag a photo between collections to move it, or use its dropdown. The first photo in
-      a collection is its cover. <kbd>Enter</kbd> jumps to the next unlabelled photo. Hit <em>Save and rebuild</em>
+      Everything saves as you type. Drag a photo between collections to move it,
+      or use its dropdown. The first photo in a collection is its cover.
+      <kbd>Enter</kbd> jumps to the next unlabelled photo. Hit
+      <em>Save and rebuild</em>
       when you are done to regenerate the site's photo data.
     </p>
 
@@ -365,7 +370,10 @@
         status.dataset.state = state
       }
 
-      const groupOf = (photo) => (collections.some((c) => c.id === photo.collection) ? photo.collection : UNFILED)
+      const groupOf = (photo) =>
+        collections.some((c) => c.id === photo.collection)
+          ? photo.collection
+          : UNFILED
 
       const inGroup = (id) => photos.filter((photo) => groupOf(photo) === id)
 
@@ -373,7 +381,9 @@
         const unlabelled = photos.filter((p) => !p.location?.trim()).length
         const unfiled = inGroup(UNFILED).length
         countEl.innerHTML = [
-          unlabelled ? `<b>${unlabelled}</b> need a location` : `all ${photos.length} labelled`,
+          unlabelled
+            ? `<b>${unlabelled}</b> need a location`
+            : `all ${photos.length} labelled`,
           unfiled ? `<i>${unfiled}</i> unfiled` : null,
         ]
           .filter(Boolean)
@@ -392,7 +402,8 @@
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-|-$/g, '') || 'collection'
         let id = base
-        for (let n = 2; collections.some((c) => c.id === id); n++) id = `${base}-${n}`
+        for (let n = 2; collections.some((c) => c.id === id); n++)
+          id = `${base}-${n}`
         return id
       }
 
@@ -463,13 +474,18 @@
           if (e.key !== 'Enter') return
           e.preventDefault()
           const inputs = [...groupsEl.querySelectorAll('input.location')]
-          const next = inputs.slice(inputs.indexOf(location) + 1).find((i) => !i.value.trim())
+          const next = inputs
+            .slice(inputs.indexOf(location) + 1)
+            .find((i) => !i.value.trim())
           ;(next ?? inputs[inputs.indexOf(location) + 1])?.focus()
         })
 
         // The same move as dragging, for anyone not dragging.
         const picker = document.createElement('select')
-        for (const option of [{ id: UNFILED, title: 'Unfiled' }, ...collections]) {
+        for (const option of [
+          { id: UNFILED, title: 'Unfiled' },
+          ...collections,
+        ]) {
           const opt = document.createElement('option')
           opt.value = option.id
           opt.textContent = option.title || option.id
@@ -521,7 +537,9 @@
           title.addEventListener('input', () => {
             collection.title = title.value
             // The dropdowns on every card name this collection too.
-            for (const option of groupsEl.querySelectorAll(`option[value="${collection.id}"]`)) {
+            for (const option of groupsEl.querySelectorAll(
+              `option[value="${collection.id}"]`,
+            )) {
               option.textContent = title.value || collection.id
             }
             queueSave()
@@ -550,9 +568,13 @@
             const button = document.createElement('button')
             button.type = 'button'
             button.textContent = label
-            button.title = delta < 0 ? 'Move collection up' : 'Move collection down'
-            button.disabled = index + delta < 0 || index + delta >= collections.length
-            button.addEventListener('click', () => moveCollection(collection.id, delta))
+            button.title =
+              delta < 0 ? 'Move collection up' : 'Move collection down'
+            button.disabled =
+              index + delta < 0 || index + delta >= collections.length
+            button.addEventListener('click', () =>
+              moveCollection(collection.id, delta),
+            )
             tools.append(button)
           }
           const remove = document.createElement('button')
@@ -560,15 +582,21 @@
           remove.className = 'danger'
           remove.textContent = 'Delete'
           remove.title = 'Delete the collection. Its photos become unfiled.'
-          remove.addEventListener('click', () => deleteCollection(collection.id))
+          remove.addEventListener('click', () =>
+            deleteCollection(collection.id),
+          )
           tools.append(remove)
           head.append(tools)
         }
 
         const cards = document.createElement('div')
         cards.className = 'cards'
-        const shown = onlyEl.checked ? members.filter((p) => !p.location?.trim()) : members
-        shown.forEach((photo, i) => cards.append(card(photo, members.indexOf(photo), id)))
+        const shown = onlyEl.checked
+          ? members.filter((p) => !p.location?.trim())
+          : members
+        shown.forEach((photo, i) =>
+          cards.append(card(photo, members.indexOf(photo), id)),
+        )
 
         section.append(head, cards)
         return section
@@ -576,7 +604,9 @@
 
       const render = () => {
         groupsEl.innerHTML = ''
-        collections.forEach((collection, index) => groupsEl.append(groupSection(collection, index)))
+        collections.forEach((collection, index) =>
+          groupsEl.append(groupSection(collection, index)),
+        )
         // Unfiled sits last so the named collections are what you see first,
         // but it is always present as a drop target.
         groupsEl.append(groupSection(null, -1))
@@ -597,7 +627,12 @@
       const deleteCollection = (id) => {
         const members = inGroup(id)
         const collection = collections.find((c) => c.id === id)
-        if (members.length && !confirm(`Delete "${collection.title}"? Its ${members.length} photos become unfiled.`)) {
+        if (
+          members.length &&
+          !confirm(
+            `Delete "${collection.title}"? Its ${members.length} photos become unfiled.`,
+          )
+        ) {
           return
         }
         collections = collections.filter((c) => c.id !== id)
@@ -615,7 +650,9 @@
         render()
         queueSave()
         // Straight to the new section, which is at the bottom of the named ones.
-        groupsEl.querySelector(`[data-group="${collections.at(-1).id}"] input.title`)?.focus()
+        groupsEl
+          .querySelector(`[data-group="${collections.at(-1).id}"] input.title`)
+          ?.focus()
       })
 
       /** Moves one photo by `delta` places within its own collection. */
@@ -627,7 +664,11 @@
         if (to < 0 || to >= members.length) return
         const from = photos.indexOf(photo)
         photos.splice(from, 1)
-        photos.splice(photos.indexOf(members[to]) + (delta > 0 ? 1 : 0), 0, photo)
+        photos.splice(
+          photos.indexOf(members[to]) + (delta > 0 ? 1 : 0),
+          0,
+          photo,
+        )
         render()
         queueSave()
       }
@@ -641,12 +682,19 @@
         if (!photo || file === beforeFile) return
         photo.collection = groupId
         photos.splice(photos.indexOf(photo), 1)
-        const before = beforeFile ? photos.find((p) => p.file === beforeFile) : null
-        if (before && groupOf(before) === groupId) photos.splice(photos.indexOf(before), 0, photo)
+        const before = beforeFile
+          ? photos.find((p) => p.file === beforeFile)
+          : null
+        if (before && groupOf(before) === groupId)
+          photos.splice(photos.indexOf(before), 0, photo)
         else {
           const members = inGroup(groupId)
           const last = members.at(-1)
-          photos.splice(last ? photos.indexOf(last) + 1 : photos.length, 0, photo)
+          photos.splice(
+            last ? photos.indexOf(last) + 1 : photos.length,
+            0,
+            photo,
+          )
         }
         regroup()
         render()
@@ -675,7 +723,8 @@
         const bottom = innerHeight - pointerY
         let speed = 0
         if (top < EDGE) speed = -MAX_SPEED * Math.min(1, (EDGE - top) / EDGE)
-        else if (bottom < EDGE) speed = MAX_SPEED * Math.min(1, (EDGE - bottom) / EDGE)
+        else if (bottom < EDGE)
+          speed = MAX_SPEED * Math.min(1, (EDGE - bottom) / EDGE)
         if (speed) scrollBy(0, speed)
         scrolling = requestAnimationFrame(edgeScroll)
       }
@@ -706,7 +755,8 @@
       groupsEl.addEventListener('dragend', () => {
         dragging = null
         stopScrolling()
-        for (const el of groupsEl.querySelectorAll('.card, .group')) el.classList.remove('dragging', 'over')
+        for (const el of groupsEl.querySelectorAll('.card, .group'))
+          el.classList.remove('dragging', 'over')
       })
 
       /*
@@ -726,14 +776,21 @@
         e.dataTransfer.dropEffect = 'move'
         const el = e.target.closest('.card')
         const section = e.target.closest('.group')
-        for (const other of groupsEl.querySelectorAll('.card')) other.classList.toggle('over', other === el)
-        for (const other of groupsEl.querySelectorAll('.group')) other.classList.toggle('over', other === section)
+        for (const other of groupsEl.querySelectorAll('.card'))
+          other.classList.toggle('over', other === el)
+        for (const other of groupsEl.querySelectorAll('.group'))
+          other.classList.toggle('over', other === section)
       })
       groupsEl.addEventListener('drop', (e) => {
         if (!dragging) return
         e.preventDefault()
         const section = e.target.closest('.group')
-        if (section) moveTo(dragging, section.dataset.group, e.target.closest('.card')?.dataset.file ?? null)
+        if (section)
+          moveTo(
+            dragging,
+            section.dataset.group,
+            e.target.closest('.card')?.dataset.file ?? null,
+          )
         dragging = null
       })
 
@@ -755,7 +812,8 @@
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ photos, collections }),
           })
-          if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
+          if (!res.ok)
+            throw new Error((await res.json()).error ?? res.statusText)
           const { changed, reordered, collectionsChanged } = await res.json()
           const what = [
             changed ? `${changed} edit${changed > 1 ? 's' : ''}` : null,
@@ -781,7 +839,8 @@
         setStatus('Rebuilding…')
         try {
           const res = await fetch('/api/rebuild', { method: 'POST' })
-          if (!res.ok) throw new Error((await res.json()).error ?? res.statusText)
+          if (!res.ok)
+            throw new Error((await res.json()).error ?? res.statusText)
           setStatus('Rebuilt', 'saved')
         } catch (error) {
           setStatus('Rebuild failed', 'error')

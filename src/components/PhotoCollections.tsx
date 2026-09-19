@@ -49,7 +49,10 @@ export const PhotoCollections = () => {
           All collections
         </button>
 
-        <h3 className="mt-4 font-serif text-2xl" style={{ color: palette.sand }}>
+        <h3
+          className="mt-4 font-serif text-2xl"
+          style={{ color: palette.sand }}
+        >
           {open.title}
         </h3>
         <p
@@ -77,7 +80,9 @@ export const PhotoCollections = () => {
             meta={`${photos.length} photos`}
             photos={photos}
             variant={variant}
-            onOpen={() => navigate({ view: 'outside', collection: collection.id })}
+            onOpen={() =>
+              navigate({ view: 'outside', collection: collection.id })
+            }
           />
         )
       })}

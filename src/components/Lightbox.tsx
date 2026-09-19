@@ -74,7 +74,10 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-cover bg-center blur-md transition-opacity duration-400 ease-(--ease-out-soft)"
-          style={{ backgroundImage: `url(${photo.lqip})`, opacity: loaded ? 0 : 1 }}
+          style={{
+            backgroundImage: `url(${photo.lqip})`,
+            opacity: loaded ? 0 : 1,
+          }}
         />
       </div>
     </>
@@ -91,7 +94,12 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
  * block for fixed positioning, which silently anchors this to that element
  * instead of the viewport and can drop the photo below the fold.
  */
-export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) => {
+export const Lightbox = ({
+  photos,
+  index,
+  onClose,
+  onNavigate,
+}: LightboxProps) => {
   const photo = photos[index]
   const swipe = useRef<{ x: number; y: number } | null>(null)
   // Two flags, so the hint can animate both ways: it has to stay mounted
@@ -117,7 +125,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
    * the thing it was solving. So the reader is asked instead.
    */
   useEffect(() => {
-    if (!matchMedia('(orientation: portrait) and (max-width: 640px)').matches) return
+    if (!matchMedia('(orientation: portrait) and (max-width: 640px)').matches)
+      return
     const timers = [
       // A beat later, so the entrance transition has a state to move from.
       setTimeout(() => setHintShown(true), 60),
@@ -167,7 +176,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
       if (e.key === 'ArrowRight') onNavigate((index + 1) % photos.length)
-      if (e.key === 'ArrowLeft') onNavigate((index - 1 + photos.length) % photos.length)
+      if (e.key === 'ArrowLeft')
+        onNavigate((index - 1 + photos.length) % photos.length)
     }
     window.addEventListener('keydown', onKey)
     // Stop the wall scrolling behind the viewer.
@@ -182,7 +192,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
   if (!photo) return null
 
   const label = photo.location || photo.date
-  const go = (delta: number) => onNavigate((index + delta + photos.length) % photos.length)
+  const go = (delta: number) =>
+    onNavigate((index + delta + photos.length) % photos.length)
 
   /*
    * Swipe to move between photos. Horizontal intent is required, so a
@@ -220,7 +231,11 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
       />
       {/* Blurs the wall behind as well as tinting it, so the photo is the
           only thing in focus. */}
-      <div aria-hidden="true" className="absolute inset-0 backdrop-blur-xl" style={{ backgroundColor: '#0f1a20d4' }} />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 backdrop-blur-xl"
+        style={{ backgroundColor: '#0f1a20d4' }}
+      />
 
       {/*
        * Only in portrait on a phone, and `landscape:hidden` means turning the
@@ -275,7 +290,8 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
             color: palette.sand,
             opacity: thanksShown ? 1 : 0,
             transform: thanksShown ? 'none' : 'translateY(8px) scale(0.92)',
-            transition: 'opacity 260ms var(--ease-out-soft), transform 320ms var(--ease-out-soft)',
+            transition:
+              'opacity 260ms var(--ease-out-soft), transform 320ms var(--ease-out-soft)',
           }}
         >
           <span
@@ -375,7 +391,10 @@ export const Lightbox = ({ photos, index, onClose, onNavigate }: LightboxProps) 
           className="text-center transition-opacity duration-700 ease-(--ease-out-soft)"
           style={{ opacity: captionShown ? 1 : 0 }}
         >
-          <span className="font-mono text-[0.7rem] tracking-[0.2em] uppercase" style={{ color: palette.stoneText }}>
+          <span
+            className="font-mono text-[0.7rem] tracking-[0.2em] uppercase"
+            style={{ color: palette.stoneText }}
+          >
             {label}
           </span>
         </figcaption>

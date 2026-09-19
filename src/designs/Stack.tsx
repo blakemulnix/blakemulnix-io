@@ -21,16 +21,30 @@ export const Stack = () => {
       {/* Landing */}
       <div
         className="mx-auto max-w-5xl px-6 pt-16 transition-all duration-500 sm:px-8"
-        style={{ opacity: isHome ? 1 : 0, pointerEvents: isHome ? 'auto' : 'none' }}
+        style={{
+          opacity: isHome ? 1 : 0,
+          pointerEvents: isHome ? 'auto' : 'none',
+        }}
       >
-        <h1 className="font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">{profile.name}</h1>
-        <p className="mt-3 font-serif text-xl italic sm:text-2xl" style={{ color: palette.moss }}>
+        <h1 className="font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
+          {profile.name}
+        </h1>
+        <p
+          className="mt-3 font-serif text-xl italic sm:text-2xl"
+          style={{ color: palette.moss }}
+        >
           {profile.role}
         </p>
-        <div className="mt-6 max-w-xl space-y-3 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+        <div
+          className="mt-6 max-w-xl space-y-3 text-[15px] leading-relaxed"
+          style={{ color: palette.muted }}
+        >
           {aboutParagraphs.slice(0, 2).map((p, i) => (
             <p key={i}>
-              <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+              <Segments
+                segments={p}
+                linkClassName="underline decoration-1 underline-offset-4"
+              />
             </p>
           ))}
         </div>
@@ -50,12 +64,21 @@ export const Stack = () => {
                 boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
               }}
             >
-              <span className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: s.accent }}>
+              <span
+                className="font-mono text-[11px] tracking-[0.3em] uppercase"
+                style={{ color: s.accent }}
+              >
                 {s.label}
               </span>
               <span>
-                <span className="block font-serif text-xl leading-snug font-semibold sm:text-2xl">{s.tagline}</span>
-                <span className="mt-2 block font-mono text-sm" style={{ color: s.accent }} aria-hidden="true">
+                <span className="block font-serif text-xl leading-snug font-semibold sm:text-2xl">
+                  {s.tagline}
+                </span>
+                <span
+                  className="mt-2 block font-mono text-sm"
+                  style={{ color: s.accent }}
+                  aria-hidden="true"
+                >
                   Open →
                 </span>
               </span>
@@ -84,8 +107,13 @@ export const Stack = () => {
             >
               ← Back to stack
             </button>
-            <h2 className="mt-6 font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
-            <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
+            <h2 className="mt-6 font-serif text-4xl font-semibold sm:text-6xl">
+              {section.label}
+            </h2>
+            <p
+              className="mt-2 font-serif text-lg italic"
+              style={{ color: `${palette.sand}99` }}
+            >
               {section.tagline}
             </p>
             <div className="mt-10">

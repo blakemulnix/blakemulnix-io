@@ -1,0 +1,6 @@
+{
+  // Rewrap reflows prose to a fixed column width, including inside YAML
+  // block and plain scalars, which Prettier deliberately never touches: it
+  // preserves whatever line breaks are already in a string.
+  "recommendations": ["stkb.rewrap"]
+}

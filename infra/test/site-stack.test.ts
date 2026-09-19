@@ -22,8 +22,12 @@ const buildSite = () => {
 describe('DnsStack', () => {
   it('creates the hosted zone and retains it', () => {
     const template = Template.fromStack(buildSite().dns)
-    template.hasResourceProperties('AWS::Route53::HostedZone', { Name: 'example.com.' })
-    template.hasResource('AWS::Route53::HostedZone', { DeletionPolicy: 'Retain' })
+    template.hasResourceProperties('AWS::Route53::HostedZone', {
+      Name: 'example.com.',
+    })
+    template.hasResource('AWS::Route53::HostedZone', {
+      DeletionPolicy: 'Retain',
+    })
   })
 
   it('delegates subdomains to other accounts when configured', () => {
@@ -31,7 +35,12 @@ describe('DnsStack', () => {
     const dns = new DnsStack(app, 'D', {
       env,
       domainName: 'example.com',
-      delegations: [{ subdomain: 'mycoolthing', nameServers: ['ns-1.awsdns-00.org', 'ns-2.awsdns-00.net'] }],
+      delegations: [
+        {
+          subdomain: 'mycoolthing',
+          nameServers: ['ns-1.awsdns-00.org', 'ns-2.awsdns-00.net'],
+        },
+      ],
     })
     Template.fromStack(dns).hasResourceProperties('AWS::Route53::RecordSet', {
       Name: 'mycoolthing.example.com.',
@@ -59,7 +68,9 @@ describe('SiteStack', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
         Aliases: Match.arrayWith(['example.com', 'www.example.com']),
-        DefaultCacheBehavior: Match.objectLike({ ViewerProtocolPolicy: 'redirect-to-https' }),
+        DefaultCacheBehavior: Match.objectLike({
+          ViewerProtocolPolicy: 'redirect-to-https',
+        }),
         HttpVersion: 'http2and3',
       },
     })
@@ -108,7 +119,9 @@ describe('SiteStack without domains attached', () => {
 
   it('claims no aliases and requests no certificate', () => {
     template.resourceCountIs('AWS::CertificateManager::Certificate', 0)
-    const distributions = template.findResources('AWS::CloudFront::Distribution')
+    const distributions = template.findResources(
+      'AWS::CloudFront::Distribution',
+    )
     for (const d of Object.values(distributions)) {
       expect(d.Properties.DistributionConfig.Aliases).toBeUndefined()
     }
@@ -162,8 +175,15 @@ describe('GithubOidcStack', () => {
     const roles = template.findResources('AWS::IAM::Role')
     const subjects = Object.values(roles).flatMap((role) =>
       (
-        role.Properties.AssumeRolePolicyDocument.Statement as { Condition?: Record<string, Record<string, unknown>> }[]
-      ).flatMap((statement) => statement.Condition?.StringEquals?.['token.actions.githubusercontent.com:sub'] ?? []),
+        role.Properties.AssumeRolePolicyDocument.Statement as {
+          Condition?: Record<string, Record<string, unknown>>
+        }[]
+      ).flatMap(
+        (statement) =>
+          statement.Condition?.StringEquals?.[
+            'token.actions.githubusercontent.com:sub'
+          ] ?? [],
+      ),
     )
     expect(subjects.length).toBeGreaterThan(0)
     for (const subject of subjects as string[]) {

@@ -63,7 +63,10 @@ const saveLabels = (incoming, incomingCollections) => {
   if (Array.isArray(incomingCollections)) {
     const next = incomingCollections
       .filter((c) => c && typeof c.id === 'string' && c.id.trim())
-      .map((c) => ({ id: c.id.trim(), title: String(c.title ?? '').trim() || c.id.trim() }))
+      .map((c) => ({
+        id: c.id.trim(),
+        title: String(c.title ?? '').trim() || c.id.trim(),
+      }))
     if (JSON.stringify(next) !== JSON.stringify(manifest.collections ?? [])) {
       manifest.collections = next
       collectionsChanged = true
@@ -79,7 +82,9 @@ const saveLabels = (incoming, incomingCollections) => {
   const sameSet =
     incomingFiles.length === manifest.photos.length &&
     new Set(incomingFiles).size === incomingFiles.length &&
-    incomingFiles.every((file) => edits.has(file) && manifest.photos.some((p) => p.file === file))
+    incomingFiles.every(
+      (file) => edits.has(file) && manifest.photos.some((p) => p.file === file),
+    )
 
   let reordered = false
   if (sameSet) {
@@ -94,7 +99,13 @@ const saveLabels = (incoming, incomingCollections) => {
   if (changed || reordered || collectionsChanged) {
     writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n')
   }
-  return { changed, reordered, collectionsChanged, total: manifest.photos.length, orderSaved: sameSet }
+  return {
+    changed,
+    reordered,
+    collectionsChanged,
+    total: manifest.photos.length,
+    orderSaved: sameSet,
+  }
 }
 
 const send = (res, status, body, type = 'application/json') => {
@@ -131,7 +142,11 @@ const server = createServer(async (req, res) => {
       if (!Array.isArray(photos)) throw new Error('Expected a photos array')
       return send(res, 200, JSON.stringify(saveLabels(photos, collections)))
     } catch (error) {
-      return send(res, 400, JSON.stringify({ error: String(error.message ?? error) }))
+      return send(
+        res,
+        400,
+        JSON.stringify({ error: String(error.message ?? error) }),
+      )
     }
   }
 
@@ -140,7 +155,11 @@ const server = createServer(async (req, res) => {
       pipeline()
       return send(res, 200, JSON.stringify({ ok: true }))
     } catch (error) {
-      return send(res, 500, JSON.stringify({ error: String(error.message ?? error) }))
+      return send(
+        res,
+        500,
+        JSON.stringify({ error: String(error.message ?? error) }),
+      )
     }
   }
 
@@ -162,7 +181,12 @@ const server = createServer(async (req, res) => {
 
 /** Opens the page in whatever the platform considers the default browser. */
 const openBrowser = (url) => {
-  const command = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'explorer' : 'xdg-open'
+  const command =
+    process.platform === 'darwin'
+      ? 'open'
+      : process.platform === 'win32'
+        ? 'explorer'
+        : 'xdg-open'
   // Detached and unreferenced, so a browser that stays open does not hold the
   // server process alive, and a machine with no opener just carries on.
   try {
@@ -182,8 +206,12 @@ const openBrowser = (url) => {
 server.on('error', (error) => {
   if (error.code !== 'EADDRINUSE') throw error
   console.error(`\n  Port ${PORT} is already in use.\n`)
-  console.error(`  If add-photos is already running, open http://localhost:${PORT}`)
-  console.error(`  Otherwise start it on another port:  PORT=${PORT + 1} npm run add-photos\n`)
+  console.error(
+    `  If add-photos is already running, open http://localhost:${PORT}`,
+  )
+  console.error(
+    `  Otherwise start it on another port:  PORT=${PORT + 1} npm run add-photos\n`,
+  )
   process.exit(1)
 })
 
@@ -194,7 +222,9 @@ server.listen(PORT, () => {
 
   const unfiled = photos.filter((p) => !p.collection).length
 
-  console.log(`\n  ${photos.length} photos, ${unlabelled} still needing a location`)
+  console.log(
+    `\n  ${photos.length} photos, ${unlabelled} still needing a location`,
+  )
   if (unfiled) console.log(`  ${unfiled} not in a collection`)
   console.log(`\n  →  ${url}\n`)
   console.log('  Labels save as you type. Ctrl+C when you are done.\n')

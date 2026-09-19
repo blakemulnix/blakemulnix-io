@@ -6,7 +6,14 @@ import { experience } from '../data/experience'
 import { socialLinks } from '../data/social'
 
 const LIME = 'text-[#b8f52c]'
-const COMMANDS = ['about', 'experience', 'stack', 'links', 'help', 'clear'] as const
+const COMMANDS = [
+  'about',
+  'experience',
+  'stack',
+  'links',
+  'help',
+  'clear',
+] as const
 
 interface Line {
   id: number
@@ -33,7 +40,10 @@ const output = (cmd: string): ReactNode => {
           <p className={LIME}>{profile.greeting} 👋</p>
           {aboutParagraphs.map((p, i) => (
             <p key={i}>
-              <Segments segments={p} linkClassName="text-[#b8f52c] underline decoration-dotted hover:bg-[#b8f52c]/15" />
+              <Segments
+                segments={p}
+                linkClassName="text-[#b8f52c] underline decoration-dotted hover:bg-[#b8f52c]/15"
+              />
             </p>
           ))}
         </div>
@@ -59,7 +69,9 @@ const output = (cmd: string): ReactNode => {
                 </span>
               </div>
               <p className="mt-1 max-w-prose text-neutral-400">{e.summary}</p>
-              <p className="mt-1 text-neutral-500">{e.technologies.join(' · ')}</p>
+              <p className="mt-1 text-neutral-500">
+                {e.technologies.join(' · ')}
+              </p>
             </div>
           ))}
         </div>
@@ -79,8 +91,15 @@ const output = (cmd: string): ReactNode => {
         <ul className="space-y-1">
           {socialLinks.map((s) => (
             <li key={s.label}>
-              <span className="inline-block w-20 text-neutral-500">{s.label.toLowerCase()}</span>
-              <a href={s.url} target="_blank" rel="noreferrer" className="text-[#b8f52c] underline decoration-dotted">
+              <span className="inline-block w-20 text-neutral-500">
+                {s.label.toLowerCase()}
+              </span>
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#b8f52c] underline decoration-dotted"
+              >
                 {s.url.replace('https://', '')}
               </a>
             </li>
@@ -103,7 +122,8 @@ const output = (cmd: string): ReactNode => {
     default:
       return (
         <p className="text-red-400">
-          command not found: {cmd} <span className="text-neutral-500">— try `help`</span>
+          command not found: {cmd}{' '}
+          <span className="text-neutral-500">— try `help`</span>
         </p>
       )
   }
@@ -123,7 +143,11 @@ export const TerminalVariant = () => {
       setLines([])
       return
     }
-    setLines((prev) => [...prev, { id: nextId.current++, prompt: cmd }, { id: nextId.current++, body: output(cmd) }])
+    setLines((prev) => [
+      ...prev,
+      { id: nextId.current++, prompt: cmd },
+      { id: nextId.current++, body: output(cmd) },
+    ])
   }
 
   // Greet with the about block so the page is never an empty prompt.
@@ -147,7 +171,10 @@ export const TerminalVariant = () => {
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 opacity-[0.035]"
-        style={{ backgroundImage: 'repeating-linear-gradient(180deg,#fff 0 1px,transparent 1px 3px)' }}
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(180deg,#fff 0 1px,transparent 1px 3px)',
+        }}
       />
 
       <div className="mx-auto max-w-4xl">

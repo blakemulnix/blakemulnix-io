@@ -7,11 +7,15 @@ const INDEX = 'dist/index.html'
 const PLACEHOLDER = '<div id="root"></div>'
 const ORIGIN = 'https://blakemulnix.io'
 
-const { render, routeMeta, routePaths } = await import(pathToFileURL(SSR_BUNDLE).href)
+const { render, routeMeta, routePaths } = await import(
+  pathToFileURL(SSR_BUNDLE).href
+)
 
 const template = readFileSync(INDEX, 'utf8')
 if (!template.includes(PLACEHOLDER)) {
-  throw new Error(`Could not find ${PLACEHOLDER} in ${INDEX}; prerender would be silently skipped.`)
+  throw new Error(
+    `Could not find ${PLACEHOLDER} in ${INDEX}; prerender would be silently skipped.`,
+  )
 }
 
 /**
@@ -22,7 +26,8 @@ if (!template.includes(PLACEHOLDER)) {
  * `/x` is written as `x/index.html`. CloudFront rewrites extensionless paths
  * to that key, which is also what most static hosts do by default.
  */
-const destination = (route) => (route === '/' ? INDEX : path.join('dist', route.slice(1), 'index.html'))
+const destination = (route) =>
+  route === '/' ? INDEX : path.join('dist', route.slice(1), 'index.html')
 
 /**
  * The head is templated by replacing whole tags rather than by string
@@ -35,7 +40,8 @@ const retitle = (html, { title, description, url }) => {
   // the one already in the template, so an unchanged string means "matched
   // and identical" just as often as it means "no match at all".
   const swap = (pattern, replacement) => {
-    if (!pattern.test(html)) throw new Error(`prerender: nothing matched ${pattern} in ${INDEX}`)
+    if (!pattern.test(html))
+      throw new Error(`prerender: nothing matched ${pattern} in ${INDEX}`)
     html = html.replace(pattern, replacement)
   }
 
@@ -49,12 +55,16 @@ const retitle = (html, { title, description, url }) => {
     ['property="og:description"', ''],
     ['name="twitter:description"', ''],
   ]) {
-    swap(new RegExp(`(<meta\\s+${attr}\\s+content=\\s*")[^"]*"`, flags), `$1${description}"`)
+    swap(
+      new RegExp(`(<meta\\s+${attr}\\s+content=\\s*")[^"]*"`, flags),
+      `$1${description}"`,
+    )
   }
   return html
 }
 
-const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
+const escape = (text) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
 
 let total = 0
 for (const route of routePaths()) {

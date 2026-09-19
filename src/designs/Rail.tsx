@@ -27,10 +27,16 @@ export const Rail = () => {
       {section && (
         <div
           className="sticky top-0 z-30 border-b backdrop-blur-md lg:hidden"
-          style={{ backgroundColor: `${background}e6`, borderColor: `${palette.sand}1f` }}
+          style={{
+            backgroundColor: `${background}e6`,
+            borderColor: `${palette.sand}1f`,
+          }}
         >
           <div className="flex items-center justify-between gap-3 px-5 py-3">
-            <button onClick={home} className="-mx-2 flex items-center gap-2 px-2 py-1.5 font-medium">
+            <button
+              onClick={home}
+              className="-mx-2 flex items-center gap-2 px-2 py-1.5 font-medium"
+            >
               <span aria-hidden="true">←</span>
               <span className="text-sm">Back</span>
             </button>
@@ -71,7 +77,10 @@ export const Rail = () => {
            */}
           <div
             className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
-            style={{ gridTemplateRows: isHome ? '0fr' : '1fr', opacity: isHome ? 0 : 1 }}
+            style={{
+              gridTemplateRows: isHome ? '0fr' : '1fr',
+              opacity: isHome ? 0 : 1,
+            }}
             inert={isHome}
           >
             <div className="min-h-0 overflow-hidden">
@@ -87,7 +96,10 @@ export const Rail = () => {
 
           <h1
             className="font-serif font-semibold tracking-tight transition-all duration-[600ms] ease-(--ease-out-soft)"
-            style={{ fontSize: isHome ? 'clamp(2.5rem,7vw,4.5rem)' : '1.5rem', lineHeight: 1.02 }}
+            style={{
+              fontSize: isHome ? 'clamp(2.5rem,7vw,4.5rem)' : '1.5rem',
+              lineHeight: 1.02,
+            }}
           >
             {profile.name}
           </h1>
@@ -102,7 +114,10 @@ export const Rail = () => {
           <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
             <p
               className="font-serif italic transition-all duration-[600ms] ease-(--ease-out-soft)"
-              style={{ color: palette.moss, fontSize: isHome ? '1.35rem' : '0.95rem' }}
+              style={{
+                color: palette.moss,
+                fontSize: isHome ? '1.35rem' : '0.95rem',
+              }}
             >
               {profile.role}
             </p>
@@ -115,7 +130,10 @@ export const Rail = () => {
              */}
             <div
               className="grid shrink-0 transition-all duration-[600ms] ease-(--ease-out-soft)"
-              style={{ gridTemplateColumns: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+              style={{
+                gridTemplateColumns: isHome ? '1fr' : '0fr',
+                opacity: isHome ? 1 : 0,
+              }}
             >
               <ul className="flex min-w-0 shrink-0 items-center gap-2 overflow-hidden sm:gap-2.5">
                 {socialLinks.map(({ label, url, Icon }) => (
@@ -148,7 +166,10 @@ export const Rail = () => {
            */}
           <div
             className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
-            style={{ gridTemplateRows: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+            style={{
+              gridTemplateRows: isHome ? '1fr' : '0fr',
+              opacity: isHome ? 1 : 0,
+            }}
           >
             {/*
              * Both of these are load-bearing. `min-h-0` on the clipped box,
@@ -165,10 +186,16 @@ export const Rail = () => {
               >
                 {profile.tagline}
               </p>
-              <div className="max-w-xl space-y-3 pt-6 text-base leading-relaxed" style={{ color: palette.muted }}>
+              <div
+                className="max-w-xl space-y-3 pt-6 text-base leading-relaxed"
+                style={{ color: palette.muted }}
+              >
                 {aboutParagraphs.map((p, i) => (
                   <p key={i}>
-                    <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+                    <Segments
+                      segments={p}
+                      linkClassName="underline decoration-1 underline-offset-4"
+                    />
                   </p>
                 ))}
               </div>
@@ -194,14 +221,19 @@ export const Rail = () => {
                     style={{ paddingBlock: isHome ? '1.25rem' : '0.75rem' }}
                   >
                     <span className="flex items-baseline gap-3">
-                      <span className="font-mono text-[0.7rem] tabular-nums" style={{ color: s.accent }}>
+                      <span
+                        className="font-mono text-[0.7rem] tabular-nums"
+                        style={{ color: s.accent }}
+                      >
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span>
                         <span
                           className="block font-serif font-semibold transition-all duration-[600ms] ease-(--ease-out-soft)"
                           style={{
-                            fontSize: isHome ? 'clamp(1.5rem,5vw,2.5rem)' : '1rem',
+                            fontSize: isHome
+                              ? 'clamp(1.5rem,5vw,2.5rem)'
+                              : '1rem',
                             color: isOpen ? s.accent : palette.sand,
                           }}
                         >
@@ -209,10 +241,16 @@ export const Rail = () => {
                         </span>
                         <span
                           className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
-                          style={{ gridTemplateRows: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+                          style={{
+                            gridTemplateRows: isHome ? '1fr' : '0fr',
+                            opacity: isHome ? 1 : 0,
+                          }}
                         >
                           <span className="block min-h-0 overflow-hidden">
-                            <span className="mt-0.5 block text-sm" style={{ color: `${palette.sand}8c` }}>
+                            <span
+                              className="mt-0.5 block text-sm"
+                              style={{ color: `${palette.sand}8c` }}
+                            >
                               {s.tagline}
                             </span>
                           </span>
@@ -221,7 +259,10 @@ export const Rail = () => {
                     </span>
                     <span
                       className="grid transition-all duration-[600ms] ease-(--ease-out-soft)"
-                      style={{ gridTemplateColumns: isHome ? '1fr' : '0fr', opacity: isHome ? 1 : 0 }}
+                      style={{
+                        gridTemplateColumns: isHome ? '1fr' : '0fr',
+                        opacity: isHome ? 1 : 0,
+                      }}
                       aria-hidden="true"
                     >
                       <span
@@ -271,8 +312,13 @@ export const Rail = () => {
                  */
                 className="animate-[rail-in_460ms_var(--ease-out-soft)_160ms_backwards]"
               >
-                <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">{s.label}</h2>
-                <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}a6` }}>
+                <h2 className="font-serif text-3xl font-semibold sm:text-5xl lg:text-6xl">
+                  {s.label}
+                </h2>
+                <p
+                  className="mt-2 font-serif text-lg italic"
+                  style={{ color: `${palette.sand}a6` }}
+                >
                   {s.tagline}
                 </p>
                 <div className="mt-8 lg:mt-10">
@@ -280,8 +326,14 @@ export const Rail = () => {
                 </div>
 
                 {/* Somewhere to go from the bottom of long content. */}
-                <div className="mt-14 border-t pt-6" style={{ borderColor: `${palette.sand}1f` }}>
-                  <button onClick={() => (next ? open(next.id) : home())} className="group text-left">
+                <div
+                  className="mt-14 border-t pt-6"
+                  style={{ borderColor: `${palette.sand}1f` }}
+                >
+                  <button
+                    onClick={() => (next ? open(next.id) : home())}
+                    className="group text-left"
+                  >
                     <span
                       className="font-mono text-[0.7rem] tracking-[0.25em] uppercase"
                       style={{ color: `${palette.sand}8c` }}

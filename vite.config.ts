@@ -2,9 +2,11 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+import { contentWatch } from './src/plugins/content-watch.ts'
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [contentWatch(), react(), tailwindcss()],
   build: {
     outDir: 'dist',
     sourcemap: true,
@@ -15,6 +17,7 @@ export default defineConfig({
      * rather than an error, so keep them as files the CSP allows.
      * `undefined` leaves every other asset type on the default limit.
      */
-    assetsInlineLimit: (filePath) => (/\.(?:woff2?|ttf|otf|eot)$/i.test(filePath) ? false : undefined),
+    assetsInlineLimit: (filePath) =>
+      /\.(?:woff2?|ttf|otf|eot)$/i.test(filePath) ? false : undefined,
   },
 })

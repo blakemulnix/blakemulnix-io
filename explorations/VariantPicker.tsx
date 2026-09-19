@@ -20,7 +20,13 @@ export const VariantPicker = ({ variants, current }: VariantPickerProps) => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return
+      if (
+        el &&
+        (el.tagName === 'INPUT' ||
+          el.tagName === 'TEXTAREA' ||
+          el.isContentEditable)
+      )
+        return
       if (e.key !== '[' && e.key !== ']') return
       const next = e.key === ']' ? index + 1 : index - 1
       const target = variants[(next + variants.length) % variants.length]
@@ -46,7 +52,9 @@ export const VariantPicker = ({ variants, current }: VariantPickerProps) => {
       <div className="flex max-w-full items-center gap-2 rounded-xl bg-neutral-900/90 p-2 ring-1 ring-white/15 backdrop-blur-md">
         <div className="hidden shrink-0 px-1 text-[11px] leading-tight sm:block">
           <div className="font-semibold text-white">{current.name}</div>
-          <div className="max-w-[22ch] truncate text-neutral-400">{current.blurb}</div>
+          <div className="max-w-[22ch] truncate text-neutral-400">
+            {current.blurb}
+          </div>
         </div>
 
         <div className="flex items-center gap-1 overflow-x-auto">
@@ -59,7 +67,9 @@ export const VariantPicker = ({ variants, current }: VariantPickerProps) => {
                 title={`${v.name} — ${v.blurb}`}
                 aria-current={active ? 'page' : undefined}
                 className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
-                  active ? 'bg-white text-neutral-900' : 'text-neutral-300 hover:bg-white/10 hover:text-white'
+                  active
+                    ? 'bg-white text-neutral-900'
+                    : 'text-neutral-300 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <span className="tabular-nums">{i + 1}</span>

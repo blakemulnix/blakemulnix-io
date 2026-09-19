@@ -8,7 +8,10 @@ const Technologies = ({ items }: { items: string[] }) => (
       <li
         key={t}
         className="rounded-full px-2.5 py-1 font-mono text-[0.7rem]"
-        style={{ backgroundColor: `${palette.stone}26`, color: palette.stoneText }}
+        style={{
+          backgroundColor: `${palette.stone}26`,
+          color: palette.stoneText,
+        }}
       >
         {t}
       </li>
@@ -20,14 +23,20 @@ const Technologies = ({ items }: { items: string[] }) => (
 export const ExperienceContent = ({ accent }: { accent: string }) => (
   <ol className="space-y-10">
     {experience.map((e) => (
-      <li key={`${e.company}-${e.start}`} className="border-l pl-5 sm:pl-6" style={{ borderColor: `${accent}59` }}>
+      <li
+        key={`${e.company}-${e.start}`}
+        className="border-l pl-5 sm:pl-6"
+        style={{ borderColor: `${accent}59` }}
+      >
         <p
           className="font-mono text-[0.7rem] leading-4 tracking-widest uppercase"
           style={{ color: `${palette.sand}aa` }}
         >
           {e.start} - {e.end ?? 'Present'}
         </p>
-        <h3 className="mt-1.5 font-serif text-xl font-semibold sm:text-2xl">{e.title}</h3>
+        <h3 className="mt-1.5 font-serif text-xl font-semibold sm:text-2xl">
+          {e.title}
+        </h3>
         <a
           href={e.companyUrl}
           target="_blank"
@@ -37,7 +46,10 @@ export const ExperienceContent = ({ accent }: { accent: string }) => (
         >
           {e.company}
         </a>
-        <p className="mt-3 max-w-2xl text-base leading-relaxed" style={{ color: palette.muted }}>
+        <p
+          className="mt-3 max-w-2xl text-base leading-relaxed"
+          style={{ color: palette.muted }}
+        >
           {e.summary}
         </p>
 
@@ -48,7 +60,10 @@ export const ExperienceContent = ({ accent }: { accent: string }) => (
          */}
         {e.clients ? (
           <>
-            <p className="mt-7 font-mono text-[0.7rem] tracking-[0.2em] uppercase" style={{ color: palette.rust }}>
+            <p
+              className="mt-7 font-mono text-[0.7rem] tracking-[0.2em] uppercase"
+              style={{ color: palette.rust }}
+            >
               Client Projects
             </p>
             {/*
@@ -59,7 +74,10 @@ export const ExperienceContent = ({ accent }: { accent: string }) => (
              * Rust marks the nesting, and the technology pills keep stone, so
              * the two levels are told apart by hue as well as by indent.
              */}
-            <ol className="mt-4 space-y-6 border-l pl-4 sm:pl-5" style={{ borderColor: `${palette.rust}59` }}>
+            <ol
+              className="mt-4 space-y-6 border-l pl-4 sm:pl-5"
+              style={{ borderColor: `${palette.rust}59` }}
+            >
               {e.clients.map((c) => (
                 <li key={c.client}>
                   <p
@@ -68,7 +86,9 @@ export const ExperienceContent = ({ accent }: { accent: string }) => (
                   >
                     {c.start} - {c.end ?? 'Present'}
                   </p>
-                  <h4 className="mt-1 font-serif text-lg font-semibold">{c.client}</h4>
+                  <h4 className="mt-1 font-serif text-lg font-semibold">
+                    {c.client}
+                  </h4>
                   <div
                     className="mt-2 max-w-2xl space-y-2 text-[0.95rem] leading-relaxed"
                     style={{ color: palette.muted }}

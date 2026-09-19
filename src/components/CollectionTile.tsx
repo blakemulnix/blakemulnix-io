@@ -8,7 +8,15 @@ import type { TileVariant } from './tileVariant'
  * what is inside, and letterboxing three different aspect ratios inside one
  * tile reads as a bug.
  */
-const Pane = ({ photo, className, style }: { photo: Photo; className?: string; style?: React.CSSProperties }) => (
+const Pane = ({
+  photo,
+  className,
+  style,
+}: {
+  photo: Photo
+  className?: string
+  style?: React.CSSProperties
+}) => (
   <span
     className={`block overflow-hidden bg-cover bg-center ${className ?? ''}`}
     style={{ backgroundImage: `url(${photo.lqip})`, ...style }}
@@ -28,7 +36,11 @@ const Pane = ({ photo, className, style }: { photo: Photo; className?: string; s
  * Collections are never shorter than three, so the fallbacks are only here to
  * keep a half filed collection from crashing the page.
  */
-const preview = (photos: Photo[]) => [photos[0], photos[1] ?? photos[0], photos[2] ?? photos[0]]
+const preview = (photos: Photo[]) => [
+  photos[0],
+  photos[1] ?? photos[0],
+  photos[2] ?? photos[0],
+]
 
 const Hero = ({ photos }: { photos: Photo[] }) => {
   const [cover, second, third] = preview(photos)
@@ -110,11 +122,16 @@ export const CollectionTile = ({
           shrink-0 because a tile is stretched to its row's height, and an
           aspect ratio box handed spare height grows into it: one tile per row
           came out taller than its neighbours. */}
-      <span className={`block shrink-0 ${variant === 'stack' ? '' : 'overflow-hidden rounded-lg'}`}>
+      <span
+        className={`block shrink-0 ${variant === 'stack' ? '' : 'overflow-hidden rounded-lg'}`}
+      >
         <Shape photos={photos} />
       </span>
 
-      <span className="mt-3 block font-serif text-lg" style={{ color: palette.sand }}>
+      <span
+        className="mt-3 block font-serif text-lg"
+        style={{ color: palette.sand }}
+      >
         {title}
       </span>
       <span

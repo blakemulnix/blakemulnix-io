@@ -8,7 +8,8 @@ import { socialLinks } from '../data/social'
 const ACCENT = '#d4ff3f'
 const allTech = [...new Set(experience.flatMap((e) => e.technologies))].sort()
 
-const tile = 'rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition-colors'
+const tile =
+  'rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition-colors'
 
 /**
  * A bento wall instead of a scrolling document. Tiles carry one idea each, and
@@ -24,20 +25,32 @@ export const MosaicVariant = () => {
           {/* Identity */}
           <div
             className="rounded-2xl p-6 sm:col-span-2 sm:row-span-2 sm:p-8"
-            style={{ background: `linear-gradient(145deg, ${ACCENT}, #9fd427)` }}
+            style={{
+              background: `linear-gradient(145deg, ${ACCENT}, #9fd427)`,
+            }}
           >
-            <p className="font-mono text-[11px] tracking-[0.3em] text-black/60 uppercase">{profile.location}</p>
+            <p className="font-mono text-[11px] tracking-[0.3em] text-black/60 uppercase">
+              {profile.location}
+            </p>
             <h1 className="font-display mt-3 text-4xl leading-[0.95] font-bold tracking-tight text-black sm:text-6xl">
               {profile.name}
             </h1>
-            <p className="mt-3 text-lg font-medium text-black/70 sm:text-xl">{profile.role}</p>
-            <p className="mt-8 max-w-sm text-sm text-black/60">{profile.tagline}</p>
+            <p className="mt-3 text-lg font-medium text-black/70 sm:text-xl">
+              {profile.role}
+            </p>
+            <p className="mt-8 max-w-sm text-sm text-black/60">
+              {profile.tagline}
+            </p>
           </div>
 
           {/* About */}
           <div className={`${tile} sm:col-span-2`}>
-            <h2 className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">About</h2>
-            <p className="font-display mt-3 text-xl text-white">{profile.greeting} 👋</p>
+            <h2 className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">
+              About
+            </h2>
+            <p className="font-display mt-3 text-xl text-white">
+              {profile.greeting} 👋
+            </p>
             <div className="mt-3 space-y-3 text-sm leading-relaxed text-neutral-400">
               {aboutParagraphs.map((p, i) => (
                 <p key={i}>
@@ -51,7 +64,9 @@ export const MosaicVariant = () => {
           </div>
 
           <div className={`${tile} flex flex-col justify-between`}>
-            <span className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">Elsewhere</span>
+            <span className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">
+              Elsewhere
+            </span>
             <ul className="mt-6 flex gap-4">
               {socialLinks.map(({ label, url, Icon }) => (
                 <li key={label}>
@@ -87,23 +102,32 @@ export const MosaicVariant = () => {
                 >
                   <span className="flex items-start justify-between gap-3">
                     <span className="font-mono text-[11px] tracking-widest text-neutral-400 uppercase">
-                      {e.start.replace(/^\w+ /, '')}–{e.end ? e.end.replace(/^\w+ /, '') : 'now'}
+                      {e.start.replace(/^\w+ /, '')}–
+                      {e.end ? e.end.replace(/^\w+ /, '') : 'now'}
                     </span>
-                    <span className="font-mono text-[11px] tabular-nums" style={{ color: isOpen ? ACCENT : '#52525b' }}>
+                    <span
+                      className="font-mono text-[11px] tabular-nums"
+                      style={{ color: isOpen ? ACCENT : '#52525b' }}
+                    >
                       {String(i + 1).padStart(2, '0')}
                     </span>
                   </span>
                   <span className="font-display mt-3 block text-lg leading-snug font-semibold text-white">
                     {e.title}
                   </span>
-                  <span className="mt-1 block text-sm" style={{ color: ACCENT }}>
+                  <span
+                    className="mt-1 block text-sm"
+                    style={{ color: ACCENT }}
+                  >
                     {e.company}
                   </span>
                 </button>
 
                 {isOpen && (
                   <div className="mt-4 border-t border-white/10 pt-4">
-                    <p className="max-w-3xl text-sm leading-relaxed text-neutral-400">{e.summary}</p>
+                    <p className="max-w-3xl text-sm leading-relaxed text-neutral-400">
+                      {e.summary}
+                    </p>
                     <ul className="mt-3 flex flex-wrap gap-1.5">
                       {e.technologies.map((t) => (
                         <li
@@ -131,10 +155,15 @@ export const MosaicVariant = () => {
 
           {/* Stack */}
           <div className={`${tile} sm:col-span-2`}>
-            <h2 className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">Stack</h2>
+            <h2 className="font-mono text-[11px] tracking-[0.3em] text-neutral-500 uppercase">
+              Stack
+            </h2>
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {allTech.map((t) => (
-                <li key={t} className="rounded-full bg-white/[0.06] px-2.5 py-1 font-mono text-[11px] text-neutral-300">
+                <li
+                  key={t}
+                  className="rounded-full bg-white/[0.06] px-2.5 py-1 font-mono text-[11px] text-neutral-300"
+                >
                   {t}
                 </li>
               ))}
@@ -142,7 +171,9 @@ export const MosaicVariant = () => {
           </div>
         </div>
 
-        <p className="mt-4 text-center font-mono text-[11px] text-neutral-600">Tap a role to expand it</p>
+        <p className="mt-4 text-center font-mono text-[11px] text-neutral-600">
+          Tap a role to expand it
+        </p>
       </div>
     </div>
   )

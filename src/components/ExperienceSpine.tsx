@@ -32,14 +32,20 @@ export const ExperienceSpine = () => {
 
   return (
     <section id="experience" className="scroll-mt-8 pt-4">
-      <h2 className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: palette.ochre }}>
+      <h2
+        className="font-mono text-[11px] tracking-[0.3em] uppercase"
+        style={{ color: palette.ochre }}
+      >
         Experience
       </h2>
 
       <div className="mt-8 lg:grid lg:grid-cols-[14rem_1fr] lg:gap-12">
         <div className="hidden lg:block">
           <div className="sticky top-16">
-            <p className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: `${palette.sand}66` }}>
+            <p
+              className="font-mono text-[11px] tracking-[0.3em] uppercase"
+              style={{ color: `${palette.sand}66` }}
+            >
               Currently viewing
             </p>
             <p
@@ -48,11 +54,20 @@ export const ExperienceSpine = () => {
             >
               {active?.start.split(' ')[1] ?? ''}
             </p>
-            <p className="mt-2 font-serif text-lg italic" style={{ color: palette.moss }}>
+            <p
+              className="mt-2 font-serif text-lg italic"
+              style={{ color: palette.moss }}
+            >
               {active?.company}
             </p>
-            <div className="mt-6 h-px w-12" style={{ backgroundColor: palette.ochre }} />
-            <p className="mt-3 font-mono text-[11px]" style={{ color: `${palette.sand}66` }}>
+            <div
+              className="mt-6 h-px w-12"
+              style={{ backgroundColor: palette.ochre }}
+            />
+            <p
+              className="mt-3 font-mono text-[11px]"
+              style={{ color: `${palette.sand}66` }}
+            >
               {activeIndex + 1} / {experience.length}
             </p>
           </div>
@@ -97,12 +112,18 @@ export const ExperienceSpine = () => {
                     transform: `translate(-50%, -50%) scale(${isActive ? 1.3 : 1})`,
                     backgroundColor: palette.pine,
                     border: `2px solid ${isActive ? palette.ochre : `${palette.moss}88`}`,
-                    boxShadow: isActive ? `0 0 14px ${palette.ochre}80` : 'none',
+                    boxShadow: isActive
+                      ? `0 0 14px ${palette.ochre}80`
+                      : 'none',
                   }}
                 >
                   <span
                     className="h-1 w-1 rounded-full transition-colors"
-                    style={{ backgroundColor: isActive ? palette.ochre : `${palette.moss}88` }}
+                    style={{
+                      backgroundColor: isActive
+                        ? palette.ochre
+                        : `${palette.moss}88`,
+                    }}
                   />
                 </span>
 
@@ -112,7 +133,9 @@ export const ExperienceSpine = () => {
                 >
                   {e.start} - {e.end ?? 'Present'}
                 </p>
-                <h3 className="mt-1.5 font-serif text-2xl font-semibold">{e.title}</h3>
+                <h3 className="mt-1.5 font-serif text-2xl font-semibold">
+                  {e.title}
+                </h3>
                 <a
                   href={e.companyUrl}
                   target="_blank"
@@ -122,7 +145,10 @@ export const ExperienceSpine = () => {
                 >
                   {e.company}
                 </a>
-                <p className="mt-3 max-w-2xl text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+                <p
+                  className="mt-3 max-w-2xl text-[15px] leading-relaxed"
+                  style={{ color: palette.muted }}
+                >
                   {e.summary}
                 </p>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
@@ -130,7 +156,10 @@ export const ExperienceSpine = () => {
                     <li
                       key={t}
                       className="rounded-full px-2.5 py-1 font-mono text-[11px]"
-                      style={{ backgroundColor: `${palette.stone}2e`, color: palette.stoneText }}
+                      style={{
+                        backgroundColor: `${palette.stone}2e`,
+                        color: palette.stoneText,
+                      }}
                     >
                       {t}
                     </li>

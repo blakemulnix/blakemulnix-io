@@ -120,14 +120,20 @@
   <body>
     <h1>Favicon options</h1>
     <p class="note">
-      Each mark is shown at 16, 32 and 64 pixels, then inside mock browser tabs on light and dark chrome. 16px is the
-      one that matters: that is the real tab size, and it is where detail dies.
+      Each mark is shown at 16, 32 and 64 pixels, then inside mock browser tabs
+      on light and dark chrome. 16px is the one that matters: that is the real
+      tab size, and it is where detail dies.
     </p>
     <div class="grid" id="grid"></div>
 
     <script>
       // Every mark is a 64x64 viewBox so they scale identically.
-      const P = { pine: '#141d17', moss: '#93b06e', sand: '#e7dcc4', ochre: '#d9a05b' }
+      const P = {
+        pine: '#141d17',
+        moss: '#93b06e',
+        sand: '#e7dcc4',
+        ochre: '#d9a05b',
+      }
       const plate = `<rect width="64" height="64" rx="14" fill="${P.pine}"/>`
 
       const options = [
@@ -148,7 +154,10 @@
         {
           name: '3. Contour',
           desc: 'Nested contour lines, straight from the site background.',
-          verdict: ['meh', 'Lines blur together at 16px; needs to be the thickest version.'],
+          verdict: [
+            'meh',
+            'Lines blur together at 16px; needs to be the thickest version.',
+          ],
           svg: `${plate}<g fill="none" stroke="${P.moss}" stroke-width="4" stroke-linecap="round">
                <path d="M14 40 C24 28, 40 28, 50 40"/><path d="M20 50 C28 40, 36 40, 44 50"/></g>`,
         },
@@ -156,7 +165,10 @@
         {
           name: '4. Spine',
           desc: 'The timeline dot-on-a-line motif.',
-          verdict: ['ok', 'Very legible small, but reads generic out of context.'],
+          verdict: [
+            'ok',
+            'Very legible small, but reads generic out of context.',
+          ],
           svg: `${plate}<line x1="32" y1="12" x2="32" y2="52" stroke="${P.moss}" stroke-width="4" stroke-linecap="round"/>
                <circle cx="32" cy="24" r="8" fill="${P.ochre}"/>`,
         },
@@ -179,7 +191,10 @@
         {
           name: '7. Prompt',
           desc: 'Shell chevron. Nods to the engineering side.',
-          verdict: ['ok', 'Reads well small. Less connected to the earthy direction.'],
+          verdict: [
+            'ok',
+            'Reads well small. Less connected to the earthy direction.',
+          ],
           svg: `${plate}<path d="M20 22 L32 32 L20 42" fill="none" stroke="${P.moss}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                <line x1="36" y1="43" x2="48" y2="43" stroke="${P.ochre}" stroke-width="5" stroke-linecap="round"/>`,
         },
@@ -187,7 +202,10 @@
         {
           name: '8. Ridge, inverted',
           desc: 'Moss plate, ridge knocked out. Heavier presence.',
-          verdict: ['ok', 'Highest contrast of the set; stands out most in a crowded tab bar.'],
+          verdict: [
+            'ok',
+            'Highest contrast of the set; stands out most in a crowded tab bar.',
+          ],
           svg: `<rect width="64" height="64" rx="14" fill="${P.moss}"/><path d="M10 45 L25 26 L34 38 L42 29 L55 45 Z" fill="${P.pine}"/>`,
         },
       ]

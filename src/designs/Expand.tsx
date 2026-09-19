@@ -24,20 +24,31 @@ export const Expand = () => {
           <h1 className="font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
             {profile.name}
           </h1>
-          <p className="mt-3 font-serif text-xl italic sm:text-2xl" style={{ color: palette.moss }}>
+          <p
+            className="mt-3 font-serif text-xl italic sm:text-2xl"
+            style={{ color: palette.moss }}
+          >
             {profile.role}
           </p>
-          <div className="mt-6 max-w-xl space-y-3 text-[15px] leading-relaxed" style={{ color: palette.muted }}>
+          <div
+            className="mt-6 max-w-xl space-y-3 text-[15px] leading-relaxed"
+            style={{ color: palette.muted }}
+          >
             {aboutParagraphs.slice(0, 2).map((p, i) => (
               <p key={i}>
-                <Segments segments={p} linkClassName="underline decoration-1 underline-offset-4" />
+                <Segments
+                  segments={p}
+                  linkClassName="underline decoration-1 underline-offset-4"
+                />
               </p>
             ))}
           </div>
         </header>
 
         {/* Panels */}
-        <div className={`grid gap-3 ${view === 'home' ? 'mt-12 sm:grid-cols-3' : 'mt-0'}`}>
+        <div
+          className={`grid gap-3 ${view === 'home' ? 'mt-12 sm:grid-cols-3' : 'mt-0'}`}
+        >
           {sections.map((s) => {
             const isOpen = view === s.id
             const isHidden = view !== 'home' && !isOpen
@@ -61,8 +72,13 @@ export const Expand = () => {
                     >
                       ← All sections
                     </button>
-                    <h2 className="mt-6 font-serif text-4xl font-semibold sm:text-6xl">{section.label}</h2>
-                    <p className="mt-2 font-serif text-lg italic" style={{ color: `${palette.sand}99` }}>
+                    <h2 className="mt-6 font-serif text-4xl font-semibold sm:text-6xl">
+                      {section.label}
+                    </h2>
+                    <p
+                      className="mt-2 font-serif text-lg italic"
+                      style={{ color: `${palette.sand}99` }}
+                    >
                       {section.tagline}
                     </p>
                     <div className="mt-10">
@@ -73,14 +89,26 @@ export const Expand = () => {
                   <button
                     onClick={() => open(s.id)}
                     className="flex h-full min-h-56 w-full flex-col justify-between rounded-2xl p-6 text-left transition-colors"
-                    style={{ backgroundColor: `${s.accent}1a`, border: `1px solid ${s.accent}40` }}
+                    style={{
+                      backgroundColor: `${s.accent}1a`,
+                      border: `1px solid ${s.accent}40`,
+                    }}
                   >
-                    <span className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: s.accent }}>
+                    <span
+                      className="font-mono text-[11px] tracking-[0.3em] uppercase"
+                      style={{ color: s.accent }}
+                    >
                       {s.label}
                     </span>
                     <span>
-                      <span className="block font-serif text-2xl leading-snug font-semibold">{s.tagline}</span>
-                      <span className="mt-3 block font-mono text-lg" style={{ color: s.accent }} aria-hidden="true">
+                      <span className="block font-serif text-2xl leading-snug font-semibold">
+                        {s.tagline}
+                      </span>
+                      <span
+                        className="mt-3 block font-mono text-lg"
+                        style={{ color: s.accent }}
+                        aria-hidden="true"
+                      >
                         →
                       </span>
                     </span>

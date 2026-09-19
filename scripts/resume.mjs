@@ -24,12 +24,18 @@ const python = path.join(venv, 'bin/python')
 const source = path.join(root, 'resume/cv.typ')
 const out = path.join(root, 'resume/out/blake-mulnix-cv.pdf')
 
-const run = (cmd, args, options) => execFileSync(cmd, args, { cwd: root, stdio: 'inherit', ...options })
+const run = (cmd, args, options) =>
+  execFileSync(cmd, args, { cwd: root, stdio: 'inherit', ...options })
 
 if (!existsSync(python)) {
   console.log('Setting up Typst (one time)...')
   run('python3', ['-m', 'venv', venv])
-  run(path.join(venv, 'bin/pip'), ['install', '-q', '-r', path.join(root, 'scripts/resume/requirements.txt')])
+  run(path.join(venv, 'bin/pip'), [
+    'install',
+    '-q',
+    '-r',
+    path.join(root, 'scripts/resume/requirements.txt'),
+  ])
 }
 
 run(python, [path.join(root, 'scripts/resume/assets.py'), root])
@@ -58,8 +64,12 @@ const info = execFileSync('pdfinfo', [out], {
 const pages = Number(info.match(/^Pages:\s+(\d+)/m)[1])
 const size = Math.round(readFileSync(out).length / 1024)
 
-console.log(`\n${path.relative(root, out)}: ${pages} page${pages === 1 ? '' : 's'}, ${size}KB`)
+console.log(
+  `\n${path.relative(root, out)}: ${pages} page${pages === 1 ? '' : 's'}, ${size}KB`,
+)
 if (pages !== 1) {
-  console.error(`\nThat is ${pages} pages. Trim resume/content.yaml, or tighten the sizes in resume/cv.typ.`)
+  console.error(
+    `\nThat is ${pages} pages. Trim resume/content.yaml, or tighten the sizes in resume/cv.typ.`,
+  )
   process.exit(1)
 }

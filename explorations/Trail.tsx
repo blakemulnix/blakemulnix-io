@@ -28,7 +28,10 @@ const area = `30,${CHART_H - 10} ${line} ${CHART_W - 30},${CHART_H - 10}`
  * profile, and each role a waypoint along the route.
  */
 export const TrailVariant = () => (
-  <div className="relative min-h-screen overflow-hidden bg-[#141d17] pb-28" style={{ color: SAND }}>
+  <div
+    className="relative min-h-screen overflow-hidden bg-[#141d17] pb-28"
+    style={{ color: SAND }}
+  >
     {/* Contour ground — decorative, generated rather than an image */}
     <svg
       aria-hidden="true"
@@ -48,13 +51,19 @@ export const TrailVariant = () => (
 
     <div className="relative mx-auto max-w-4xl px-5 sm:px-8">
       <header className="pt-16 sm:pt-24">
-        <p className="font-mono text-[11px] tracking-[0.35em] uppercase" style={{ color: OCHRE }}>
+        <p
+          className="font-mono text-[11px] tracking-[0.35em] uppercase"
+          style={{ color: OCHRE }}
+        >
           {profile.location}
         </p>
         <h1 className="mt-3 font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
           {profile.name}
         </h1>
-        <p className="mt-3 font-serif text-xl italic sm:text-2xl" style={{ color: MOSS }}>
+        <p
+          className="mt-3 font-serif text-xl italic sm:text-2xl"
+          style={{ color: MOSS }}
+        >
           {profile.role}
         </p>
 
@@ -73,7 +82,10 @@ export const TrailVariant = () => (
 
       {/* Elevation profile */}
       <section className="mt-14" aria-label="Career elevation profile">
-        <h2 className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: OCHRE }}>
+        <h2
+          className="font-mono text-[11px] tracking-[0.3em] uppercase"
+          style={{ color: OCHRE }}
+        >
           The route so far
         </h2>
         <div className="mt-4 overflow-x-auto">
@@ -84,28 +96,61 @@ export const TrailVariant = () => (
             aria-label={`Career progression from ${route[0]?.company} to ${route[route.length - 1]?.company}`}
           >
             <polygon points={area} fill={MOSS} opacity="0.16" />
-            <polyline points={line} fill="none" stroke={OCHRE} strokeWidth="2" strokeLinejoin="round" />
+            <polyline
+              points={line}
+              fill="none"
+              stroke={OCHRE}
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
             {points.map(({ entry, x, y }) => (
               <g key={`${entry.company}-${entry.start}`}>
-                <circle cx={x} cy={y} r="4.5" fill="#141d17" stroke={OCHRE} strokeWidth="2" />
-                <text x={x} y={y - 12} textAnchor="middle" fill={SAND} fontSize="9" fontFamily="monospace">
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="4.5"
+                  fill="#141d17"
+                  stroke={OCHRE}
+                  strokeWidth="2"
+                />
+                <text
+                  x={x}
+                  y={y - 12}
+                  textAnchor="middle"
+                  fill={SAND}
+                  fontSize="9"
+                  fontFamily="monospace"
+                >
                   {entry.start.split(' ')[1]}
                 </text>
               </g>
             ))}
-            <line x1="30" y1={CHART_H - 10} x2={CHART_W - 30} y2={CHART_H - 10} stroke={SAND} strokeOpacity="0.2" />
+            <line
+              x1="30"
+              y1={CHART_H - 10}
+              x2={CHART_W - 30}
+              y2={CHART_H - 10}
+              stroke={SAND}
+              strokeOpacity="0.2"
+            />
           </svg>
         </div>
       </section>
 
       {/* Waypoints */}
       <section className="mt-12" aria-label="Experience">
-        <h2 className="font-mono text-[11px] tracking-[0.3em] uppercase" style={{ color: OCHRE }}>
+        <h2
+          className="font-mono text-[11px] tracking-[0.3em] uppercase"
+          style={{ color: OCHRE }}
+        >
           Waypoints
         </h2>
         <ol className="mt-6 pl-[var(--pad)] [--node-y:8px] [--pad:1.75rem] [--spine:9px] sm:[--pad:2.5rem]">
           {experience.map((e, i) => (
-            <li key={`${e.company}-${e.start}`} className="relative pb-8 last:pb-0">
+            <li
+              key={`${e.company}-${e.start}`}
+              className="relative pb-8 last:pb-0"
+            >
               {i < experience.length - 1 && (
                 <span
                   aria-hidden="true"
@@ -127,15 +172,23 @@ export const TrailVariant = () => (
                   border: `2px solid ${OCHRE}`,
                 }}
               >
-                <span className="h-1 w-1 rounded-full" style={{ backgroundColor: OCHRE }} />
+                <span
+                  className="h-1 w-1 rounded-full"
+                  style={{ backgroundColor: OCHRE }}
+                />
               </span>
-              <p className="font-mono text-[11px] leading-4 tracking-widest uppercase" style={{ color: `${SAND}aa` }}>
+              <p
+                className="font-mono text-[11px] leading-4 tracking-widest uppercase"
+                style={{ color: `${SAND}aa` }}
+              >
                 {e.start} — {e.end ?? 'Present'}
                 <span className="ml-2" style={{ color: `${SAND}66` }}>
                   no. {experience.length - i}
                 </span>
               </p>
-              <h3 className="mt-1.5 font-serif text-2xl font-semibold">{e.title}</h3>
+              <h3 className="mt-1.5 font-serif text-2xl font-semibold">
+                {e.title}
+              </h3>
               <a
                 href={e.companyUrl}
                 target="_blank"
@@ -145,8 +198,13 @@ export const TrailVariant = () => (
               >
                 {e.company}
               </a>
-              <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#c9bfa6]">{e.summary}</p>
-              <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px]" style={{ color: `${SAND}88` }}>
+              <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#c9bfa6]">
+                {e.summary}
+              </p>
+              <ul
+                className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px]"
+                style={{ color: `${SAND}88` }}
+              >
                 {e.technologies.map((t) => (
                   <li key={t}>{t}</li>
                 ))}

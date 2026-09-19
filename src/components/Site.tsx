@@ -42,13 +42,19 @@ export const Site = () => (
 
     <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
       <header className="pt-14 pb-16 sm:pt-20">
-        <p className="font-mono text-[11px] tracking-[0.35em] uppercase" style={{ color: palette.ochre }}>
+        <p
+          className="font-mono text-[11px] tracking-[0.35em] uppercase"
+          style={{ color: palette.ochre }}
+        >
           {profile.location}
         </p>
         <h1 className="mt-3 font-serif text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
           {profile.name}
         </h1>
-        <p className="mt-3 font-serif text-xl italic sm:text-2xl" style={{ color: palette.moss }}>
+        <p
+          className="mt-3 font-serif text-xl italic sm:text-2xl"
+          style={{ color: palette.moss }}
+        >
           {profile.role}
         </p>
 
@@ -64,13 +70,21 @@ export const Site = () => (
         </div>
 
         {/* Jump links, useful now the page runs well past one screen. */}
-        <nav aria-label="Sections" className="mt-10 flex flex-wrap gap-x-6 gap-y-2">
+        <nav
+          aria-label="Sections"
+          className="mt-10 flex flex-wrap gap-x-6 gap-y-2"
+        >
           {SECTIONS.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
               className="font-mono text-[11px] tracking-[0.2em] text-(--nav) uppercase transition-colors hover:text-(--nav-active) focus-visible:text-(--nav-active)"
-              style={{ '--nav': `${palette.sand}80`, '--nav-active': palette.ochre } as CSSProperties}
+              style={
+                {
+                  '--nav': `${palette.sand}80`,
+                  '--nav-active': palette.ochre,
+                } as CSSProperties
+              }
             >
               {label}
             </a>
@@ -86,7 +100,10 @@ export const Site = () => (
         className="mt-20 flex flex-wrap items-center justify-between gap-5 border-t pt-8"
         style={{ borderColor: `${palette.sand}22` }}
       >
-        <p className="font-mono text-[11px] tracking-widest uppercase" style={{ color: `${palette.sand}66` }}>
+        <p
+          className="font-mono text-[11px] tracking-widest uppercase"
+          style={{ color: `${palette.sand}66` }}
+        >
           {profile.name}
         </p>
         <ul className="flex gap-5">

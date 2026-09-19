@@ -34,7 +34,10 @@ export const PhotoWall = ({ photos = allPhotos }: { photos?: Photo[] }) => {
         {photos.map((photo, i) => {
           const label = photo.location || photo.date
           return (
-            <figure key={photo.slug} className="mb-2.5 break-inside-avoid sm:mb-3">
+            <figure
+              key={photo.slug}
+              className="mb-2.5 break-inside-avoid sm:mb-3"
+            >
               <button
                 onClick={() => setOpenIndex(i)}
                 className="group block w-full cursor-zoom-in overflow-hidden rounded-lg"
@@ -85,7 +88,14 @@ export const PhotoWall = ({ photos = allPhotos }: { photos?: Photo[] }) => {
         })}
       </div>
 
-      {openIndex !== null && <Lightbox photos={photos} index={openIndex} onClose={close} onNavigate={navigate} />}
+      {openIndex !== null && (
+        <Lightbox
+          photos={photos}
+          index={openIndex}
+          onClose={close}
+          onNavigate={navigate}
+        />
+      )}
     </>
   )
 }

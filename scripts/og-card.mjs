@@ -9,7 +9,14 @@
  * Slack all cache by URL, and some of them for weeks.
  */
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
+import {
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -26,7 +33,9 @@ const out = path.join(root, 'public/og.jpg')
  */
 const about = readFileSync(path.join(root, 'src/data/about.ts'), 'utf8')
 const field = (name) => {
-  const match = about.match(new RegExp(`^\\s*${name}:\\s*(['"\`])(.*?)\\1`, 'ms'))
+  const match = about.match(
+    new RegExp(`^\\s*${name}:\\s*(['"\`])(.*?)\\1`, 'ms'),
+  )
   if (!match) throw new Error(`no ${name} in src/data/about.ts`)
   return match[2]
 }
@@ -61,10 +70,20 @@ try {
     ],
     { stdio: 'pipe' },
   )
-  execFileSync('magick', [raw, '-resize', '1200x630', '-strip', '-quality', '88', out])
+  execFileSync('magick', [
+    raw,
+    '-resize',
+    '1200x630',
+    '-strip',
+    '-quality',
+    '88',
+    out,
+  ])
 } finally {
   rmSync(profile, { recursive: true, force: true })
   unlinkSync(filled)
 }
 
-console.log(`wrote ${path.relative(root, out)}, ${Math.round(statSync(out).size / 1024)}KB`)
+console.log(
+  `wrote ${path.relative(root, out)}, ${Math.round(statSync(out).size / 1024)}KB`,
+)
