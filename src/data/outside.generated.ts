@@ -9,7 +9,7 @@
  * funniest thing on the page, so it belongs at the size people read.
  */
 export const outsideLede: string[] = [
-  "I charge up my mental batteries by depleting my glycogen stores. Much of that takes place behind some handlebars. Avoid bringing up bike tires around me if you don't have the next 20 minutes free.",
+  "I charge up my mental batteries by depleting my glycogen stores. Much of that takes place behind my handlebars. Avoid bringing up bike tires around me if you don't have the next 20 minutes free.",
 ]
 
 /** Body-size paragraphs under the lede. */
