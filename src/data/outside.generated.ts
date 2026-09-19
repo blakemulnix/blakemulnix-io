@@ -9,7 +9,7 @@
  * funniest thing on the page, so it belongs at the size people read.
  */
 export const outsideLede: string[] = [
-  "I charge up my mental batteries by depleting my glycogen stores. Much of that takes place behind my handlebars. Avoid bringing up bike tires around me if you don't have the next 20 minutes free.",
+  "I charge up my mental batteries by depleting my glycogen stores. Much of that takes place behind my handlebars. Avoid bringing up bike tires around me if you don't have 20 minutes to chat.",
 ]
 
 /** Body-size paragraphs under the lede. */
@@ -17,8 +17,8 @@ export const outsideBody: string[] = [
   'I always build enough time into a road trip to take the less traveled route. I bring my camera just about everywhere, and I am saving up for the telephoto lens that will finally let me get a decent picture of a moose without putting my life at risk.',
   "I'm undoubtedly hooked on gravel biking at this point, but I still love a long walk up a steep trail. Skiing has gotten too darn expensive lately, but I go when I can.",
   "I hunt and fish with my dad and brother. Iowa's trophy whitetail deer population is thriving, but sadly I can't say the same for the fish in our rivers. Lucky for us, there are ten thousand lakes not too far north.",
-  'I recently bought a century home (built in 1918). It has the tiniest yard that I population to fill with native plants. I refuse to own a mower again. Giving the house the attention it has gone far too long without has been more rewarding than I expected.',
-  "There is a big spot in my brain reserved for the lyrics and melodies of singer songwriters, especially ones with objectively imperfect voices: Adrianne Lenker (of Big Thief), John Prine, Neil Young, Joni Mitchell, David Byrne, and Colter Wall get a lot of play time. Oh, and if you haven't heard Khruangbin yet, do yourself a favor and go listen.",
-  'I host for family and friends. We play board games and classic midwestern card games. House rules: no table talk during euchre. I cook from scratch as much as I can, and I like to think I have gotten pretty good at pressure cooker carnitas, pastas, and soups. There is a gas grill out back I still need to practice on when I get my patio completed.',
+  "There is a big spot in my brain reserved for the lyrics and melodies of singer songwriters, mostly ones with objectively imperfect voices: Adrianne Lenker (of Big Thief), John Prine, Neil Young, Joni Mitchell, David Byrne, and Colter Wall get a lot of play time. Oh, and if you haven't heard Khruangbin yet, do yourself a favor and go listen.",
+  'I recently bought a century home (built in 1918). It has the tiniest yard that I plan to fill with native plants. I refuse to own a mower. Giving my house the attention it has gone far too long without has been a very rewarding experience. Who knew PEX-A plumbing could be so easy?',
+  'I host for family and friends. We play board games and classic midwestern card games. House rules: absolutely no table talk during euchre. I cook from scratch as much as I can, and I like to think I have gotten pretty good at pressure cooker carnitas, pastas, and soups. There is a gas grill out back I still need to practice on when I get my patio completed.',
   'And of course, coffee. I recently acquired an AeroPress and enjoy iterating on my technique. My beverage of choice is an Irish red ale, or a paloma with mezcal (yes, the kind with the worm is best).',
 ]
