@@ -12,14 +12,26 @@ const Pane = ({
   photo,
   className,
   style,
+  morphName,
 }: {
   photo: Photo
   className?: string
   style?: React.CSSProperties
+  /**
+   * Pairs this print with the lightbox frame it opens into, so the browser
+   * morphs one into the other. Only ever set on a collection's cover, and
+   * only on one element per slug, since a duplicate name aborts the whole
+   * transition.
+   */
+  morphName?: string
 }) => (
   <span
     className={`block overflow-hidden bg-cover bg-center ${className ?? ''}`}
-    style={{ backgroundImage: `url(${photo.lqip})`, ...style }}
+    style={{
+      backgroundImage: `url(${photo.lqip})`,
+      viewTransitionName: morphName,
+      ...style,
+    }}
   >
     <img
       src={photoSrc(photo, 900)}
@@ -30,6 +42,11 @@ const Pane = ({
     />
   </span>
 )
+
+interface ShapeProps {
+  photos: Photo[]
+  morphName?: string
+}
 
 /**
  * The cover plus two supporting photos, which is all the shapes below use.
@@ -42,11 +59,11 @@ const preview = (photos: Photo[]) => [
   photos[2] ?? photos[0],
 ]
 
-const Hero = ({ photos }: { photos: Photo[] }) => {
+const Hero = ({ photos, morphName }: ShapeProps) => {
   const [cover, second, third] = preview(photos)
   return (
     <span className="grid aspect-[4/3] grid-cols-[2fr_1fr] gap-1">
-      <Pane photo={cover} className="h-full" />
+      <Pane photo={cover} className="h-full" morphName={morphName} />
       <span className="grid grid-rows-2 gap-1">
         <Pane photo={second} className="h-full" />
         <Pane photo={third} className="h-full" />
@@ -55,12 +72,12 @@ const Hero = ({ photos }: { photos: Photo[] }) => {
   )
 }
 
-const Mosaic = ({ photos }: { photos: Photo[] }) => {
+const Mosaic = ({ photos, morphName }: ShapeProps) => {
   const [cover, second, third] = preview(photos)
   const fourth = photos[3] ?? cover
   return (
     <span className="grid aspect-[4/3] grid-cols-2 grid-rows-2 gap-1">
-      <Pane photo={cover} className="h-full" />
+      <Pane photo={cover} className="h-full" morphName={morphName} />
       <Pane photo={second} className="h-full" />
       <Pane photo={third} className="h-full" />
       <Pane photo={fourth} className="h-full" />
@@ -73,7 +90,7 @@ const Mosaic = ({ photos }: { photos: Photo[] }) => {
  * straightens on hover, so the tile answers a pointer without moving the
  * layout around it.
  */
-const Stack = ({ photos }: { photos: Photo[] }) => {
+const Stack = ({ photos, morphName }: ShapeProps) => {
   const [cover, second, third] = preview(photos)
   return (
     <span className="relative block aspect-[4/3] px-5 py-3">
@@ -87,6 +104,7 @@ const Stack = ({ photos }: { photos: Photo[] }) => {
       />
       <Pane
         photo={cover}
+        morphName={morphName}
         className="absolute inset-x-5 inset-y-3 rotate-[-1deg] rounded-md shadow-xl transition-transform duration-500 ease-(--ease-out-soft) group-hover:rotate-0"
       />
     </span>
@@ -100,12 +118,14 @@ export const CollectionTile = ({
   meta,
   photos,
   variant,
+  morphName,
   onOpen,
 }: {
   title: string
   meta: string
   photos: Photo[]
   variant: TileVariant
+  morphName?: string
   onOpen: () => void
 }) => {
   const Shape = shapes[variant]
@@ -125,7 +145,7 @@ export const CollectionTile = ({
       <span
         className={`block shrink-0 ${variant === 'stack' ? '' : 'overflow-hidden rounded-lg'}`}
       >
-        <Shape photos={photos} />
+        <Shape photos={photos} morphName={morphName} />
       </span>
 
       <span

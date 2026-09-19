@@ -23,9 +23,21 @@ export const palette = {
   stone: '#8fb0c0',
   /** Legible chip text on a tinted fill. */
   stoneText: '#c3d6df',
+  /**
+   * Photographs ground. Cool and nearly colourless: it is the only section
+   * whose content brings its own palette, so the ground stays out of the
+   * way, and a cool grey does that in a way a warm one does not. A warm
+   * ground puts an orange cast behind every photograph on it.
+   */
+  slate: '#141a1c',
+  /**
+   * Cool grey at text weight, for the labels that sit among the
+   * photographs. Not a section accent: the point is to say nothing.
+   */
+  pewter: '#aebcc1',
 } as const
 
-export type SectionId = 'experience' | 'values' | 'outside'
+export type SectionId = 'experience' | 'values' | 'outside' | 'photos'
 
 export interface Section {
   id: SectionId
@@ -66,6 +78,26 @@ export const sections: Section[] = [
     tagline: "Spoiler: it's mostly gravel biking",
     bg: '#1d3038',
     accent: palette.stone,
+  },
+  /*
+   * Its own section rather than the tail of Outside Work. Sharing one meant
+   * the prose and the photographs each pushed the other around, which is how
+   * the collections ended up most of a screen below the fold; it also means
+   * an album is now `/photos/<album>` rather than buried under an essay.
+   *
+   * The index numeral takes the site's green, like the first section does,
+   * so the rail stays one thing. Everything inside the section is pewter
+   * instead, set through `--photo-accent`: a numeral in the margin can be
+   * any colour, but a label among the photographs should not tint them, and
+   * the warm accent that was here first did exactly that.
+   */
+  {
+    id: 'photos',
+    slug: 'photos',
+    label: 'Photographs',
+    tagline: 'What I saw on the way there',
+    bg: palette.slate,
+    accent: palette.moss,
   },
 ]
 

@@ -101,6 +101,52 @@ describe('SiteStack', () => {
   it('publishes IPv4 and IPv6 aliases for both names', () => {
     template.resourceCountIs('AWS::Route53::RecordSet', 4)
   })
+
+  /*
+   * The viewer-request function is run, not read. It is the one piece of
+   * this stack that is source code rather than configuration, and asserting
+   * that a string appears in the template would pass just as happily for a
+   * rewrite that sends every request to the wrong document.
+   */
+  describe('its viewer-request function', () => {
+    const functions = template.findResources('AWS::CloudFront::Function')
+    const source = Object.values(functions)[0].Properties.FunctionCode as string
+    const handler = new Function(`${source}; return handler`)() as (event: {
+      request: { uri: string }
+    }) => {
+      uri?: string
+      statusCode?: number
+      headers?: Record<string, { value: string }>
+    }
+
+    const get = (uri: string) => handler({ request: { uri } })
+
+    it('points extensionless paths at their document', () => {
+      expect(get('/photos').uri).toBe('/photos/index.html')
+      expect(get('/photos/canyon-country').uri).toBe(
+        '/photos/canyon-country/index.html',
+      )
+      expect(get('/').uri).toBe('/index.html')
+    })
+
+    it('leaves a request for a real file alone', () => {
+      expect(get('/photos/2026-09-04-01-900.webp').uri).toBe(
+        '/photos/2026-09-04-01-900.webp',
+      )
+      expect(get('/sitemap.xml').uri).toBe('/sitemap.xml')
+    })
+
+    it('redirects album links published under the old section', () => {
+      const moved = get('/outside/canyon-country')
+      expect(moved.statusCode).toBe(301)
+      expect(moved.headers?.location.value).toBe('/photos/canyon-country')
+    })
+
+    it('leaves the Outside Work section itself where it is', () => {
+      expect(get('/outside').uri).toBe('/outside/index.html')
+      expect(get('/outside/').uri).toBe('/outside/index.html')
+    })
+  })
 })
 
 describe('SiteStack without domains attached', () => {

@@ -21,6 +21,7 @@ import {
   writeFileSync,
 } from 'node:fs'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { format, resolveConfig } from 'prettier'
 
 const ORIGINALS = 'photos/originals'
@@ -29,7 +30,7 @@ const OUT_DIR = 'public/photos'
 const GENERATED = 'src/data/photos.generated.ts'
 const GENERATED_COLLECTIONS = 'src/data/collections.generated.ts'
 
-/** Wall needs ~400-900; the lightbox goes full screen. */
+/** Tiles and the filmstrip need ~400-900; the viewer goes full screen. */
 const WIDTHS = [400, 900, 1800]
 const QUALITY = 82
 /** Width of the inline blur-up placeholder. */
@@ -38,7 +39,7 @@ const LQIP_WIDTH = 20
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'))
 
 // Same reasoning as the manifest script: without the originals this would
-// generate an empty wall and prune every committed derivative.
+// generate an empty shelf and prune every committed derivative.
 if (!existsSync(ORIGINALS) || manifest.photos.length === 0) {
   console.log(
     `no originals in ${ORIGINALS}, leaving ${GENERATED} and ${OUT_DIR} untouched`,
@@ -77,21 +78,27 @@ const lqip = (src) => {
  * all of them dominated the runtime even when no encoding was needed: 44 of 44
  * seconds on a rerun. A placeholder can only change if its original does, which
  * is the same condition the derivatives are rebuilt on.
+ *
+ * The last run's output is imported rather than parsed. It used to be sliced
+ * out of the file and run through `JSON.parse`, which worked only for as long
+ * as this script emitted the array as JSON; once the output started going
+ * through Prettier on the way out it came back as TypeScript object literals,
+ * with unquoted keys and single quotes, and the parse failed silently into an
+ * empty cache. Every run regenerated all 57 from then on, which is a forty
+ * second wait in front of the add-photos tool on every launch. Node strips
+ * the types on import, so this reads the same values the app does and cannot
+ * drift from however the file happens to be formatted.
  */
-const priorLqip = () => {
+const priorLqip = async () => {
   if (!existsSync(GENERATED)) return new Map()
-  const text = readFileSync(GENERATED, 'utf8')
-  // Search past the `=`, since the `Photo[]` annotation has a bracket of its own.
-  const declaration = text.indexOf('export const photos')
-  const start = text.indexOf('[', text.indexOf('=', declaration))
   try {
-    const parsed = JSON.parse(text.slice(start, text.lastIndexOf(']') + 1))
-    return new Map(parsed.map((p) => [p.slug, p.lqip]))
+    const { photos } = await import(pathToFileURL(GENERATED).href)
+    return new Map(photos.map((p) => [p.slug, p.lqip]))
   } catch {
     return new Map()
   }
 }
-const cachedLqip = priorLqip()
+const cachedLqip = await priorLqip()
 
 const entries = []
 let built = 0
@@ -165,7 +172,7 @@ for (const file of readdirSync(OUT_DIR)) {
 }
 
 /*
- * Manifest order, not a shuffle. The wall used to be shuffled from a fixed
+ * Manifest order, not a shuffle. The photos used to be shuffled from a fixed
  * seed, which kept it stable across builds but left no way to arrange it; the
  * order is now set by hand in the add-photos tool. The existing shuffled
  * arrangement was written into the manifest when this changed, so nothing
@@ -213,13 +220,13 @@ const canonical = async (source) =>
 writeFileSync(GENERATED, await canonical(body))
 
 /*
- * Collections, as a second module rather than a field on each photo. The wall
+ * Collections, as a second module rather than a field on each photo. The shelf
  * asks "what is in this collection", never "what collection is this photo
  * in", and a named group with an order of its own cannot be reconstructed
  * from a field without also encoding the group's order somewhere.
  *
  * Membership order follows the manifest, which is the order arranged in the
- * add-photos tool, so the same drag sets the wall and the collection.
+ * add-photos tool, so the same drag sets the order and the collection.
  */
 const named = manifest.collections ?? []
 const collections = named
@@ -237,7 +244,7 @@ const unfiled = ordered.filter(
 )
 if (unfiled.length) {
   console.warn(
-    `  ${unfiled.length} photos are in no collection and will not appear on the wall`,
+    `  ${unfiled.length} photos are in no collection and are unreachable`,
   )
 }
 
@@ -250,7 +257,7 @@ writeFileSync(
 export interface PhotoCollection {
   id: string
   title: string
-  /** Slugs in manifest order, which is the order the wall shows them. */
+  /** Slugs in manifest order, which is the order the viewer steps through. */
   slugs: string[]
 }
 

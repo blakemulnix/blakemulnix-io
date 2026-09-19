@@ -123,13 +123,31 @@ export class SiteStack extends cdk.Stack {
      * the front door instead. Rewriting the request to the index key is what
      * makes those documents reachable.
      */
+    /*
+     * S3 behind an origin access control serves no directory indexes, so an
+     * extensionless path has to be pointed at the document itself.
+     *
+     * It also carries the one redirect the site has needed so far. Photo
+     * albums used to hang off the Outside Work section and were published,
+     * indexed and shared at `/outside/<album>`; they are their own section
+     * now. A 301 here means those links keep working and search engines
+     * move their record over, rather than the site quietly shedding seven
+     * addresses. `/outside` itself still exists and is left alone.
+     */
     const directoryIndex = new cloudfront.Function(this, 'DirectoryIndex', {
-      comment: 'Rewrites extensionless paths to their index.html',
+      comment: 'Rewrites extensionless paths to index.html; moves old albums',
       runtime: cloudfront.FunctionRuntime.JS_2_0,
       code: cloudfront.FunctionCode.fromInline(`
 function handler(event) {
   var request = event.request
   var uri = request.uri
+  if (uri.startsWith('/outside/') && uri.length > '/outside/'.length) {
+    return {
+      statusCode: 301,
+      statusDescription: 'Moved Permanently',
+      headers: { location: { value: '/photos/' + uri.slice('/outside/'.length) } },
+    }
+  }
   if (uri.endsWith('/')) {
     request.uri = uri + 'index.html'
   } else if (!uri.split('/').pop().includes('.')) {

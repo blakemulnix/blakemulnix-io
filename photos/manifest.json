@@ -26,7 +26,7 @@
     },
     {
       "id": "san-juans",
-      "title": "San Juans in Late Spring"
+      "title": "San Juans Just Before Spring"
     }
   ],
   "photos": [
@@ -211,6 +211,15 @@
       "collection": "canyon-country"
     },
     {
+      "file": "DSCF1193 (1).jpg",
+      "slug": "2024-05-20-02",
+      "date": "2024-05-20",
+      "width": 6201,
+      "height": 4134,
+      "location": "Coconino National Forest, Arizona",
+      "collection": "canyon-country"
+    },
+    {
       "file": "PXL_20260530_143325557.MP.jpg",
       "slug": "2026-05-30-03",
       "date": "2026-05-30",
@@ -379,15 +388,6 @@
       "width": 4511,
       "height": 3443,
       "location": "Redonkulous Farm, Iowa",
-      "collection": "iowa-backroads"
-    },
-    {
-      "file": "DSCF1193 (1).jpg",
-      "slug": "2024-05-20-02",
-      "date": "2024-05-20",
-      "width": 6201,
-      "height": 4134,
-      "location": "Coconino National Forest, Arizona",
       "collection": "iowa-backroads"
     },
     {

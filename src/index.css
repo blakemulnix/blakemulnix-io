@@ -13,19 +13,6 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/*
- * Registered so it can be animated. An unregistered custom property is an
- * opaque token to the engine, which can only swap it at the halfway point
- * rather than interpolate it, so the fade over collapsed prose jumped
- * instead of lifting. Registering it gives the value a type, and a typed
- * percentage interpolates like any other length.
- */
-@property --fade-start {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 100%;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;

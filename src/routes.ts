@@ -14,13 +14,13 @@ export type View = 'home' | SectionId
  */
 export interface Route {
   view: View
-  /** Only meaningful under `outside`: the open photo collection, if any. */
+  /** Only meaningful under `photos`: the open photo collection, if any. */
   collection: string | null
 }
 
 export const HOME: Route = { view: 'home', collection: null }
 
-/** `/how-i-work`, `/outside`, `/outside/canyon-country`, or `/`. */
+/** `/how-i-work`, `/photos`, `/photos/canyon-country`, or `/`. */
 export const toPath = ({ view, collection }: Route): string => {
   if (view === 'home') return '/'
   const { slug } = sectionById(view)
@@ -37,7 +37,7 @@ export const parsePath = (pathname: string): Route => {
   const section = slug ? sectionBySlug(slug) : undefined
   if (!section) return HOME
   const collection =
-    section.id === 'outside' && collections.some((c) => c.id === second)
+    section.id === 'photos' && collections.some((c) => c.id === second)
       ? second
       : null
   return { view: section.id, collection }
@@ -46,7 +46,8 @@ export const parsePath = (pathname: string): Route => {
 /*
  * A module level store rather than context, read through useSyncExternalStore.
  *
- * Two distant components care about the route, the rail and the photo wall,
+ * Two distant components care about the route, the rail and the photo
+ * collections,
  * and threading it between them would mean passing it through every section's
  * props for the sake of one. The server sets it before rendering; the browser
  * takes it from the address bar.

@@ -222,6 +222,16 @@ export const photos: Photo[] = [
     v: '6789319b0d',
   },
   {
+    slug: '2024-05-20-02',
+    width: 6201,
+    height: 4134,
+    date: '2024-05-20',
+    location: 'Coconino National Forest, Arizona',
+    caption: '',
+    lqip: 'data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZACdACLLYT8a5+U3QMtthwAA/pvpwyw+39VyE8tbu0FK3Ef9w0VixMF5g4B6kNlMXhqkZ/MJ02LFvtTGJi5CHWDvuh6EkcsrSdDZUI4Mg4c8DYry+fPZEgvJ+yfGzXsQeA/QwaQeJN5v76LXi2d8rAAAAA==',
+    v: '599f2b0118',
+  },
+  {
     slug: '2026-05-30-03',
     width: 3648,
     height: 2736,
@@ -410,16 +420,6 @@ export const photos: Photo[] = [
     caption: '',
     lqip: 'data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAABwBACdASoUAA8APt1apkyopSOiMAgBEBuJZACdAdwA3B6jLYHWai4Fz8kh8AD+7/wIyZlWZ60yoLU4Qiz8yc6AKxuco5blvjRJPLLAl85+853/1XYQ0EUTP1WjFu0ZlHJucvf/hKF2fxosuXyGzVJc7KOkZoiSXfLhGX1+zydjjM0x1p4vKZ8AAAA=',
     v: 'b88996bf0c',
-  },
-  {
-    slug: '2024-05-20-02',
-    width: 6201,
-    height: 4134,
-    date: '2024-05-20',
-    location: 'Coconino National Forest, Arizona',
-    caption: '',
-    lqip: 'data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAwBACdASoUAA0APt1apkyopSOiMAgBEBuJZACdACLLYT8a5+U3QMtthwAA/pvpwyw+39VyE8tbu0FK3Ef9w0VixMF5g4B6kNlMXhqkZ/MJ02LFvtTGJi5CHWDvuh6EkcsrSdDZUI4Mg4c8DYry+fPZEgvJ+yfGzXsQeA/QwaQeJN5v76LXi2d8rAAAAA==',
-    v: '599f2b0118',
   },
   {
     slug: '2021-10-15-01',

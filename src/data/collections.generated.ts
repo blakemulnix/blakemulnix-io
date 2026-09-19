@@ -5,7 +5,7 @@
 export interface PhotoCollection {
   id: string
   title: string
-  /** Slugs in manifest order, which is the order the wall shows them. */
+  /** Slugs in manifest order, which is the order the viewer steps through. */
   slugs: string[]
 }
 
@@ -34,6 +34,7 @@ export const collections: PhotoCollection[] = [
       '2024-05-20-01',
       '2022-10-10-01',
       '2022-10-13-01',
+      '2024-05-20-02',
     ],
   },
   {
@@ -65,7 +66,6 @@ export const collections: PhotoCollection[] = [
       '2024-05-05-01',
       '2026-07-23-02',
       '2026-08-11-02',
-      '2024-05-20-02',
       '2021-10-15-01',
     ],
   },
@@ -92,7 +92,7 @@ export const collections: PhotoCollection[] = [
   },
   {
     id: 'san-juans',
-    title: 'San Juans in Late Spring',
+    title: 'San Juans Just Before Spring',
     slugs: ['2025-03-07-02', '2025-03-02-01', '2025-03-07-01'],
   },
 ]

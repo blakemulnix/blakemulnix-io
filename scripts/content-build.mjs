@@ -37,6 +37,15 @@ const banner = (
  */
 const prettierConfig = await resolveConfig(`${OUT}/about.generated.ts`)
 
+/** A run of prose: plain text, or `{ text, href }` for an inline link. */
+const segment = (seg) =>
+  typeof seg === 'string'
+    ? JSON.stringify(seg)
+    : `{ text: ${JSON.stringify(seg.text)}, href: ${JSON.stringify(seg.href)} }`
+
+const paragraphs = (paras) =>
+  paras.map((para) => `  [${para.map(segment).join(', ')}],`).join('\n')
+
 const write = async (name, body) => {
   writeFileSync(
     `${OUT}/${name}`,
@@ -48,11 +57,6 @@ const write = async (name, body) => {
 // ─── about ──────────────────────────────────────────────────────────────────
 {
   const about = load('about')
-
-  const segment = (seg) =>
-    typeof seg === 'string'
-      ? JSON.stringify(seg)
-      : `{ text: ${JSON.stringify(seg.text)}, href: ${JSON.stringify(seg.href)} }`
 
   await write(
     'about.generated.ts',
@@ -77,7 +81,7 @@ export const profile = ${JSON.stringify(
       )} as const
 
 export const aboutParagraphs: Segment[][] = [
-${about.paragraphs.map((para) => `  [${para.map(segment).join(', ')}],`).join('\n')}
+${paragraphs(about.paragraphs)}
 ]
 `,
   )
@@ -164,6 +168,8 @@ export const experience: ExperienceEntry[] = ${JSON.stringify(experience.roles.m
     'outside.generated.ts',
     banner('outside') +
       `
+import type { Segment } from './about.generated'
+
 // Photos come from photos/manifest.json via PhotoCollections.
 
 /**
@@ -173,8 +179,13 @@ export const experience: ExperienceEntry[] = ${JSON.stringify(experience.roles.m
  */
 export const outsideLede: string[] = ${JSON.stringify(outside.lede, null, 2)}
 
-/** Body-size paragraphs under the lede. */
-export const outsideBody: string[] = ${JSON.stringify(outside.body, null, 2)}
+/**
+ * Body-size paragraphs under the lede, each a run of segments so a sentence
+ * can carry a link without being broken up at the call site.
+ */
+export const outsideBody: Segment[][] = [
+${paragraphs(outside.body)}
+]
 `,
   )
 }

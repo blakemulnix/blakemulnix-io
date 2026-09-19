@@ -11,6 +11,40 @@ interface LightboxProps {
   index: number
   onClose: () => void
   onNavigate: (index: number) => void
+  /**
+   * The album being looked through. Shown with the position in it, since
+   * the viewer is now the album: there is no page behind it saying which
+   * collection this is or how far through you are.
+   */
+  title?: string
+  /**
+   * Pairs this frame with the print that opened it, so the browser grows one
+   * into the other. Set only when the viewer was opened from a collection's
+   * cover. Set only at the front of an album, which is where the cover
+   * opens to.
+   */
+  morphName?: string
+}
+
+/**
+ * Element fullscreen, where the browser has it, as a function that can be
+ * called or a null saying do not bother.
+ *
+ * Safari on iPhone has no element fullscreen API whatsoever, prefixed or
+ * otherwise; iPad has it under the webkit prefix. So this really can come
+ * back empty, and the layout has to be worth looking at without it, which is
+ * what the safe-area insets and `viewport-fit=cover` are for.
+ */
+const fullscreenRequest = () => {
+  const el = document.documentElement as HTMLElement & {
+    webkitRequestFullscreen?: () => Promise<void>
+  }
+  const request = el.requestFullscreen ?? el.webkitRequestFullscreen
+  return request ? () => request.call(el) : null
+}
+
+const exitFullscreen = () => {
+  if (document.fullscreenElement) void document.exitFullscreen().catch(() => {})
 }
 
 /**
@@ -19,7 +53,15 @@ interface LightboxProps {
  * Keyed by slug at the call site so navigating remounts this and resets the
  * loading state, rather than showing the previous photo under a stale flag.
  */
-const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
+const Frame = ({
+  photo,
+  label,
+  morphName,
+}: {
+  photo: Photo
+  label: string
+  morphName?: string
+}) => {
   const [loaded, setLoaded] = useState(false)
   const ratio = `${photo.width} / ${photo.height}`
 
@@ -46,6 +88,7 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
         style={{
           aspectRatio: ratio,
           width: `min(100cqw, calc(100cqh * ${photo.width} / ${photo.height}))`,
+          viewTransitionName: morphName,
         }}
       >
         <img
@@ -85,6 +128,83 @@ const Frame = ({ photo, label }: { photo: Photo; label: string }) => {
 }
 
 /**
+ * A rail of thumbnails under the photo.
+ *
+ * The grid used to be the overview: you could see the shape of a collection
+ * before picking something out of it. Opening straight into the viewer takes
+ * that away mid-browse, so it comes back here, where it also answers "how
+ * many more of these are there" without arrowing through to find out.
+ *
+ * Desktop and tablet only. A landscape phone is the one place with no height
+ * to give, and it is exactly where the photo needs all of it.
+ */
+const Filmstrip = ({
+  photos,
+  index,
+  onPick,
+}: {
+  photos: Photo[]
+  index: number
+  onPick: (index: number) => void
+}) => {
+  const current = useRef<HTMLButtonElement>(null)
+
+  // Keep the current thumbnail in view when the photo changes by any other
+  // means: arrow keys, a swipe, or the buttons either side.
+  useEffect(() => {
+    current.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    })
+  }, [index])
+
+  return (
+    <div
+      className="hidden w-full max-w-full shrink-0 justify-start gap-2 overflow-x-auto px-1 pb-1 sm:flex landscape:max-lg:hidden [&::-webkit-scrollbar]:hidden"
+      style={{ scrollbarWidth: 'none' }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Centred as a group when the strip is short, scrollable when it is
+          not, which `margin: auto` on the row does on its own. */}
+      <span className="m-auto flex gap-2">
+        {photos.map((photo, i) => {
+          const active = i === index
+          return (
+            <button
+              key={photo.slug}
+              ref={active ? current : undefined}
+              onClick={() => onPick(i)}
+              aria-label={`Show photo ${i + 1}: ${photo.location || photo.date}`}
+              aria-current={active ? 'true' : undefined}
+              className="h-12 shrink-0 overflow-hidden rounded-sm bg-cover bg-center transition-[opacity,outline-color] duration-300 ease-(--ease-out-soft) hover:opacity-100"
+              style={{
+                aspectRatio: `${photo.width} / ${photo.height}`,
+                backgroundImage: `url(${photo.lqip})`,
+                opacity: active ? 1 : 0.5,
+                // An outline rather than a border or a ring, so selecting a
+                // thumbnail cannot change its size and shuffle the strip.
+                outline: '2px solid',
+                outlineColor: active ? palette.sand : 'transparent',
+                outlineOffset: '1px',
+              }}
+            >
+              <img
+                src={photoSrc(photo, 400)}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </button>
+          )
+        })}
+      </span>
+    </div>
+  )
+}
+
+/**
  * Full-screen viewer. The backdrop is the photo's own blur-up placeholder,
  * scaled up and heavily blurred, so the surround picks up the colour of
  * whatever you are looking at without a single extra byte over the network.
@@ -99,6 +219,8 @@ export const Lightbox = ({
   index,
   onClose,
   onNavigate,
+  title,
+  morphName,
 }: LightboxProps) => {
   const photo = photos[index]
   const swipe = useRef<{ x: number; y: number } | null>(null)
@@ -109,10 +231,14 @@ export const Lightbox = ({
   // The caption clears itself shortly after each photo settles, so the whole
   // frame is visible. Tapping the photo brings it back.
   const [captionShown, setCaptionShown] = useState(true)
-  // Shown once, when someone actually turns their phone.
-  const [thanksMounted, setThanksMounted] = useState(false)
-  const [thanksShown, setThanksShown] = useState(false)
-  const thanked = useRef(false)
+  /*
+   * The pill that answers a turned phone: either a thank you, or the offer
+   * of fullscreen when the browser would not hand it over on its own.
+   * Mounted and shown are separate so it can animate out as well as in.
+   */
+  const [notice, setNotice] = useState<'thanks' | 'offer' | null>(null)
+  const [noticeShown, setNoticeShown] = useState(false)
+  const answered = useRef(false)
 
   // Ask for landscape, and only nudge the reader if the browser said no. The
   // click that opened this is what authorises the request, so it has to happen
@@ -140,22 +266,53 @@ export const Lightbox = ({
   }, [])
 
   /*
-   * Say thank you when the phone actually turns. Once per viewing, so rocking
-   * the phone back and forth does not set it off repeatedly, and only on a
-   * screen small enough for the ask to have been made in the first place.
+   * Turning the phone sideways is a request for the whole screen, so take it
+   * literally and go fullscreen. Once per viewing, so rocking the phone back
+   * and forth does not set it off repeatedly, and only on a screen small
+   * enough for the ask to have been made in the first place.
+   *
+   * It is attempted silently rather than offered up front, because where it
+   * works there is nothing to ask about: the browser chrome simply leaves.
+   * But `requestFullscreen` needs transient user activation, and turning a
+   * phone is not a user gesture, so the attempt often rejects even though
+   * the API is there. That is what the offer is: a pill that supplies the
+   * tap the spec wants, which is one gesture rather than the two that
+   * asking first would have cost everybody.
+   *
+   * Nothing at all happens on an iPhone, which has no element fullscreen to
+   * request. The safe-area insets and `viewport-fit=cover` already take that
+   * case as far as the web can.
    */
   useEffect(() => {
     const landscape = matchMedia('(orientation: landscape)')
     const timers: ReturnType<typeof setTimeout>[] = []
 
+    const flash = (kind: 'thanks' | 'offer') => {
+      setNotice(kind)
+      timers.push(setTimeout(() => setNoticeShown(true), 60))
+      // The thank you is an acknowledgement and clears itself. The offer is
+      // a control, so it waits to be used.
+      if (kind !== 'thanks') return
+      timers.push(setTimeout(() => setNoticeShown(false), 2200))
+      timers.push(setTimeout(() => setNotice(null), 2800))
+    }
+
     const onRotate = () => {
-      if (!landscape.matches || thanked.current) return
       if (!matchMedia('(max-width: 900px)').matches) return
-      thanked.current = true
-      setThanksMounted(true)
-      timers.push(setTimeout(() => setThanksShown(true), 60))
-      timers.push(setTimeout(() => setThanksShown(false), 2200))
-      timers.push(setTimeout(() => setThanksMounted(false), 2800))
+      // Turned back upright: hand the chrome back rather than leaving them
+      // stuck in a fullscreen they never asked for in this orientation.
+      if (!landscape.matches) {
+        exitFullscreen()
+        return
+      }
+      if (answered.current) return
+      answered.current = true
+      const request = fullscreenRequest()
+      if (!request) return
+      request().then(
+        () => flash('thanks'),
+        () => flash('offer'),
+      )
     }
 
     landscape.addEventListener('change', onRotate)
@@ -164,6 +321,9 @@ export const Lightbox = ({
       for (const timer of timers) clearTimeout(timer)
     }
   }, [])
+
+  // Leaving the viewer leaves fullscreen with it, however it was left.
+  useEffect(() => exitFullscreen, [])
 
   // Re-armed per photo, so navigating shows the new location and then clears.
   useEffect(() => {
@@ -180,7 +340,7 @@ export const Lightbox = ({
         onNavigate((index - 1 + photos.length) % photos.length)
     }
     window.addEventListener('keydown', onKey)
-    // Stop the wall scrolling behind the viewer.
+    // Stop the shelf scrolling behind the viewer.
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
@@ -229,7 +389,7 @@ export const Lightbox = ({
         className="absolute inset-0 scale-125 bg-cover bg-center blur-3xl"
         style={{ backgroundImage: `url(${photo.lqip})`, opacity: 0.55 }}
       />
-      {/* Blurs the wall behind as well as tinting it, so the photo is the
+      {/* Blurs the shelf behind as well as tinting it, so the photo is the
           only thing in focus. */}
       <div
         aria-hidden="true"
@@ -281,28 +441,66 @@ export const Lightbox = ({
        * Kept short deliberately. "I appreciate you" measured 150px, which
        * runs into a long caption at 568x320, the narrowest landscape phone
        * still worth supporting.
+       *
+       * A button in both cases, even for the thank you, so the two states
+       * are one element and the offer does not have to be introduced with a
+       * layout of its own. The thank you simply dismisses.
        */}
-      {thanksMounted && (
-        <p
-          className="pointer-events-none absolute right-[max(0.75rem,env(safe-area-inset-right))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 flex h-9 items-center gap-1.5 rounded-full px-3 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md"
+      {notice && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            if (notice === 'thanks') {
+              setNoticeShown(false)
+              return
+            }
+            // Inside a real click, so the activation the rotate event could
+            // not supply is now there for the taking.
+            const request = fullscreenRequest()
+            void request?.().catch(() => {})
+            setNoticeShown(false)
+            setTimeout(() => setNotice(null), 600)
+          }}
+          className="absolute right-[max(0.75rem,env(safe-area-inset-right))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 flex h-9 items-center gap-1.5 rounded-full px-3 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap uppercase backdrop-blur-md"
           style={{
             backgroundColor: '#00000073',
             color: palette.sand,
-            opacity: thanksShown ? 1 : 0,
-            transform: thanksShown ? 'none' : 'translateY(8px) scale(0.92)',
+            opacity: noticeShown ? 1 : 0,
+            transform: noticeShown ? 'none' : 'translateY(8px) scale(0.92)',
             transition:
               'opacity 260ms var(--ease-out-soft), transform 320ms var(--ease-out-soft)',
           }}
         >
-          <span
-            aria-hidden="true"
-            className="animate-[thanks-pop_600ms_var(--ease-out-soft)_both] text-[12px] leading-none"
-            style={{ color: palette.moss }}
-          >
-            ✦
-          </span>
-          Thanks!
-        </p>
+          {notice === 'thanks' ? (
+            <>
+              <span
+                aria-hidden="true"
+                className="animate-[thanks-pop_600ms_var(--ease-out-soft)_both] text-[12px] leading-none"
+                style={{ color: palette.moss }}
+              >
+                ✦
+              </span>
+              Thanks!
+            </>
+          ) : (
+            <>
+              {/* The four corner marks every fullscreen control uses. */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+                className="h-3 w-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4" />
+              </svg>
+              Tap for fullscreen
+            </>
+          )}
+        </button>
       )}
 
       <button
@@ -379,7 +577,12 @@ export const Lightbox = ({
          * definite height, which `flex-1` on a full-height column supplies.
          */}
         <div className="[container-type:size] flex min-h-0 w-full flex-1 items-center justify-center">
-          <Frame key={photo.slug} photo={photo} label={label} />
+          <Frame
+            key={photo.slug}
+            photo={photo}
+            label={label}
+            morphName={morphName}
+          />
         </div>
         {/*
          * Under the photo, never over it, at every size. A landscape phone has
@@ -397,7 +600,21 @@ export const Lightbox = ({
           >
             {label}
           </span>
+          {/* One line, not two: a landscape phone gives up real photo
+              height for every row under the frame. */}
+          {title && (
+            <span
+              className="mt-1 block font-mono text-[0.65rem] tracking-[0.2em] uppercase"
+              style={{ color: `${palette.sand}73` }}
+            >
+              {title} · {index + 1} / {photos.length}
+            </span>
+          )}
         </figcaption>
+
+        {photos.length > 1 && (
+          <Filmstrip photos={photos} index={index} onPick={onNavigate} />
+        )}
 
         {/*
          * Phone controls sit under the photo rather than over it. At this

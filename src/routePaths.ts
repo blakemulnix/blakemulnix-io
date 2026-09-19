@@ -13,7 +13,7 @@ export const routePaths = (): string[] => [
   '/',
   ...sections.map((section) => toPath({ view: section.id, collection: null })),
   ...collections.map((collection) =>
-    toPath({ view: 'outside', collection: collection.id }),
+    toPath({ view: 'photos', collection: collection.id }),
   ),
 ]
 
@@ -46,7 +46,7 @@ export const routeMeta = (pathname: string): RouteMeta => {
   if (named) {
     return {
       title: `${named.title}, photos by ${profile.name}`,
-      description: `${named.slugs.length} photos from ${named.title}, part of ${profile.name}'s photo wall.`,
+      description: `${named.slugs.length} photos from ${named.title}, one of ${profile.name}'s photo collections.`,
     }
   }
 

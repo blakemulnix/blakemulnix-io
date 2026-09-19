@@ -6,12 +6,14 @@ import { palette } from '../theme'
 import { ExperienceSpine } from './ExperienceSpine'
 import { HowIWork } from './HowIWork'
 import { OutsideWork } from './OutsideWork'
+import { Photographs } from './Photographs'
 import { Segments } from './Segments'
 
 const SECTIONS = [
   { id: 'experience', label: 'Experience' },
   { id: 'how-i-work', label: 'How I Work' },
   { id: 'outside', label: 'Outside Work' },
+  { id: 'photos', label: 'Photographs' },
 ] as const
 
 /** Decorative topographic ground. */
@@ -95,6 +97,7 @@ export const Site = () => (
       <ExperienceSpine />
       <HowIWork />
       <OutsideWork />
+      <Photographs />
 
       <footer
         className="mt-20 flex flex-wrap items-center justify-between gap-5 border-t pt-8"

@@ -131,7 +131,7 @@ const photos = scanned.map((p) => {
 })
 
 /*
- * The array order is the order the wall displays, and it is arranged by hand
+ * The array order is the order a collection is shown in, and it is arranged by hand
  * in the add-photos tool, so it has to survive a rescan. Photos already in the
  * manifest keep their position and anything new lands at the end, where it is
  * easy to find and move.

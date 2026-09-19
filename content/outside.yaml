@@ -9,36 +9,50 @@ lede:
     takes place behind my handlebars. Avoid bringing up bike tires around me if you
     don't have 20 minutes to chat.
 
-# Body-size paragraphs under the lede. Only the first shows before the fade,
-# so it opens on the camera: the photo collections are the next thing on the
-# page, and the moose lands right as the text trails off.
+# Body-size paragraphs under the lede, each a list of segments: plain text,
+# or a mapping with `text` and `href` for an inline link. A path rather than
+# a URL means somewhere on this site.
+#
+# All of it is on the page at once now. It used to fade out behind a "more
+# about me" control, because the photographs sat underneath and this much
+# prose buried them; they have their own section now, so there is nothing
+# left to get out of the way of.
 body:
-  - I always build enough time into a road trip to take the less traveled route. I
-    bring my camera just about everywhere, and I am saving up for the telephoto lens
-    that will finally let me get a decent picture of a moose without putting my life
-    at risk.
-  - I'm undoubtedly hooked on gravel biking at this point, but I still love a long walk up
-    a steep trail. Skiing has gotten too darn expensive lately, but I go when I
-    can.
-  - I hunt and fish with my dad and brother. Iowa's trophy whitetail deer
-    population is thriving, but sadly I can't say the same for the fish in our
-    rivers. Lucky for us, there are ten thousand lakes not too far north.
-  - "There is a big spot in my brain reserved for the lyrics and melodies of
-    singer songwriters, mostly ones with objectively imperfect voices:
-    Adrianne Lenker (of Big Thief), John Prine, Neil Young, Joni Mitchell, David Byrne,
-    and Colter Wall get a lot of play time. Oh, and if you haven't heard Khruangbin yet,
-    do yourself a favor and go listen."
-  - I recently bought a century home (built in 1918). It has the tiniest yard that I plan
-    to fill with native plants. I refuse to own a mower. Giving my house the attention it
-    has gone far too long without has been a very rewarding experience. Who knew PEX-A plumbing
-    could be so easy?
+  # The sentence that already mentions the camera is the one that carries the
+  # link to the photographs, so the way there is a part of the writing rather
+  # than a signpost bolted to the end of it. Double quoted where a segment
+  # has to keep a space at its edge, which a plain scalar would eat.
+  - - 'I always build enough time into a road trip to take the less traveled
+      route. I bring '
+    - text: my camera
+      href: /photos
+    - ' just about everywhere, and I am saving up for the telephoto lens that
+      will finally let me get a decent picture of a moose without putting my
+      life at risk.'
+  - - I'm undoubtedly hooked on gravel biking at this point, but I still love a long walk up
+      a steep trail. Skiing has gotten too darn expensive lately, but I go when I
+      can.
+  - - I hunt and fish with my dad and brother. Iowa's trophy whitetail deer
+      population is thriving, but sadly I can't say the same for the fish in our
+      rivers. Lucky for us, there are ten thousand lakes not too far north.
   # Double quoted, not single: inside a single quoted scalar an apostrophe
   # has to be doubled, so "haven't" ended the string early.
-  - 'I host for family and friends. We play board games and classic midwestern card
-    games. House rules: absolutely no table talk during euchre. I cook from scratch as much as I
-    can, and I like to think I have gotten pretty good at pressure cooker carnitas,
-    pastas, and soups. There is a gas grill out back I still need to practice on when
-    I get my patio completed.'
-  - And of course, coffee. I recently acquired an AeroPress and enjoy iterating on my
-    technique. My beverage of choice is an Irish red ale, or a paloma with mezcal (yes,
-    the kind with the worm is best).
+  - - "There is a big spot in my brain reserved for the lyrics and melodies of
+      singer songwriters, mostly ones with objectively imperfect voices:
+      Adrianne Lenker (of Big Thief), John Prine, Neil Young, Joni Mitchell, David Byrne,
+      and Colter Wall get a lot of play time. Oh, and if you haven't heard Khruangbin yet,
+      do yourself a favor and go listen."
+  - - I recently bought a century home (built in 1918). It has the tiniest yard that I plan
+      to fill with native plants. I refuse to own a mower. Giving my house the attention it
+      has gone far too long without has been a very rewarding experience. Who knew PEX-A plumbing
+      could be so easy?
+  # Quoted at all only because "House rules:" would otherwise be read as a
+  # key: a colon followed by a space starts a mapping, even mid-sentence.
+  - - 'I host for family and friends. We play board games and classic midwestern card
+      games. House rules: absolutely no table talk during euchre. I cook from scratch as much as I
+      can, and I like to think I have gotten pretty good at pressure cooker carnitas,
+      pastas, and soups. There is a gas grill out back I still need to practice on when
+      I get my patio completed.'
+  - - And of course, coffee. I recently acquired an AeroPress and enjoy iterating on my
+      technique. My beverage of choice is an Irish red ale, or a paloma with mezcal (yes,
+      the kind with the worm is best).
