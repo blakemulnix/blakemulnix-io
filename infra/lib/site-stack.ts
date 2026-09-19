@@ -104,6 +104,34 @@ export class SiteStack extends cdk.Stack {
       },
     })
 
+    /*
+     * Directory indexes, which S3 behind an origin access control does not do
+     * for itself.
+     *
+     * The site prerenders a document per route, written as `outside/canyon-
+     * country/index.html`. A request for `/outside/canyon-country` asks for a
+     * key that does not exist, which is a 403, which the error responses below
+     * would answer with the landing page: every deep link would quietly load
+     * the front door instead. Rewriting the request to the index key is what
+     * makes those documents reachable.
+     */
+    const directoryIndex = new cloudfront.Function(this, 'DirectoryIndex', {
+      comment: 'Rewrites extensionless paths to their index.html',
+      runtime: cloudfront.FunctionRuntime.JS_2_0,
+      code: cloudfront.FunctionCode.fromInline(`
+function handler(event) {
+  var request = event.request
+  var uri = request.uri
+  if (uri.endsWith('/')) {
+    request.uri = uri + 'index.html'
+  } else if (!uri.split('/').pop().includes('.')) {
+    request.uri = uri + '/index.html'
+  }
+  return request
+}
+`),
+    })
+
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       comment: `Static site for ${domainName}`,
       ...(certificate ? { domainNames: [domainName, wwwDomain], certificate } : {}),
@@ -119,9 +147,11 @@ export class SiteStack extends cdk.Stack {
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
         responseHeadersPolicy: securityHeaders,
         compress: true,
+        functionAssociations: [{ function: directoryIndex, eventType: cloudfront.FunctionEventType.VIEWER_REQUEST }],
       },
-      // Single-page site: anything unresolved falls back to the one document
-      // rather than surfacing an S3 AccessDenied page.
+      // Anything unresolved still falls back to the landing document rather
+      // than surfacing an S3 AccessDenied page. With the rewrite above this is
+      // now only genuinely unknown paths, which the app renders as home.
       errorResponses: [
         { httpStatus: 403, responseHttpStatus: 200, responsePagePath: '/index.html', ttl: cdk.Duration.minutes(5) },
         { httpStatus: 404, responseHttpStatus: 200, responsePagePath: '/index.html', ttl: cdk.Duration.minutes(5) },

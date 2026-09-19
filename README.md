@@ -45,7 +45,8 @@ src/
   components/    The page and its parts; Segments renders shared prose
   sections/      Experience, How I Work and Outside Work content
   designs/       Parked layout explorations, reachable in dev only
-  data/          Content, kept out of markup (photos.generated.ts is built)
+  data/          Content, kept out of markup (the .generated.ts files are built)
+  routes.ts      The URL as state: which section and photo album are open
   theme.ts       Palette and the three section definitions
   index.css      Tailwind import and design tokens
 photos/          manifest.json plus gitignored originals
@@ -58,6 +59,36 @@ infra/           CDK app (see below)
 
 To update work history, edit `src/data/experience.ts`, and About copy
 `src/data/about.ts`; neither needs a component change.
+
+## Addresses
+
+The site is one page that swaps its content, but every view has a URL, so a
+section or a photo album can be linked to, bookmarked and indexed.
+
+| Path                    | Shows                |
+| ----------------------- | -------------------- |
+| `/`                     | The landing view     |
+| `/experience`           | My Experience        |
+| `/how-i-work`           | How I Work           |
+| `/outside`              | The collection shelf |
+| `/outside/<collection>` | That album, open     |
+
+The route is state, held in `src/routes.ts` and read through
+`useSyncExternalStore`. A module level store rather than context, because the
+two components that care, the rail and the photo wall, are far apart, and
+context would mean threading a route through every section's props for the
+sake of one.
+
+`npm run build` prerenders **a document per route**, with its own title and
+description, and generates `dist/sitemap.xml` from the same list. Both are
+derived from the sections and the collections, so a new album becomes a page
+and a sitemap entry on the next build with nobody remembering to add it.
+
+That needs one thing from the CDN: S3 behind an origin access control does not
+serve directory indexes, so a request for `/outside/canyon-country` asks for a
+key that does not exist. A CloudFront viewer request function rewrites
+extensionless paths to their `index.html`. Without it every deep link 403s and
+falls back to the landing page, which looks like the link simply not working.
 
 ## CV
 
@@ -78,6 +109,13 @@ technology pills moved into a column beside each role rather than stranded in a
 list at the bottom of the page. The page is paper rather than pine, since sand
 on a dark ground is unkind to a printer and to anyone reading in a light PDF
 viewer.
+
+Only the first seven technologies of each entry are printed (nine for a role
+itself), so order them most telling first in the YAML. Uncapped, a ten item
+stack ran four rows deep beside two lines of prose, and since a grid row is as
+tall as its tallest cell, that is what made the spacing between engagements
+look arbitrary. The pills pack with a first fit rather than the natural line
+break, so a narrow pill later in the list can fill the gap a wide one left.
 
 The fonts come from `node_modules`, converted from woff2 to TTF on demand, so
 the CV is set in the same files the browser serves rather than a second copy
@@ -115,27 +153,35 @@ npm run add-photos
 ```
 
 That is the whole flow. It scans the originals, builds the derivatives, and
-serves a page at `http://localhost:4321` listing every photo with its
-thumbnail and a location field. **Labels save to `photos/manifest.json` as you
-type**, `Enter` jumps to the next unlabelled photo, and _Save and rebuild_
-regenerates the site's photo data when you are done. Then commit.
+serves a page at `http://localhost:4321` showing every photo grouped into its
+collection, each with a thumbnail, a location field and a way to move it.
+**Everything saves to `photos/manifest.json` as you type**, `Enter` jumps to
+the next unlabelled photo, and _Save and rebuild_ regenerates the site's photo
+data when you are done. Then commit.
+
+The wall shows collections rather than one flat grid, so every photo needs to
+be in one; anything unfiled collects in its own section at the bottom of the
+tool and warns at build time. A collection's first photo is its cover, its
+title becomes its URL, and dragging within or between collections sets both
+the wall order and the grouping. See [`add-photos/`](add-photos/README.md).
 
 The tool lives in [`add-photos/`](add-photos/). It runs a small local server
 rather than being a page you open directly, because a page loaded over
 `file://` cannot write to disk, and a labelling page that asks you to copy JSON
 back out by hand is how labels get lost.
 
-Only `location` is taken from the page. Slugs, dates and dimensions are derived
-from the original file, so a stale tab cannot overwrite them.
+Only `location`, the collection and the order are taken from the page. Slugs,
+dates and dimensions are derived from the original file, so a stale tab cannot
+overwrite them.
 
 An unlabelled photo still renders, falling back to its date.
 
 ### The two scripts behind it
 
-| Script                | Does                                                        |
-| --------------------- | ----------------------------------------------------------- |
-| `photos-manifest.mjs` | Scans originals, adds new entries to `photos/manifest.json` |
-| `photos-build.mjs`    | Encodes derivatives, writes `src/data/photos.generated.ts`  |
+| Script                | Does                                                          |
+| --------------------- | ------------------------------------------------------------- |
+| `photos-manifest.mjs` | Scans originals, adds new entries to `photos/manifest.json`   |
+| `photos-build.mjs`    | Encodes derivatives, writes the two `src/data/*.generated.ts` |
 
 `npm run photos` runs both, which is all `add-photos` does on startup and on
 _Save and rebuild_. `photos/manifest.json` is the source of truth;

@@ -38,11 +38,14 @@ export interface Section {
    */
   bg: string
   accent: string
+  /** First path segment of the section's URL, so it can be linked to. */
+  slug: string
 }
 
 export const sections: Section[] = [
   {
     id: 'experience',
+    slug: 'experience',
     label: 'My Experience',
     tagline: `What I've been up to for ${yearsInCareer} years`,
     bg: palette.pine,
@@ -50,6 +53,7 @@ export const sections: Section[] = [
   },
   {
     id: 'values',
+    slug: 'how-i-work',
     label: 'How I Work',
     tagline: 'What I think a team needs to excel',
     bg: '#2b1610',
@@ -57,12 +61,15 @@ export const sections: Section[] = [
   },
   {
     id: 'outside',
+    slug: 'outside',
     label: 'Me Outside of Work',
     tagline: "Spoiler: it's mostly gravel biking",
     bg: '#1d3038',
     accent: palette.stone,
   },
 ]
+
+export const sectionBySlug = (slug: string): Section | undefined => sections.find((s) => s.slug === slug)
 
 export const sectionById = (id: SectionId): Section => {
   const found = sections.find((s) => s.id === id)
