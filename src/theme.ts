@@ -95,7 +95,7 @@ export const sections: Section[] = [
     id: 'photos',
     slug: 'photos',
     label: 'Photographs',
-    tagline: 'What I saw on the way there',
+    tagline: "Momma don't take my Kodachrome away",
     bg: palette.slate,
     accent: palette.moss,
   },
