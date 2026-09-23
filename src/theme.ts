@@ -35,9 +35,19 @@ export const palette = {
    * photographs. Not a section accent: the point is to say nothing.
    */
   pewter: '#aebcc1',
+  /**
+   * Writing ground. Warm and very dark, so the rust accent reads as ink on
+   * dark paper. It carries more of the difference than a ground usually
+   * has to: Writing shares its accent with How I Work, the way Photographs
+   * shares one with My Experience, so the two grounds are what tell them
+   * apart. This one is far darker and much less saturated than the Values
+   * ground, which is the red end of the same family.
+   */
+  walnut: '#17130d',
 } as const
 
-export type SectionId = 'experience' | 'values' | 'outside' | 'photos'
+export type SectionId =
+  'experience' | 'values' | 'outside' | 'photos' | 'writing'
 
 export interface Section {
   id: SectionId
@@ -52,6 +62,13 @@ export interface Section {
   accent: string
   /** First path segment of the section's URL, so it can be linked to. */
   slug: string
+  /**
+   * Announced but not written yet. The section is routed and reachable so
+   * the index can carry it, and it is kept out of the sitemap so nothing
+   * invites a crawler to a page that says "coming soon". Delete the flag
+   * along with the placeholder.
+   */
+  placeholder?: boolean
 }
 
 export const sections: Section[] = [
@@ -98,6 +115,21 @@ export const sections: Section[] = [
     tagline: "Momma don't take my Kodachrome away",
     bg: palette.slate,
     accent: palette.moss,
+  },
+  /*
+   * Rust again, a second time down the index, exactly as the green appears
+   * twice: five sections against four accents means one has to repeat, and
+   * a warm numeral after the Photographs green keeps the index alternating
+   * rather than ending on two of a kind.
+   */
+  {
+    id: 'writing',
+    slug: 'writing',
+    label: 'Writing',
+    tagline: 'Thinking out loud, tech and otherwise',
+    bg: palette.walnut,
+    accent: palette.rust,
+    placeholder: true,
   },
 ]
 

@@ -7,6 +7,7 @@ import { ExperienceSpine } from './ExperienceSpine'
 import { HowIWork } from './HowIWork'
 import { OutsideWork } from './OutsideWork'
 import { Photographs } from './Photographs'
+import { Writing } from './Writing'
 import { Segments } from './Segments'
 
 const SECTIONS = [
@@ -14,6 +15,7 @@ const SECTIONS = [
   { id: 'how-i-work', label: 'How I Work' },
   { id: 'outside', label: 'Outside Work' },
   { id: 'photos', label: 'Photographs' },
+  { id: 'writing', label: 'Writing' },
 ] as const
 
 /** Decorative topographic ground. */
@@ -98,6 +100,7 @@ export const Site = () => (
       <HowIWork />
       <OutsideWork />
       <Photographs />
+      <Writing />
 
       <footer
         className="mt-20 flex flex-wrap items-center justify-between gap-5 border-t pt-8"

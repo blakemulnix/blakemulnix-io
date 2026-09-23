@@ -111,7 +111,7 @@ export const Rail = () => {
            * column's right edge, they also line up with the arrows on the
            * section rows below, which keeps the column on one rhythm.
            */}
-          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-3 sm:gap-x-6">
             <p
               className="font-serif italic transition-all duration-[600ms] ease-(--ease-out-soft)"
               style={{
@@ -202,7 +202,15 @@ export const Rail = () => {
             </div>
           </div>
 
-          <nav className="mt-9 flex flex-col" aria-label="Sections">
+          {/*
+           * `--row-pad` rather than a literal, so the rows can be tighter on
+           * a phone without the padding transition losing its pair of
+           * animatable values.
+           */}
+          <nav
+            className="mt-6 flex flex-col [--row-pad:0.9rem] sm:mt-9 sm:[--row-pad:1.25rem]"
+            aria-label="Sections"
+          >
             {sections.map((s, i) => {
               const isOpen = view === s.id
               return (
@@ -218,7 +226,9 @@ export const Rail = () => {
                       stepped the row height while its label was still shrinking. */}
                   <span
                     className="flex items-center justify-between gap-3 transition-[padding] duration-[600ms] ease-(--ease-out-soft)"
-                    style={{ paddingBlock: isHome ? '1.25rem' : '0.75rem' }}
+                    style={{
+                      paddingBlock: isHome ? 'var(--row-pad)' : '0.75rem',
+                    }}
                   >
                     <span className="flex items-baseline gap-3">
                       <span

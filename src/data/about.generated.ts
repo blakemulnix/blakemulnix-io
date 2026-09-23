@@ -18,10 +18,7 @@ export const profile = {
 
 export const aboutParagraphs: Segment[][] = [
   [
-    "Hey, I'm Blake. I've been into computers since I was a youngster. If all those hours watching early YouTube and playing flight simulators taught me anything, it's that software can genuinely enrich people's lives. Today I build software for a living.",
-  ],
-  [
-    "I'm a consultant at ",
+    "Hey, I'm Blake. I'm a consultant at \"",
     { text: 'Source Allies', href: 'https://www.sourceallies.com' },
     ", where I work with a crew that's unreasonably good at delivering software. We do as much coaching as coding, helping teams and organizations pick up new skills and see for themselves why the practices we live by are worth keeping.",
   ],

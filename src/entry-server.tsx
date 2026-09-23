@@ -16,4 +16,4 @@ export function render(pathname = '/'): string {
   return renderToString(<App />)
 }
 
-export { routeMeta, routePaths } from './routePaths'
+export { routeMeta, routePaths, sitemapPaths } from './routePaths'

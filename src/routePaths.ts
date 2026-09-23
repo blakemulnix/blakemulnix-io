@@ -17,6 +17,20 @@ export const routePaths = (): string[] => [
   ),
 ]
 
+/**
+ * The subset of routes worth advertising.
+ *
+ * A section that is announced but not written yet is still routed and still
+ * prerendered, so the index can link to it and the link works; it just has
+ * no business in a sitemap, which is an invitation to come and read
+ * something.
+ */
+export const sitemapPaths = (): string[] =>
+  routePaths().filter((route) => {
+    const { view } = parsePath(route)
+    return view === 'home' || !sectionById(view).placeholder
+  })
+
 export interface RouteMeta {
   title: string
   description: string

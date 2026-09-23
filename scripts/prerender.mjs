@@ -7,7 +7,7 @@ const INDEX = 'dist/index.html'
 const PLACEHOLDER = '<div id="root"></div>'
 const ORIGIN = 'https://blakemulnix.io'
 
-const { render, routeMeta, routePaths } = await import(
+const { render, routeMeta, routePaths, sitemapPaths } = await import(
   pathToFileURL(SSR_BUNDLE).href
 )
 
@@ -89,13 +89,16 @@ for (const route of routePaths()) {
  * static file listing only the home page. Photo albums are the whole reason
  * this matters: they are real pages now, and a crawler has no way to discover
  * one otherwise, since reaching it means clicking.
+ *
+ * Placeholder sections are the one exclusion; they are prerendered like
+ * everything else, just not advertised.
  */
 writeFileSync(
   'dist/sitemap.xml',
   [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...routePaths().map((route) =>
+    ...sitemapPaths().map((route) =>
       [
         '  <url>',
         `    <loc>${ORIGIN}${route}</loc>`,
@@ -113,5 +116,5 @@ writeFileSync(
 rmSync('dist/.ssr', { recursive: true, force: true })
 
 console.log(
-  `prerendered ${routePaths().length} routes (and dist/sitemap.xml), ${total.toLocaleString()} bytes of markup`,
+  `prerendered ${routePaths().length} routes (${sitemapPaths().length} in dist/sitemap.xml), ${total.toLocaleString()} bytes of markup`,
 )

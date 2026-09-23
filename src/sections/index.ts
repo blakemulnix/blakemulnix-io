@@ -3,6 +3,7 @@ import { ExperienceContent } from './ExperienceContent'
 import { OutsideContent } from './OutsideContent'
 import { PhotosContent } from './PhotosContent'
 import { ValuesContent } from './ValuesContent'
+import { WritingContent } from './WritingContent'
 
 /** Content is identical across designs; only the shell differs. */
 export const sectionContent: Record<
@@ -13,4 +14,5 @@ export const sectionContent: Record<
   values: ValuesContent,
   outside: OutsideContent,
   photos: PhotosContent,
+  writing: WritingContent,
 }
