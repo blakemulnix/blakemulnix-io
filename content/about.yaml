@@ -17,7 +17,7 @@ profile:
 # Paragraphs of prose, each a list of segments. A segment is plain text, or a
 # mapping with `text` and `href` for an inline link.
 paragraphs:
-  - - Hey, I'm Blake. I'm a consultant at "
+  - - "Hey, I'm Blake. I'm a consultant at "
     - text: Source Allies
       href: https://www.sourceallies.com
     - ", where I work with a crew that's unreasonably good at delivering
