@@ -69,9 +69,16 @@ export interface Section {
    * along with the placeholder.
    */
   placeholder?: boolean
+  /**
+   * Switched off: not in the index, not routed, not prerendered. The
+   * definition stays so turning a section back on is deleting one line,
+   * and so code that names it by id (the parked designs do) still works.
+   * A request for a disabled section's URL lands on the overview.
+   */
+  disabled?: boolean
 }
 
-export const sections: Section[] = [
+const allSections: Section[] = [
   {
     id: 'experience',
     slug: 'experience',
@@ -95,6 +102,7 @@ export const sections: Section[] = [
     tagline: "Spoiler: it's mostly gravel biking",
     bg: '#1d3038',
     accent: palette.stone,
+    disabled: true,
   },
   /*
    * Its own section rather than the tail of Outside Work. Sharing one meant
@@ -102,8 +110,8 @@ export const sections: Section[] = [
    * the collections ended up most of a screen below the fold; it also means
    * an album is now `/photos/<album>` rather than buried under an essay.
    *
-   * The index numeral takes the site's green, like the first section does,
-   * so the rail stays one thing. Everything inside the section is pewter
+   * The index numeral takes a section colour so the rail stays one thing.
+   * Everything inside the section is pewter
    * instead, set through `--photo-accent`: a numeral in the margin can be
    * any colour, but a label among the photographs should not tint them, and
    * the warm accent that was here first did exactly that.
@@ -114,7 +122,9 @@ export const sections: Section[] = [
     label: 'Photographs',
     tagline: "Momma don't take my Kodachrome away",
     bg: palette.slate,
-    accent: palette.moss,
+    // Blue while Outside Work is switched off, so the index still reads
+    // green, orange, blue. Give it its own accent again if Outside returns.
+    accent: palette.stone,
   },
   /*
    * Rust again, a second time down the index, exactly as the green appears
@@ -130,14 +140,19 @@ export const sections: Section[] = [
     bg: palette.walnut,
     accent: palette.rust,
     placeholder: true,
+    disabled: true,
   },
 ]
 
+/** The sections the site actually shows, in index order. */
+export const sections: Section[] = allSections.filter((s) => !s.disabled)
+
+/** Enabled sections only, so a disabled section's URL is not a route. */
 export const sectionBySlug = (slug: string): Section | undefined =>
   sections.find((s) => s.slug === slug)
 
 export const sectionById = (id: SectionId): Section => {
-  const found = sections.find((s) => s.id === id)
+  const found = allSections.find((s) => s.id === id)
   if (!found) throw new Error(`Unknown section: ${id}`)
   return found
 }
